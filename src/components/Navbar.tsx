@@ -1,12 +1,36 @@
 import React from "react";
+import { BmkLanguage, BmkLanguages } from "../services/dataTypes";
 
 interface Props {
-  leftImage: string;
-  rightImage: string;
-  titleName: string;
-  subTitleName: string;
-  lang: string;
+  lang: BmkLanguage;
 }
+
+const languageHeaderData: Record<
+  BmkLanguage,
+  {
+    titleName: string;
+    subTitleName: string;
+    leftImage: string;
+    rightImage: string;
+  }
+> = {
+  telugu: {
+    titleName: "బాల ముకుందము",
+    subTitleName: "శిక్షావాహిని",
+    leftImage: "Bpic-2.png",
+    rightImage: "BalamukundamKids.png",
+  },
+  devanagari: {
+    titleName: "बालमुकुन्दम्‌",
+    subTitleName: "शिक्षावाहिनी",
+    leftImage: "Bpic-san.png",
+    rightImage: "BalamukundamKids.png",
+  },
+};
+
+const getLanguageHeaderData = (lang: BmkLanguage) => {
+  return languageHeaderData[lang];
+};
 
 const Navbar = (props: Props) => {
   return (
@@ -16,7 +40,10 @@ const Navbar = (props: Props) => {
           <img
             alt="Alps"
             style={{ width: "150px", height: "auto" }}
-            src={"./src/static/images/" + props.leftImage}
+            src={
+              "./src/static/images/" +
+              getLanguageHeaderData(props.lang).leftImage
+            }
           />
         </div>
 
@@ -26,10 +53,10 @@ const Navbar = (props: Props) => {
         >
           <div>
             <div className={"div-" + props.lang + "gen fontup3"}>
-              {props.titleName}
+              {getLanguageHeaderData(props.lang).titleName}
             </div>
             <div className={"div-" + props.lang + "gen fontup2"}>
-              {props.subTitleName}
+              {getLanguageHeaderData(props.lang).subTitleName}
             </div>
           </div>
         </div>
@@ -38,7 +65,10 @@ const Navbar = (props: Props) => {
           <img
             alt="Alps"
             style={{ width: "auto", height: "150px", float: "right" }}
-            src={"./src/static/images/" + props.rightImage}
+            src={
+              "./src/static/images/" +
+              getLanguageHeaderData(props.lang).rightImage
+            }
           />
         </div>
       </div>

@@ -5,6 +5,7 @@ import Button from "./components/Button";
 import { useState } from "react";
 import Navbar from "./components/Navbar";
 import NavMenu from "./components/NavMenu";
+import { BmkLanguage, BmkLanguages } from "./services/dataTypes";
 
 import React from "react";
 import { EngToTelService } from "./services/engToTelugu";
@@ -16,33 +17,16 @@ function App() {
 
   let ett: EngToTelService = new EngToTelService();
 
-  const teluguHeader = {
-    titleName: "బాల ముకుందము",
-    subTitleName: "శిక్షావాహిని",
-    leftImage: "Bpic-2.png",
-    rightImage: "BalamukundamKids.png",
-    lang: "telugu",
-  };
-  const sanskritHeader = {
-    titleName: "बालमुकुन्दम्‌",
-    subTitleName: "शिक्षावाहिनी",
-    leftImage: "Bpic-san.png",
-    rightImage: "BalamukundamKids.png",
-    lang: "hindi",
-  };
-  const [curLang, setLanguage] = useState("telugu");
+  const [curLang, setLanguage] = useState<BmkLanguage>(BmkLanguages.telugu);
 
-  const [navParams, setSelectedOption1] = useState(teluguHeader);
   const [titleLesson, setTitleLesson] = useState("");
   const [dataRows, setDataRows] = useState([]);
 
   const handleLanguageSelectItem = (item: string) => {
     if (item == "Sanskrit") {
-      setSelectedOption1(sanskritHeader);
-      setLanguage("hindi");
+      setLanguage(BmkLanguages.devanagari);
     } else {
-      setSelectedOption1(teluguHeader);
-      setLanguage("telugu");
+      setLanguage(BmkLanguages.telugu);
     }
   };
 
@@ -117,13 +101,7 @@ function App() {
       className="container-fluid"
       style={{ minWidth: "210mm", width: "90%" }}
     >
-      <Navbar
-        titleName={navParams.titleName}
-        subTitleName={navParams.subTitleName}
-        leftImage={navParams.leftImage}
-        rightImage={navParams.rightImage}
-        lang={navParams.lang}
-      ></Navbar>
+      <Navbar lang={curLang}></Navbar>
 
       <NavMenu
         onSelectLanguage={handleLanguageSelectItem}
