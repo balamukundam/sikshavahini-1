@@ -38,6 +38,7 @@ const Navbar = (props: Props) => {
       <div className="row">
         <div className="col-3 m3 l2">
           <img
+            data-testid="webpage-left-image"
             alt="Alps"
             style={{ width: "150px", height: "auto" }}
             src={
@@ -52,10 +53,16 @@ const Navbar = (props: Props) => {
           style={{ placeItems: "center" }}
         >
           <div>
-            <div className={"div-" + props.lang + "gen fontup3"}>
+            <div
+              data-testid="webpage-heading"
+              className={"div-" + props.lang + "gen fontup3"}
+            >
               {getLanguageHeaderData(props.lang).titleName}
             </div>
-            <div className={"div-" + props.lang + "gen fontup2"}>
+            <div
+              data-testid="webpage-subheading"
+              className={"div-" + props.lang + "gen fontup2"}
+            >
               {getLanguageHeaderData(props.lang).subTitleName}
             </div>
           </div>
@@ -63,6 +70,7 @@ const Navbar = (props: Props) => {
 
         <div className="col-3 m3 l2">
           <img
+            data-testid="webpage-right-image"
             alt="Alps"
             style={{ width: "auto", height: "150px", float: "right" }}
             src={

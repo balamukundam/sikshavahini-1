@@ -1,15 +1,15 @@
 import Message from "./Message";
 import ListGroup from "./components/ListGroup";
 import Alert from "./components/Alert";
-import Button from "./components/Button";
 import { useState } from "react";
 import Navbar from "./components/Navbar";
 import NavMenu from "./components/NavMenu";
 import { BmkLanguage, BmkLanguages } from "./services/dataTypes";
-
+import { downloadData } from "./services/downloadUtils";
 import React from "react";
 import { EngToTelService } from "./services/engToTelugu";
 import TitleInput from "./components/TitleInput";
+import RowsDesign from "./components/RowsDesign";
 
 function App() {
   let items1 = ["Level-1", "Level-2", "Level-3"];
@@ -23,14 +23,25 @@ function App() {
   const [dataRows, setDataRows] = useState([]);
 
   const handleLanguageSelectItem = (item: string) => {
-    if (item == "Sanskrit") {
-      setLanguage(BmkLanguages.devanagari);
-    } else {
-      setLanguage(BmkLanguages.telugu);
-    }
+    item === "Sanskrit"
+      ? setLanguage(BmkLanguages.devanagari)
+      : setLanguage(BmkLanguages.telugu);
+
+    setAlertStatus("Language: " + item, true, true);
+  };
+
+  const setAlertStatus = (
+    alertText = "",
+    isValid = false,
+    isVisible = false
+  ) => {
+    setAlertVisibility(isVisible);
+    setAlertText(alertText);
+    isValid ? setAlertColor("primary") : setAlertColor("danger");
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAlertStatus();
     const files = event.target.files;
 
     if (files && files[0].type === "application/json") {
@@ -40,22 +51,17 @@ function App() {
           const parsedJson = JSON.parse(e.target?.result as string);
           setJsonData(parsedJson);
           setTitleLesson(parsedJson?.titleLesson || "");
-          setAlertVisibility(true);
-          setAlertText("JSON file loaded!");
-          setAlertColor("primary");
+          setDataRows(parsedJson?.dataRows || []);
+          setAlertStatus("JSON file loaded!", true, true);
         } catch (error) {
-          setAlertVisibility(true);
-          setAlertText("Invalid file type!");
-          setAlertColor("danger");
+          setAlertStatus("Invalid file type!", false, true);
         }
       };
       reader.readAsText(files[0]);
 
       //files[0].name
     } else {
-      setAlertVisibility(true);
-      setAlertText("Invalid file type!");
-      setAlertColor("danger");
+      setAlertStatus("Invalid file type!", false, true);
     }
   };
 
@@ -68,26 +74,13 @@ function App() {
   };
 
   const handleDownload = () => {
-    console.log("Download");
     const dataToExport = {
       titleLesson: titleLesson,
+      dataRows: dataRows,
     };
-    const jsonString = JSON.stringify(dataToExport, null, 2);
 
-    const blob = new Blob([jsonString], { type: "application/json" });
-
-    const url = URL.createObjectURL(blob);
-
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "data.json"; // Set the file name
-
-    document.body.appendChild(link);
-    link.click();
-
-    // Clean up
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    downloadData(dataToExport);
+    setAlertStatus("JSON file Downloaded", true, true);
   };
 
   const [jsonData, setJsonData] = useState(null);
@@ -108,19 +101,18 @@ function App() {
         handleFileChange={handleFileChange}
         handleDownload={handleDownload}
       ></NavMenu>
-
+      {alertVisible && <Alert text={alertText} color={alertColor}></Alert>}
       <div className="row" style={{ marginBottom: "25px" }}>
         <div className="col-3">
           <div className={"card bg-light mb-4 me-1 div-" + curLang + "gen"}>
             <div className="card-header text-center">Design</div>
             <div className="card-body">
-              {alertVisible && (
-                <Alert text={alertText} color={alertColor}></Alert>
-              )}
               <TitleInput
                 value={titleLesson}
                 onTitleChange={handleTitle}
               ></TitleInput>
+
+              <RowsDesign initialDataRows={dataRows}></RowsDesign>
             </div>
           </div>
         </div>
@@ -129,7 +121,7 @@ function App() {
             <div className="card-header text-center">Preview</div>
             <div className="card-body">
               <p className="text-center fontup2">
-                {curLang === "telugu"
+                {curLang === BmkLanguages.telugu
                   ? ett.getStringInTelugu(titleLesson)
                   : ett.getStringInSanskrit(titleLesson)}
               </p>
