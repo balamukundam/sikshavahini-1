@@ -4,6 +4,17 @@ export class EngToTelService {
 
   private curLang:number = 0;
 
+
+  getStringInUserLanguage(slang:string, str1: string): string {
+    const langMap: Record<string, (s: string) => string> = {
+      transcription: this.getStringInTranscript.bind(this),
+      devanagari: this.getStringInSanskrit.bind(this)
+    };
+  
+    return (langMap[slang.toLowerCase()] || this.getStringInTelugu.bind(this))(str1);
+  }
+
+
   getStringInTranscript(str1:string):string {
 
     let str2: string = str1;
