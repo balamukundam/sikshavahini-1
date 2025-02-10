@@ -23,7 +23,7 @@ const EditParaComponent: React.FC<Props> = ({
     onDataUpdate(rowIndex, compIndex, paraComponentData);
   };
   const handleParaChange = (value: string) => {
-    paraComponentData.lines = value.split("\n \n");
+    paraComponentData.lines = value.split("\n");
     onDataUpdate(rowIndex, compIndex, paraComponentData);
   };
   const handleImageChange = (value: string) => {
@@ -100,7 +100,7 @@ const EditParaComponent: React.FC<Props> = ({
         style={{ width: "100%" }}
         onChange={(e) => handleParaChange(e.target.value)}
       >
-        {paraComponentData.lines.join("\n \n")}
+        {paraComponentData.lines.join("\n")}
       </textarea>
     </>
   );

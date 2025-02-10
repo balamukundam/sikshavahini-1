@@ -24,6 +24,7 @@ export const BmkLanguages = {
     floatDirection: string;
     lines: string[];
   }
+
   
   // Define a union type for all components
   export type ComponentType = ComponentImage | ComponentPara;

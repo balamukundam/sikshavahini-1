@@ -9,6 +9,8 @@ import {
   BmkLanguages,
   DataRow,
   ComponentType,
+  ComponentImage,
+  ComponentPara,
 } from "./services/dataTypes";
 import { downloadData } from "./services/downloadUtils";
 import React from "react";
@@ -18,6 +20,7 @@ import RowsDesign from "./components/RowsDesign";
 import RowPreview from "./components/RowPreview";
 import RowInput from "./components/RowInput";
 import PreviewParaComponent from "./components/PreviewParaComponent";
+import Button from "./components/Button";
 
 function App() {
   let items1 = ["Level-1", "Level-2", "Level-3"];
@@ -29,19 +32,7 @@ function App() {
 
   const [titleLesson, setTitleLesson] = useState("");
   const [subTitleLesson, setSubTitleLesson] = useState("");
-  const [dataRows, setDataRows] = useState<DataRow[]>([
-    {
-      components: [
-        {
-          width: "3",
-          cType: "1",
-          image:
-            "https://www.boloji.com/articlephotos/Introduction%20to%20Ramayana1.jpg",
-          title: "daSarathuDu",
-        },
-      ],
-    },
-  ]);
+  const [dataRows, setDataRows] = useState<DataRow[]>([]);
 
   const handleLanguageSelectItem = (item: string) => {
     item === "Sanskrit"
@@ -196,6 +187,125 @@ function App() {
     );
   }
 
+  function getNewImageCompObject(): ComponentImage {
+    return {
+      width: "3",
+      cType: "1",
+      image: "./src/static/images/Bpic-2.png",
+      title: "bAlamukuMdamu",
+    };
+  }
+  function getNewParaCompObject(cType: string): ComponentPara {
+    return {
+      image: "./src/static/images/Bpic-2.png",
+      width: "12",
+      cType: cType,
+      floatDirection: "left",
+      imageWidth: "30%",
+      lines: [
+        "ayOdhyaa nagaraaniki mahArAju daSarathuDu.",
+        "okarOju daSarathuDu vETa koraku aDaviki veLLenu.",
+        "aMtalO rAtri ayiMdi. caMdruDu AkASaMlO prakASistunnADu.",
+      ],
+      title: "",
+    };
+  }
+
+  function getComponent(newComponentType: string): ComponentType {
+    switch (newComponentType) {
+      case "Image component":
+        return getNewImageCompObject();
+      case "Para component":
+        return getNewParaCompObject("2");
+      case "Numbered comp":
+        return getNewParaCompObject("3");
+      case "Bullet comp":
+        return getNewParaCompObject("4");
+      default:
+        return getNewImageCompObject();
+    }
+  }
+
+  function addComponent(rowIndex: number, newComponentType: string) {
+    setDataRows((prevRows) =>
+      prevRows.map((row, rIdx) =>
+        rIdx === rowIndex
+          ? {
+              ...row,
+              components: [...row.components, getComponent(newComponentType)],
+            }
+          : row
+      )
+    );
+  }
+
+  function insertComponent(
+    rowIndex: number,
+    compIndex: number,
+    newComponentType: string
+  ) {
+    setDataRows((prevRows) =>
+      prevRows.map((row, rIdx) =>
+        rIdx === rowIndex
+          ? {
+              ...row,
+              components: [
+                ...row.components.slice(0, compIndex), // Keep components before 'compIndex'
+                getComponent(newComponentType), // Insert new component
+                ...row.components.slice(compIndex), // Keep components after 'compIndex'
+              ],
+            }
+          : row
+      )
+    );
+  }
+
+  function deleteComponent(rowIndex: number, compIndex: number) {
+    setDataRows((prevRows) =>
+      prevRows.map((row, rIdx) =>
+        rIdx === rowIndex
+          ? {
+              ...row,
+              components: row.components.filter(
+                (_, cIdx) => cIdx !== compIndex - 1
+              ),
+            }
+          : row
+      )
+    );
+  }
+
+  function moveComponent(rowIndex: number, compIndex: number) {
+    setDataRows((prevRows) =>
+      prevRows.map((row, rIdx) => {
+        if (rIdx !== rowIndex || compIndex === 0) return row; // Ignore if first component
+
+        const updatedComponents = [...row.components];
+
+        // Swap components at compIndex and compIndex - 1
+        [updatedComponents[compIndex - 2], updatedComponents[compIndex - 1]] = [
+          updatedComponents[compIndex - 1],
+          updatedComponents[compIndex - 2],
+        ];
+
+        return { ...row, components: updatedComponents };
+      })
+    );
+  }
+
+  function addRow() {
+    setDataRows((prevRows) => [
+      ...prevRows,
+      {
+        components: [],
+      },
+    ]);
+  }
+
+  function deleteRow(rowIndex: number) {
+    setDataRows((prevRows) => prevRows.filter((_, rIdx) => rIdx !== rowIndex));
+  }
+
   return (
     <div
       className="container-fluid"
@@ -237,32 +347,23 @@ function App() {
           <RowsDesign
             initialDataRows={dataRows}
             onDataUpdate={updateComponent}
+            addComponent={addComponent}
+            insertComponent={insertComponent}
+            moveComponent={moveComponent}
+            deleteComponent={deleteComponent}
+            deleteRow={deleteRow}
             curLang={curLang}
           ></RowsDesign>
+          <div className="row" style={{ marginBottom: "25px" }}>
+            <div className="col-1">
+              <Button color="primary" onClick={addRow}>
+                Add Row
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
 
-      <input
-        type="text"
-        className="form-control"
-        placeholder="Title"
-        aria-label="Title"
-        aria-describedby="subtitle-input"
-        id="inputField"
-        value={dataRows[0]["components"][0]["title"]}
-        onChange={(e) => handleInputChange(0, 0, "title", e.target.value)}
-      />
-
-      <input
-        type="text"
-        className="form-control"
-        placeholder="Title"
-        aria-label="Title"
-        aria-describedby="subtitle-input"
-        id="inputField"
-        value={dataRows[0]["components"][0]["width"]}
-        onChange={(e) => handleInputChange(0, 0, "width", e.target.value)}
-      />
       {/* 
       <div className="row" style={{ marginBottom: "25px" }}>
         <div className="col-3">

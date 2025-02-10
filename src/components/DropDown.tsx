@@ -17,7 +17,7 @@ const DropDown = ({ items, heading, onSelectItem }: Props) => {
           data-bs-toggle="dropdown"
           aria-expanded="false"
         >
-          {heading}
+          {selectedIndex < 0 ? heading : items[selectedIndex]}
         </button>
 
         <ul className="dropdown-menu">

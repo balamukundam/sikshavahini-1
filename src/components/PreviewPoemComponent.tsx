@@ -14,6 +14,12 @@ const PreviewPoemComponent = ({ poemComp, curLang }: Props) => {
     textAlign: "left",
   };
 
+  let bLine = false;
+  const getLineSuffix = () => {
+    bLine = !bLine;
+    return bLine ? poemComp["OddLineSuffix"] : poemComp["EvenLineSuffix"];
+  };
+
   return (
     <>
       {!!poemComp["title"] && (
@@ -22,29 +28,27 @@ const PreviewPoemComponent = ({ poemComp, curLang }: Props) => {
         </p>
       )}
 
-      {poemComp["poems"].map((poem: any, index: number) => (
-        <div className="row" style={{ marginBottom: "25px" }}>
-          <div className="col-2">
-            <p>{ett.getStringInUserLanguage(curLang, poem["tag"])}</p>
-          </div>
+      <div className="row" style={{ marginBottom: "25px" }}>
+        <div className="col-2">
+          <p>{ett.getStringInUserLanguage(curLang, poemComp["tag"])}</p>
+        </div>
 
-          <div className="col-10">
-            <div className="row" style={{ marginBottom: "25px" }}>
-              {poem["lines"].map((line: any) => (
-                <>
-                  <div className="col-8">
-                    <p>{ett.getStringInUserLanguage(curLang, line["line"])}</p>
-                  </div>
+        <div className="col-10">
+          <div className="row" style={{ marginBottom: "25px" }}>
+            {poemComp["lines"].map((line: any) => (
+              <>
+                <div className="col-8">
+                  <p>{ett.getStringInUserLanguage(curLang, line)}</p>
+                </div>
 
-                  <div className="col-4">
-                    <p>{ett.getStringInUserLanguage(curLang, line["suf"])}</p>
-                  </div>
-                </>
-              ))}
-            </div>
+                <div className="col-4">
+                  <p>{ett.getStringInUserLanguage(curLang, getLineSuffix())}</p>
+                </div>
+              </>
+            ))}
           </div>
         </div>
-      ))}
+      </div>
     </>
   );
 };

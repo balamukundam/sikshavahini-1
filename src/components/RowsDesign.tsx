@@ -18,12 +18,26 @@ interface Props {
     compIndex: number,
     updatedComponent: ComponentType
   ) => void;
+  deleteRow: (rowIndex: number) => void;
+  addComponent: (rowIndex: number, newComponentType: string) => void;
+  insertComponent: (
+    rowIndex: number,
+    compIndex: number,
+    newComponentType: string
+  ) => void;
+  moveComponent: (rowIndex: number, compIndex: number) => void;
+  deleteComponent: (rowIndex: number, compIndex: number) => void;
 }
 
 const RowsDesign: React.FC<Props> = ({
   initialDataRows,
   curLang,
   onDataUpdate,
+  deleteRow,
+  addComponent,
+  insertComponent,
+  moveComponent,
+  deleteComponent,
 }) => {
   // Initialize state with the dataRows
   // const [dataRows, setDataRows] = useState<any[]>(initialDataRows);
@@ -37,7 +51,13 @@ const RowsDesign: React.FC<Props> = ({
             <RowInput
               rowData={item}
               rowIndex={index}
+              rowsCount={initialDataRows.length}
               onDataUpdate={onDataUpdate}
+              deleteRow={deleteRow}
+              addComponent={addComponent}
+              insertComponent={insertComponent}
+              moveComponent={moveComponent}
+              deleteComponent={deleteComponent}
             ></RowInput>
           </div>
 
