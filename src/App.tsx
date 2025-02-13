@@ -21,6 +21,7 @@ import RowPreview from "./components/RowPreview";
 import RowInput from "./components/RowInput";
 import PreviewParaComponent from "./components/PreviewParaComponent";
 import Button from "./components/Button";
+import logotelugu from "/dist/images/Bpic-2.png";
 
 function App() {
   let items1 = ["Level-1", "Level-2", "Level-3"];
@@ -191,13 +192,13 @@ function App() {
     return {
       width: "3",
       cType: "1",
-      image: "./src/static/images/Bpic-2.png",
+      image: logotelugu,
       title: "bAlamukuMdamu",
     };
   }
   function getNewParaCompObject(cType: string): ComponentPara {
     return {
-      image: "./src/static/images/Bpic-2.png",
+      image: logotelugu,
       width: "12",
       cType: cType,
       floatDirection: "left",

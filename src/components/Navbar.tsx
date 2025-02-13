@@ -1,5 +1,8 @@
 import React from "react";
 import { BmkLanguage, BmkLanguages } from "../services/dataTypes";
+import logokids from "/dist/images/BalamukundamKids.png";
+import logotelugu from "/dist/images/Bpic-2.png";
+import logosanskrit from "/dist/images/Bpic-san.png";
 
 interface Props {
   lang: BmkLanguage;
@@ -17,14 +20,14 @@ const languageHeaderData: Record<
   telugu: {
     titleName: "బాల ముకుందము",
     subTitleName: "శిక్షావాహిని",
-    leftImage: "Bpic-2.png",
-    rightImage: "BalamukundamKids.png",
+    leftImage: logotelugu,
+    rightImage: logokids,
   },
   devanagari: {
     titleName: "बालमुकुन्दम्‌",
     subTitleName: "शिक्षावाहिनी",
-    leftImage: "Bpic-san.png",
-    rightImage: "BalamukundamKids.png",
+    leftImage: logosanskrit,
+    rightImage: logokids,
   },
 };
 
@@ -41,10 +44,7 @@ const Navbar = (props: Props) => {
             data-testid="webpage-left-image"
             alt="Alps"
             style={{ width: "150px", height: "auto" }}
-            src={
-              "./src/static/images/" +
-              getLanguageHeaderData(props.lang).leftImage
-            }
+            src={getLanguageHeaderData(props.lang).leftImage}
           />
         </div>
 
@@ -73,10 +73,7 @@ const Navbar = (props: Props) => {
             data-testid="webpage-right-image"
             alt="Alps"
             style={{ width: "auto", height: "150px", float: "right" }}
-            src={
-              "./src/static/images/" +
-              getLanguageHeaderData(props.lang).rightImage
-            }
+            src={getLanguageHeaderData(props.lang).rightImage}
           />
         </div>
       </div>
