@@ -21,7 +21,7 @@ import RowPreview from "./components/RowPreview";
 import RowInput from "./components/RowInput";
 import PreviewParaComponent from "./components/PreviewParaComponent";
 import Button from "./components/Button";
-import logotelugu from "/dist/images/Bpic-2.png";
+import logotelugu from "/public/images/Bpic-2.png";
 
 function App() {
   let items1 = ["Level-1", "Level-2", "Level-3"];

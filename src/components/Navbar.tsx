@@ -1,8 +1,8 @@
 import React from "react";
 import { BmkLanguage, BmkLanguages } from "../services/dataTypes";
-import logokids from "/dist/images/BalamukundamKids.png";
-import logotelugu from "/dist/images/Bpic-2.png";
-import logosanskrit from "/dist/images/Bpic-san.png";
+import logokids from "/public/images/BalamukundamKids.png";
+import logotelugu from "/public/images/Bpic-2.png";
+import logosanskrit from "/public/images/Bpic-san.png";
 
 interface Props {
   lang: BmkLanguage;
