@@ -14,9 +14,7 @@ const DropDown = ({
   onSelectItem,
 }: Props) => {
   const [selectedIndex, setSelectedIndex] = useState(-1);
-  preselectedIndex = preselectedIndex;
-  console.log("preselectedIndex:", preselectedIndex);
-  console.log("selectedIndex:", selectedIndex);
+  // preselectedIndex = preselectedIndex;
 
   return (
     <>
@@ -35,11 +33,11 @@ const DropDown = ({
         </button>
 
         <ul className="dropdown-menu">
-          {items.map((item, index) => (
+          {/* {items.map((item, index) => (
             <li>
               <a
                 className="dropdown-item"
-                key={item}
+                key={index}
                 onClick={() => {
                   preselectedIndex = index;
                   setSelectedIndex(index);
@@ -49,7 +47,7 @@ const DropDown = ({
                 {item}
               </a>
             </li>
-          ))}
+          ))} */}
         </ul>
       </div>
     </>
