@@ -33,7 +33,7 @@ const DropDown = ({
         </button>
 
         <ul className="dropdown-menu">
-          {/* {items.map((item, index) => (
+          {items.map((item, index) => (
             <li>
               <a
                 className="dropdown-item"
@@ -47,7 +47,7 @@ const DropDown = ({
                 {item}
               </a>
             </li>
-          ))} */}
+          ))}
         </ul>
       </div>
     </>
