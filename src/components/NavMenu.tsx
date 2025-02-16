@@ -58,16 +58,39 @@ const NavMenu = ({
               ></DropDown>
             </li>
 
-            <li className="nav-item" style={{ paddingLeft: "10px" }}>
-              <JsonFilePicker
-                handleFileChange={handleFileChange}
-              ></JsonFilePicker>
+            <li className="nav-item dropdown" style={{ paddingLeft: "10px" }}>
+              <div className="dropdown">
+                <button
+                  className="btn btn-secondary dropdown-toggle"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Data
+                </button>
+
+                <ul className="dropdown-menu">
+                  <li className="nav-item">
+                    <a className="dropdown-item">
+                      <label htmlFor="filePicker">Load JSON File</label>
+                      <input
+                        className="form-control d-none"
+                        type="file"
+                        id="filePicker"
+                        accept=".json"
+                        onChange={handleFileChange}
+                      />
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a className="dropdown-item" onClick={handleDownload}>
+                      Download
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </li>
-            <li className="nav-item" style={{ paddingLeft: "10px" }}>
-              <label className="btn btn-secondary" onClick={handleDownload}>
-                Download
-              </label>
-            </li>
+
             <li className="nav-item" style={{ paddingLeft: "10px" }}>
               <label
                 className={

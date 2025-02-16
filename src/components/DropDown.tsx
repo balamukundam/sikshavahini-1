@@ -34,10 +34,9 @@ const DropDown = ({
 
         <ul className="dropdown-menu">
           {items.map((item, index) => (
-            <li>
+            <li key={index}>
               <a
                 className="dropdown-item"
-                key={index}
                 onClick={() => {
                   preselectedIndex = index;
                   setSelectedIndex(index);

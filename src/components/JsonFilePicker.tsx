@@ -7,9 +7,7 @@ interface Props {
 const JsonFilePicker = ({ handleFileChange }: Props) => {
   return (
     <>
-      <label htmlFor="filePicker" className="btn btn-secondary">
-        Load JSON File
-      </label>
+      <label htmlFor="filePicker">Load JSON File</label>
       <input
         className="form-control d-none"
         type="file"

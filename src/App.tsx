@@ -22,7 +22,7 @@ import RowPreview from "./components/RowPreview";
 import RowInput from "./components/RowInput";
 import PreviewParaComponent from "./components/PreviewParaComponent";
 import Button from "./components/Button";
-import logotelugu from "/public/images/Bpic-2.png";
+import logotelugu from "/images/Bpic-2.png";
 import HelpPage from "./components/HelpPage";
 
 function App() {
