@@ -4,6 +4,38 @@ export class EngToTelService {
 
   private curLang:number = 0;
 
+  getStringInLekhini(str1:string):string {
+    let str2: string = str1.toLowerCase();
+
+    str2=this.replaceAll(str2, 'ā', 'A');		
+    str2=this.replaceAll(str2, 'ī', 'I');	
+    str2=this.replaceAll(str2, 'ū', 'U');		
+    str2=this.replaceAll(str2, 'r̥', 'R');
+    str2=this.replaceAll(str2, 'r̥̄', 'F');	
+    str2=this.replaceAll(str2, 'l̥', 'z');	
+    str2=this.replaceAll(str2, 'l̥̄', 'Z');	
+    str2=this.replaceAll(str2, 'ē', 'E');	
+    str2=this.replaceAll(str2, 'ō', 'O');	
+    str2=this.replaceAll(str2, 'ṁ', 'M');
+    str2=this.replaceAll(str2, 'ṃ', 'M');    
+    str2=this.replaceAll(str2, 'ḥ', '@h');	
+    str2=this.replaceAll(str2, 'ṅ', '~m');	
+    str2=this.replaceAll(str2, 'ch', 'C');
+    str2=this.replaceAll(str2, 'jh', 'J');		
+    str2=this.replaceAll(str2, 'ñ', '~n');	
+    str2=this.replaceAll(str2, 'ṭ', 'T');	
+    str2=this.replaceAll(str2, 'ṭh', 'Th');	
+    str2=this.replaceAll(str2, 'D', 'D');		
+    str2=this.replaceAll(str2, 'Ð', 'Dh');
+    str2=this.replaceAll(str2, 'ṇ', 'N', );
+    str2=this.replaceAll(str2, 'ś', 'S', );		
+    str2=this.replaceAll(str2, 'ṣ', 'sh', );	
+    str2=this.replaceAll(str2, 'ḷ', 'lh', );	
+    str2=this.replaceAll(str2, 'ṟ', '~r', );
+
+    return str2;
+  }
+
 
   getStringInUserLanguage(slang:string, str1: string): string {
     const langMap: Record<string, (s: string) => string> = {

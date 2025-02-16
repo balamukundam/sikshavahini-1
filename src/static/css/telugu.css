@@ -111,6 +111,9 @@
     src: url(https://fonts.gstatic.com/s/notosans/v12/o-0IIpQlx3QUlC5A4PNr5DRAW_0.woff2) format("woff2");
     unicode-range: u+0900-097f,u+1cd0-1cf6,u+1cf8-1cf9,u+200c-200d,u+20a8,u+20b9,u+25cc,u+a830-a839,u+a8e0-a8fb
 }
+  .fontup1w {
+    font-size: 1vw; /* default font size */
+  }
 
  .fontup {
     font-size: 2vw; /* default font size */
@@ -319,4 +322,22 @@
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   z-index: 1000; /* Makes sure it's above the overlay */
+}
+
+
+/* HelpBoard.css */
+.help-board { 
+    border-spacing: 0; 
+    border-collapse: collapse; 
+    text-align: center; 
+    white-space: nowrap;
+} 
+.help-board td { 
+    border: 1px solid; 
+    width: 4em; 
+    position: relative;
+}
+.help-board tr { 
+    border: 1px solid; 
+    height: 2em;  
 }
