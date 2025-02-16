@@ -36,7 +36,7 @@ const HelpPage = () => {
         if (outLang == "english") {
           outLangCopy = "kolkata";
         }
-        let result = window.Sanscript.t(inputText, inLang, outLangCopy);
+        let result = window.Sanscript.t(inputText, inLangCopy, outLangCopy);
         if (outLang == "english") {
           result = ett.getStringInLekhini(result);
           result = result
