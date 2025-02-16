@@ -6,6 +6,7 @@ import PreviewParaComponent from "./PreviewParaComponent";
 import PreviewImageComponent from "./PreviewImageComponent";
 import PreviewTableComponent from "./PreviewTableComponent";
 import PreviewPoemComponent from "./PreviewPoemComponent";
+import PreviewSeparatorComponent from "./PreviewSeparatorComponent";
 
 interface Props {
   dataRow: any; // Initial data passed to the component
@@ -14,13 +15,24 @@ interface Props {
 
 const RowPreview: React.FC<Props> = ({ dataRow, curLang }) => {
   // Initialize state with the dataRows
+  if (dataRow["preferences"]["language"] !== "Default") {
+    curLang = dataRow["preferences"]["language"];
+  }
 
   let ett: EngToTelService = new EngToTelService();
 
   // Function to add data to the rows
 
   return (
-    <div className={"col-11 div-" + curLang + "gen fontup"}>
+    <div className={"div-" + curLang + "gen fontup"}>
+      {dataRow["preferences"]["title"] !== "" && (
+        <p className="text-center fontup">
+          {ett.getStringInUserLanguage(
+            curLang,
+            dataRow["preferences"]["title"]
+          )}
+        </p>
+      )}
       <div className="row" style={{ marginBottom: "25px" }}>
         {dataRow["components"].map((item: any, index: number) => (
           <div className={"col-" + item["width"]}>
@@ -80,8 +92,17 @@ const RowPreview: React.FC<Props> = ({ dataRow, curLang }) => {
                 <p>For future</p>
               </>
             )}
+            {item["cType"] === "99" && (
+              <>
+                <PreviewSeparatorComponent
+                  sepComp={item}
+                ></PreviewSeparatorComponent>
+              </>
+            )}
           </div>
         ))}
+
+        {dataRow["preferences"]["endline"] == "solid" && <hr></hr>}
       </div>
     </div>
   );

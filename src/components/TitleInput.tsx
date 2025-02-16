@@ -71,15 +71,14 @@ const TitleInput = ({
                 onChange={handleSubHeaderChange}
               />
             </div>
-
-            <Button color="danger" onClick={closePopup}>
+            <Button color="danger" symbol="X" onClick={closePopup}>
               Close
             </Button>
           </div>
         </div>
       )}
       <div>
-        <Button color="primary" onClick={openPopup}>
+        <Button color="primary" symbol="🏷️" onClick={openPopup}>
           Edit Title
         </Button>
       </div>

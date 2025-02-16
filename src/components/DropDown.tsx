@@ -3,11 +3,21 @@ import { useState } from "react";
 interface Props {
   items: string[];
   heading: string;
+  preselectedIndex: number;
   onSelectItem: (item: string) => void;
 }
 
-const DropDown = ({ items, heading, onSelectItem }: Props) => {
+const DropDown = ({
+  items,
+  heading,
+  preselectedIndex,
+  onSelectItem,
+}: Props) => {
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  preselectedIndex = preselectedIndex;
+  console.log("preselectedIndex:", preselectedIndex);
+  console.log("selectedIndex:", selectedIndex);
+
   return (
     <>
       <div className="dropdown">
@@ -17,7 +27,11 @@ const DropDown = ({ items, heading, onSelectItem }: Props) => {
           data-bs-toggle="dropdown"
           aria-expanded="false"
         >
-          {selectedIndex < 0 ? heading : items[selectedIndex]}
+          {preselectedIndex < 0 && selectedIndex < 0
+            ? heading
+            : preselectedIndex >= 0
+            ? items[preselectedIndex]
+            : items[selectedIndex]}
         </button>
 
         <ul className="dropdown-menu">
@@ -27,6 +41,7 @@ const DropDown = ({ items, heading, onSelectItem }: Props) => {
                 className="dropdown-item"
                 key={item}
                 onClick={() => {
+                  preselectedIndex = index;
                   setSelectedIndex(index);
                   onSelectItem(item);
                 }}

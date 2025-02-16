@@ -3,6 +3,7 @@ import Button from "./Button";
 import Pagination from "./Pagination";
 import EditParaComponent from "./EditParaComponent";
 import EditImageComponent from "./EditImageComponent";
+import EditSeperatorComponent from "./EditSeperatorComponent";
 import {
   BmkLanguage,
   BmkLanguages,
@@ -10,6 +11,7 @@ import {
   ComponentType,
 } from "../services/dataTypes";
 import DropDown from "./DropDown";
+import EditRowPreferences from "./EditRowPreferences";
 
 interface Props {
   rowData: any;
@@ -29,6 +31,8 @@ interface Props {
   ) => void;
   moveComponent: (rowIndex: number, compIndex: number) => void;
   deleteComponent: (rowIndex: number, compIndex: number) => void;
+  moveRow: (rowIndex: number) => void;
+  preferencesUpdate: (rowIndex: number, updatedPreferences: any) => void;
 }
 
 const RowInput: React.FC<Props> = ({
@@ -41,6 +45,8 @@ const RowInput: React.FC<Props> = ({
   insertComponent,
   moveComponent,
   deleteComponent,
+  moveRow,
+  preferencesUpdate,
 }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const openPopup = () => {
@@ -54,9 +60,14 @@ const RowInput: React.FC<Props> = ({
   };
 
   const onDeleteRow = () => {
-    setIsPopupOpen(false);
-    setNewComponentType("");
-    deleteRow(rowIndex);
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this row ?"
+    );
+    if (isConfirmed) {
+      setIsPopupOpen(false);
+      setNewComponentType("");
+      deleteRow(rowIndex);
+    }
   };
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -84,31 +95,49 @@ const RowInput: React.FC<Props> = ({
       insertComponent(rowIndex, currentPage - 1, newComponentType);
     }
     setNewComponentType("");
-    setCurrentPage(1);
   };
   const onInsertComponentRight = () => {
     if (newComponentType != "") {
       insertComponent(rowIndex, currentPage, newComponentType);
     }
     setNewComponentType("");
-    setCurrentPage(1);
+    setCurrentPage(currentPage + 1);
   };
 
   const onMoveComponentLeft = () => {
     moveComponent(rowIndex, currentPage);
-    setCurrentPage(1);
+    setCurrentPage(currentPage - 1);
   };
 
   const onMoveComponentRight = () => {
     moveComponent(rowIndex, currentPage + 1);
-    setCurrentPage(1);
-  };
-  const onDeleteComponent = () => {
-    deleteComponent(rowIndex, currentPage);
-    setCurrentPage(1);
+    setCurrentPage(currentPage + 1);
   };
 
-  let item = rowData["components"][currentPage - 1];
+  const onMoveUpRow = () => {
+    moveRow(rowIndex);
+    closePopup();
+  };
+
+  const onMoveDownRow = () => {
+    moveRow(rowIndex + 1);
+    closePopup();
+  };
+  const onDeleteComponent = () => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this component ?"
+    );
+    if (isConfirmed) {
+      deleteComponent(rowIndex, currentPage);
+      setCurrentPage(1);
+    }
+  };
+
+  const onPreferencesUpdate = (updatedPreferences: any) => {
+    preferencesUpdate(rowIndex, updatedPreferences);
+  };
+
+  let item = currentPage > 0 ? rowData["components"][currentPage - 1] : null;
 
   return (
     <>
@@ -135,17 +164,21 @@ const RowInput: React.FC<Props> = ({
                 >
                   {rowIndex > 0 && (
                     <div>
-                      <Button onClick={onAddComponent}>Move Up</Button>
+                      <Button symbol="📤" onClick={onMoveUpRow}>
+                        Move Up
+                      </Button>
                     </div>
                   )}
                   {rowIndex < rowsCount - 1 && (
                     <div>
-                      <Button onClick={onAddComponent}>Move Down</Button>
+                      <Button symbol="📥" onClick={onMoveDownRow}>
+                        Move Down
+                      </Button>
                     </div>
                   )}
 
-                  <Button color="danger" onClick={closePopup}>
-                    X
+                  <Button symbol="❌" color="danger" onClick={closePopup}>
+                    Close
                   </Button>
                 </div>
               </div>
@@ -168,19 +201,23 @@ const RowInput: React.FC<Props> = ({
                         "Para component",
                         "Numbered comp",
                         "Bullet comp",
+                        "Seperator comp",
                       ]}
                       heading="Choose component"
+                      preselectedIndex={-1}
                       onSelectItem={onComponentSelection}
                     ></DropDown>
 
                     {newComponentType != "" && (
                       <div>
-                        <Button onClick={onAddComponent}>Add Component</Button>
+                        <Button symbol="🧩➕" onClick={onAddComponent}>
+                          Add Component
+                        </Button>
                       </div>
                     )}
 
                     <div>
-                      <Button color="danger" onClick={onDeleteRow}>
+                      <Button symbol="🗑️" color="danger" onClick={onDeleteRow}>
                         Delete Row
                       </Button>
                     </div>
@@ -188,8 +225,21 @@ const RowInput: React.FC<Props> = ({
                 </div>
               </>
             )}
+            {currentPage == 0 && (
+              <div className={"card bg-light mb-4 me-1 "}>
+                <div className="card-header text-center">
+                  Row Preferecnes - Edit
+                </div>
+                <div className="card-body">
+                  <EditRowPreferences
+                    preferences={rowData["preferences"]}
+                    onPreferencesUpdate={onPreferencesUpdate}
+                  ></EditRowPreferences>
+                </div>
+              </div>
+            )}
 
-            {totalPages > 0 && (
+            {totalPages > 0 && currentPage > 0 && (
               <div className={"card bg-light mb-4 me-1 "}>
                 <div className="card-header text-center">
                   Current Component {currentPage}
@@ -234,12 +284,22 @@ const RowInput: React.FC<Props> = ({
                         <p>For future</p>
                       </>
                     )}
+                    {item["cType"] === "99" && (
+                      <>
+                        <EditSeperatorComponent
+                          rowIndex={rowIndex}
+                          compIndex={currentPage - 1}
+                          sepComponentData={item}
+                          onDataUpdate={onDataUpdate}
+                        ></EditSeperatorComponent>
+                      </>
+                    )}
                   </>
                 </div>
               </div>
             )}
             <div style={{ display: "flex", gap: "10px" }}>
-              {totalPages > 0 && (
+              {totalPages > 0 && currentPage > 0 && (
                 <>
                   <DropDown
                     items={[
@@ -247,19 +307,21 @@ const RowInput: React.FC<Props> = ({
                       "Para component",
                       "Numbered comp",
                       "Bullet comp",
+                      "Seperator comp",
                     ]}
                     heading="Choose component"
+                    preselectedIndex={-1}
                     onSelectItem={onComponentSelection}
                   ></DropDown>
                   {newComponentType != "" && (
                     <>
                       <div>
-                        <Button onClick={onInsertComponentLeft}>
+                        <Button symbol="⬅️➕" onClick={onInsertComponentLeft}>
                           Add To Left
                         </Button>
                       </div>
                       <div>
-                        <Button onClick={onInsertComponentRight}>
+                        <Button symbol="➕➡️" onClick={onInsertComponentRight}>
                           Add To Right
                         </Button>
                       </div>
@@ -270,14 +332,14 @@ const RowInput: React.FC<Props> = ({
                     <>
                       {currentPage > 1 && (
                         <div>
-                          <Button onClick={onMoveComponentLeft}>
+                          <Button symbol="↩️" onClick={onMoveComponentLeft}>
                             Move To Left
                           </Button>
                         </div>
                       )}
                       {totalPages > currentPage && (
                         <div>
-                          <Button onClick={onMoveComponentRight}>
+                          <Button symbol="↪️" onClick={onMoveComponentRight}>
                             Move To Right
                           </Button>
                         </div>
@@ -286,7 +348,11 @@ const RowInput: React.FC<Props> = ({
                   )}
 
                   <div>
-                    <Button color="danger" onClick={onDeleteComponent}>
+                    <Button
+                      symbol="🚫"
+                      color="danger"
+                      onClick={onDeleteComponent}
+                    >
                       Delete Component
                     </Button>
                   </div>
@@ -297,7 +363,11 @@ const RowInput: React.FC<Props> = ({
         </div>
       )}
       <div>
-        <Button color="primary" onClick={openPopup}>
+        <Button
+          symbol={rowIndex + 1 + "📝"}
+          color="primary"
+          onClick={openPopup}
+        >
           Edit Row
         </Button>
       </div>

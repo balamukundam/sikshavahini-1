@@ -27,6 +27,8 @@ interface Props {
   ) => void;
   moveComponent: (rowIndex: number, compIndex: number) => void;
   deleteComponent: (rowIndex: number, compIndex: number) => void;
+  moveRow: (rowIndex: number) => void;
+  preferencesUpdate: (rowIndex: number, updatedPreferences: any) => void;
 }
 
 const RowsDesign: React.FC<Props> = ({
@@ -38,6 +40,8 @@ const RowsDesign: React.FC<Props> = ({
   insertComponent,
   moveComponent,
   deleteComponent,
+  moveRow,
+  preferencesUpdate,
 }) => {
   // Initialize state with the dataRows
   // const [dataRows, setDataRows] = useState<any[]>(initialDataRows);
@@ -58,6 +62,8 @@ const RowsDesign: React.FC<Props> = ({
               insertComponent={insertComponent}
               moveComponent={moveComponent}
               deleteComponent={deleteComponent}
+              moveRow={moveRow}
+              preferencesUpdate={preferencesUpdate}
             ></RowInput>
           </div>
 

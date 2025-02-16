@@ -9,6 +9,15 @@ const Pagination = ({ currentPage, totalPages, onPageChange }: Props) => {
   return (
     <nav aria-label="Pagination">
       <ul className="pagination pagination-lg">
+        <li
+          key={-1}
+          className={`page-item ${currentPage === 0 ? "active" : ""}`}
+          aria-current={currentPage === 0 ? "page" : undefined}
+        >
+          <button className="page-link" onClick={() => onPageChange(0)}>
+            Row
+          </button>
+        </li>
         {Array.from({ length: totalPages }, (_, index) => (
           <li
             key={index}

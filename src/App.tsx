@@ -11,6 +11,7 @@ import {
   ComponentType,
   ComponentImage,
   ComponentPara,
+  ComponentSeparator,
 } from "./services/dataTypes";
 import { downloadData } from "./services/downloadUtils";
 import React from "react";
@@ -22,6 +23,7 @@ import RowInput from "./components/RowInput";
 import PreviewParaComponent from "./components/PreviewParaComponent";
 import Button from "./components/Button";
 import logotelugu from "/public/images/Bpic-2.png";
+import HelpPage from "./components/HelpPage";
 
 function App() {
   let items1 = ["Level-1", "Level-2", "Level-3"];
@@ -123,6 +125,7 @@ function App() {
   const [alertVisible, setAlertVisibility] = useState(false);
   const [alertText, setAlertText] = useState("Alert");
   const [alertColor, setAlertColor] = useState("primary");
+  const [selectedScreen, setSelectedScreen] = useState("Design");
 
   const addData1 = () => {
     let dr = { components: [] };
@@ -187,6 +190,13 @@ function App() {
       }))
     );
   }
+  function getNewSeperatorCompObject(): ComponentSeparator {
+    return {
+      width: "3",
+      cType: "99",
+      sepType: "curve",
+    };
+  }
 
   function getNewImageCompObject(): ComponentImage {
     return {
@@ -222,6 +232,8 @@ function App() {
         return getNewParaCompObject("3");
       case "Bullet comp":
         return getNewParaCompObject("4");
+      case "Seperator comp":
+        return getNewSeperatorCompObject();
       default:
         return getNewImageCompObject();
     }
@@ -294,10 +306,24 @@ function App() {
     );
   }
 
+  function moveRow(rowIndex: number) {
+    setDataRows((prevRows) => {
+      if (rowIndex <= 0) return prevRows; // Don't do anything if it's the first row
+      const newRows = [...prevRows];
+      // Swap the row at rowIndex with the one before it (rowIndex - 1)
+      [newRows[rowIndex - 1], newRows[rowIndex]] = [
+        newRows[rowIndex],
+        newRows[rowIndex - 1],
+      ];
+      return newRows;
+    });
+  }
+
   function addRow() {
     setDataRows((prevRows) => [
       ...prevRows,
       {
+        preferences: { title: "", language: "Default", endline: "solid" },
         components: [],
       },
     ]);
@@ -305,6 +331,23 @@ function App() {
 
   function deleteRow(rowIndex: number) {
     setDataRows((prevRows) => prevRows.filter((_, rIdx) => rIdx !== rowIndex));
+  }
+
+  function preferencesUpdate(rowIndex: number, updatedPreferences: any) {
+    setDataRows((prevRows) =>
+      prevRows.map((row, rIdx) =>
+        rIdx === rowIndex
+          ? {
+              ...row,
+              preferences: updatedPreferences,
+            }
+          : row
+      )
+    );
+  }
+
+  function onSelectScreen(screen: string) {
+    setSelectedScreen(screen);
   }
 
   return (
@@ -318,54 +361,59 @@ function App() {
         onSelectLanguage={handleLanguageSelectItem}
         handleFileChange={handleFileChange}
         handleDownload={handleDownload}
+        onSelectScreen={onSelectScreen}
       ></NavMenu>
-      {alertVisible && <Alert text={alertText} color={alertColor}></Alert>}
+      {selectedScreen == "Design" && (
+        <>
+          {alertVisible && <Alert text={alertText} color={alertColor}></Alert>}
 
-      <div className={"card bg-light mb-4 me-1"}>
-        <div className="card-header text-center">Design</div>
-        <div className="card-body">
-          <div className="row" style={{ marginBottom: "25px" }}>
-            <div className="col-1">
-              <TitleInput
-                titleText={titleLesson}
-                subTitleText={subTitleLesson}
-                onTitleChange={handleTitle}
-                onSubTitleChange={handleSubTitle}
-              ></TitleInput>
-            </div>
-            <div className={"col-11 div-" + curLang + "gen fontup"}>
-              <p className="text-center fontup2">
-                {getTestInLocalLanguage(titleLesson)}
-              </p>
-              {subTitleLesson !== "" && (
-                <p className="text-center">
-                  {getTestInLocalLanguage(subTitleLesson)}
-                </p>
-              )}
+          <div className={"card bg-light mb-4 me-1"}>
+            <div className="card-header text-center">Design</div>
+            <div className="card-body">
+              <div className="row" style={{ marginBottom: "25px" }}>
+                <div className="col-1">
+                  <TitleInput
+                    titleText={titleLesson}
+                    subTitleText={subTitleLesson}
+                    onTitleChange={handleTitle}
+                    onSubTitleChange={handleSubTitle}
+                  ></TitleInput>
+                </div>
+                <div className={"col-11 div-" + curLang + "gen fontup"}>
+                  <p className="text-center fontup2">
+                    {getTestInLocalLanguage(titleLesson)}
+                  </p>
+                  {subTitleLesson !== "" && (
+                    <p className="text-center">
+                      {getTestInLocalLanguage(subTitleLesson)}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <RowsDesign
+                initialDataRows={dataRows}
+                onDataUpdate={updateComponent}
+                addComponent={addComponent}
+                insertComponent={insertComponent}
+                moveComponent={moveComponent}
+                deleteComponent={deleteComponent}
+                moveRow={moveRow}
+                deleteRow={deleteRow}
+                curLang={curLang}
+                preferencesUpdate={preferencesUpdate}
+              ></RowsDesign>
+              <div className="row" style={{ marginBottom: "25px" }}>
+                <div className="col-1">
+                  <Button color="primary" symbol="➕" onClick={addRow}>
+                    Add Row
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
 
-          <RowsDesign
-            initialDataRows={dataRows}
-            onDataUpdate={updateComponent}
-            addComponent={addComponent}
-            insertComponent={insertComponent}
-            moveComponent={moveComponent}
-            deleteComponent={deleteComponent}
-            deleteRow={deleteRow}
-            curLang={curLang}
-          ></RowsDesign>
-          <div className="row" style={{ marginBottom: "25px" }}>
-            <div className="col-1">
-              <Button color="primary" onClick={addRow}>
-                Add Row
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 
+          {/* 
       <div className="row" style={{ marginBottom: "25px" }}>
         <div className="col-3">
           <div className={"card bg-light mb-4 me-1 div-" + curLang + "gen"}>
@@ -393,7 +441,7 @@ function App() {
         </div>
       </div> */}
 
-      {/* {alertVisible && (
+          {/* {alertVisible && (
         <Alert onClose={() => setAlertVisibility(false)}>
           Hello World{" "}
           <p>
@@ -422,6 +470,27 @@ function App() {
         heading="Names"
         onSelectItem={handleSelectItem}
       /> */}
+        </>
+      )}
+
+      {selectedScreen == "Preview" && (
+        <>
+          <div className={"card bg-light mb-4 me-1"}>
+            <div className="card-header text-center">Preview</div>
+            <div className="card-body"></div>
+          </div>
+        </>
+      )}
+      {selectedScreen == "Help" && (
+        <>
+          <div className={"card bg-light mb-4 me-1"}>
+            <div className="card-header text-center">Help</div>
+            <div className="card-body">
+              <HelpPage></HelpPage>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
