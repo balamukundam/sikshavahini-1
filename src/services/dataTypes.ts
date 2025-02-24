@@ -8,7 +8,8 @@ export const BmkLanguages = {
   export interface BaseComponent {
     width: string;
     cType: string;
-    
+    language: string;
+    border: boolean;    
   }
 
   
@@ -27,12 +28,34 @@ export const BmkLanguages = {
     lines: string[];
   }
 
+  export interface ComponentPoem extends BaseComponent {
+      tag: string;
+      title: string;
+      titlePosn: string;
+      OddLineSuffix: string;
+      EvenLineSuffix: string;
+      EvenLineExtraTab: number;
+      lines: string[];
+      pwidth: number;
+      swidth: number;
+      count: boolean;
+ }
+
+ export interface ComponentTable extends BaseComponent {
+  title: string;
+  tHeader: string;
+  rows: string[];
+  langs: string;
+
+ }
+
+
   export interface ComponentSeparator extends BaseComponent {
     sepType: string;
   }
   
   // Define a union type for all components
-  export type ComponentType = ComponentImage | ComponentPara | ComponentSeparator;
+  export type ComponentType = ComponentImage | ComponentPara | ComponentTable | ComponentPoem | ComponentSeparator;
   
   // DataRow contains an array of any ComponentType
   export interface DataRow {

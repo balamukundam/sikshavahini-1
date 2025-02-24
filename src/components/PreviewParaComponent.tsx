@@ -1,5 +1,6 @@
 import React from "react";
 import { EngToTelService } from "../services/engToTelugu";
+import PToolTip from "./PToolTip";
 
 interface Props {
   paraComp: any;
@@ -28,14 +29,16 @@ const PreviewParaComponent = ({ paraComp, curLang, orderType }: Props) => {
       {orderType === 0 &&
         paraComp["lines"].map((line: any) => (
           <p className="card-text">
-            {ett.getStringInUserLanguage(curLang, line)}
+            <PToolTip textToShow={line} curLang={curLang}></PToolTip>
           </p>
         ))}
 
       {orderType === 1 && (
         <ol style={{ listStyleType: "decimal-leading-zero;" }}>
           {paraComp["lines"].map((line: any) => (
-            <li>{ett.getStringInUserLanguage(curLang, line)}</li>
+            <li>
+              <PToolTip textToShow={line} curLang={curLang}></PToolTip>
+            </li>
           ))}
         </ol>
       )}
@@ -43,7 +46,9 @@ const PreviewParaComponent = ({ paraComp, curLang, orderType }: Props) => {
       {orderType === 2 && (
         <ul style={{ listStyleType: "decimal-leading-zero;" }}>
           {paraComp["lines"].map((line: any) => (
-            <li>{ett.getStringInUserLanguage(curLang, line)}</li>
+            <li>
+              <PToolTip textToShow={line} curLang={curLang}></PToolTip>
+            </li>
           ))}
         </ul>
       )}

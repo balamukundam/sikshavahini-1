@@ -54,7 +54,7 @@ const EditImageComponent: React.FC<Props> = ({
         <div className="col-3">
           <div className="input-group mb-4">
             <span className="input-group-text" id="width-input">
-              Width
+              W
             </span>
 
             <input

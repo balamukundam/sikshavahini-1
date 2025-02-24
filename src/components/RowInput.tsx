@@ -12,6 +12,7 @@ import {
 } from "../services/dataTypes";
 import DropDown from "./DropDown";
 import EditRowPreferences from "./EditRowPreferences";
+import EditPoemComponent from "./EditPoemComponent";
 
 interface Props {
   rowData: any;
@@ -201,6 +202,8 @@ const RowInput: React.FC<Props> = ({
                         "Para component",
                         "Numbered comp",
                         "Bullet comp",
+                        "Table comp",
+                        "Poem comp",
                         "Seperator comp",
                       ]}
                       heading="Choose component"
@@ -275,7 +278,12 @@ const RowInput: React.FC<Props> = ({
 
                     {item["cType"] === "6" && (
                       <>
-                        <p>Indented Text in development</p>
+                        <EditPoemComponent
+                          rowIndex={rowIndex}
+                          compIndex={currentPage - 1}
+                          poemComponentData={item}
+                          onDataUpdate={onDataUpdate}
+                        ></EditPoemComponent>
                       </>
                     )}
 
@@ -307,6 +315,8 @@ const RowInput: React.FC<Props> = ({
                       "Para component",
                       "Numbered comp",
                       "Bullet comp",
+                      "Table comp",
+                      "Poem comp",
                       "Seperator comp",
                     ]}
                     heading="Choose component"

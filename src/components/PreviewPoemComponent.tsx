@@ -1,5 +1,6 @@
 import React from "react";
 import { EngToTelService } from "../services/engToTelugu";
+import PToolTip from "./PToolTip";
 
 interface Props {
   poemComp: any;
@@ -20,29 +21,54 @@ const PreviewPoemComponent = ({ poemComp, curLang }: Props) => {
     return bLine ? poemComp["OddLineSuffix"] : poemComp["EvenLineSuffix"];
   };
 
+  let bLineSpace = false;
+  const getLineSpace = () => {
+    bLineSpace = !bLineSpace;
+    return bLineSpace ? "0px" : poemComp["EvenLineExtraTab"] + "%";
+  };
+
   return (
     <>
       {!!poemComp["title"] && (
-        <p className="text-center">
-          {ett.getStringInUserLanguage(curLang, poemComp["title"])}
-        </p>
+        <div className="row">
+          <div className={"col-" + poemComp["pwidth"]}></div>
+          <div className={"col-" + (12 - poemComp["swidth"])}>
+            <p className={"text-" + poemComp["titlePosn"]}>
+              <PToolTip
+                textToShow={poemComp["title"]}
+                curLang={curLang}
+              ></PToolTip>
+            </p>
+          </div>
+        </div>
       )}
 
       <div className="row" style={{ marginBottom: "25px" }}>
-        <div className="col-2">
-          <p>{ett.getStringInUserLanguage(curLang, poemComp["tag"])}</p>
+        <div className={"col-" + poemComp["pwidth"]}>
+          <p>
+            <PToolTip textToShow={poemComp["tag"]} curLang={curLang}></PToolTip>
+          </p>
         </div>
 
-        <div className="col-10">
+        <div className={"col-" + (12 - poemComp["pwidth"])}>
           <div className="row" style={{ marginBottom: "25px" }}>
             {poemComp["lines"].map((line: any) => (
               <>
-                <div className="col-8">
-                  <p>{ett.getStringInUserLanguage(curLang, line)}</p>
+                <div className={"col-" + (12 - poemComp["swidth"])}>
+                  <>
+                    <p style={{ marginLeft: getLineSpace() }}>
+                      <PToolTip textToShow={line} curLang={curLang}></PToolTip>
+                    </p>
+                  </>
                 </div>
 
-                <div className="col-4">
-                  <p>{ett.getStringInUserLanguage(curLang, getLineSuffix())}</p>
+                <div className={"col-" + poemComp["swidth"]}>
+                  <p>
+                    <PToolTip
+                      textToShow={getLineSuffix()}
+                      curLang={curLang}
+                    ></PToolTip>
+                  </p>
                 </div>
               </>
             ))}

@@ -1,5 +1,6 @@
 import React from "react";
 import { EngToTelService } from "../services/engToTelugu";
+import PToolTip from "./PToolTip";
 
 interface Props {
   imageComp: any;
@@ -20,9 +21,14 @@ const PreviewImageComponent = ({ imageComp, curLang }: Props) => {
         }}
       />
       {imageComp["title"] !== "" && (
-        <p className="text-center">
-          {ett.getStringInUserLanguage(curLang, imageComp["title"])}
-        </p>
+        <>
+          <p className="text-center">
+            <PToolTip
+              textToShow={imageComp["title"]}
+              curLang={curLang}
+            ></PToolTip>
+          </p>
+        </>
       )}
     </div>
   );

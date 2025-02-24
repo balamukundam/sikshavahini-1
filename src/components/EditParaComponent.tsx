@@ -34,6 +34,10 @@ const EditParaComponent: React.FC<Props> = ({
     paraComponentData.width = value;
     onDataUpdate(rowIndex, compIndex, paraComponentData);
   };
+  const handleImageDirection = (value: string) => {
+    paraComponentData.floatDirection = value;
+    onDataUpdate(rowIndex, compIndex, paraComponentData);
+  };
   return (
     <>
       <div className="row">
@@ -88,6 +92,15 @@ const EditParaComponent: React.FC<Props> = ({
           value={paraComponentData.image}
           onChange={(e) => handleImageChange(e.target.value)}
         />
+        <select
+          name="inputSelect"
+          title="Choose your input format."
+          value={paraComponentData.floatDirection}
+          onChange={(e) => handleImageDirection(e.target.value)}
+        >
+          <option value="left">Left</option>
+          <option value="right">Right</option>
+        </select>
       </div>
 
       <textarea

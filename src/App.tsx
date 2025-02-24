@@ -12,6 +12,8 @@ import {
   ComponentImage,
   ComponentPara,
   ComponentSeparator,
+  ComponentPoem,
+  ComponentTable,
 } from "./services/dataTypes";
 import { downloadData } from "./services/downloadUtils";
 import React from "react";
@@ -194,6 +196,8 @@ function App() {
     return {
       width: "3",
       cType: "99",
+      language: "default",
+      border: false,
       sepType: "curve",
     };
   }
@@ -201,6 +205,8 @@ function App() {
   function getNewImageCompObject(): ComponentImage {
     return {
       width: "3",
+      language: "default",
+      border: false,
       cType: "1",
       image: logotelugu,
       title: "bAlamukuMdamu",
@@ -210,6 +216,8 @@ function App() {
     return {
       image: logotelugu,
       width: "12",
+      language: "default",
+      border: false,
       cType: cType,
       floatDirection: "left",
       imageWidth: "30%",
@@ -219,6 +227,46 @@ function App() {
         "aMtalO rAtri ayiMdi. caMdruDu AkASaMlO prakASistunnADu.",
       ],
       title: "",
+    };
+  }
+  function getNewPoemCompObject(): ComponentPoem {
+    return {
+      width: "12",
+      language: "default",
+      border: false,
+      cType: "6",
+      tag: "SlO",
+      OddLineSuffix: "|",
+      EvenLineSuffix: "||",
+      EvenLineExtraTab: 0,
+      lines: [
+        "SuklAMbaradharaM vishNuM SaSivarNaM chaturbhujaM",
+        "prasannavadanaM dhyaayEt Sarva vighnOpaSAMtayE",
+        "agajaananapadmaarkaM gajaananamaharniSaM",
+        "anEkadaMtaM baktaanaaM EkadaMtamupaasmahE",
+      ],
+      title: "gaNESa praarthana",
+      titlePosn: "start",
+      pwidth: 2,
+      swidth: 2,
+      count: true,
+    };
+  }
+
+  function getNewTableCompObject(): ComponentTable {
+    return {
+      langs: "",
+      border: false,
+      width: "12",
+      cType: "5",
+      language: "default",
+      title: "akaaraaMta@h puMliMga@h raama Sabda@h",
+      tHeader: ",Eka vacanamu, dvi vacanamu, bahu vacanamu",
+      rows: [
+        "1,raama@h, raamau, raamaa@h",
+        "1.1, hE raama, hE raamau, hE raamaa@h",
+        "2, raamam, raamau, raamaan",
+      ],
     };
   }
 
@@ -234,6 +282,10 @@ function App() {
         return getNewParaCompObject("4");
       case "Seperator comp":
         return getNewSeperatorCompObject();
+      case "Poem comp":
+        return getNewPoemCompObject();
+      case "Table comp":
+        return getNewTableCompObject();
       default:
         return getNewImageCompObject();
     }
