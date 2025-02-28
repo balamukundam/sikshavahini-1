@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { EngToTelService } from "../services/engToTelugu";
 import PToolTip from "./PToolTip";
 
@@ -16,6 +16,29 @@ const PreviewParaComponent = ({
   updateDisctionary,
 }: Props) => {
   let ett: EngToTelService = new EngToTelService();
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  let utterance = new SpeechSynthesisUtterance(
+    ett.getStringInTelugu(paraComp["lines"].join())
+  );
+  utterance.lang = "te";
+
+  const speakText = () => {
+    if ("speechSynthesis" in window) {
+      speechSynthesis.cancel(); // Stop any ongoing speech
+      speechSynthesis.speak(utterance);
+      setIsSpeaking(true);
+
+      utterance.onend = () => setIsSpeaking(false); // Reset state when finished
+    } else {
+      alert("Your browser does not support text-to-speech.");
+    }
+  };
+
+  const stopSpeech = () => {
+    speechSynthesis.cancel(); // Stop speech
+    setIsSpeaking(false);
+  };
+
   let margin =
     paraComp["floatDirection"] === "left" ? "0 15px 15px 0" : "0 0 15px 15px";
   return (
@@ -70,6 +93,18 @@ const PreviewParaComponent = ({
           ))}
         </ul>
       )}
+
+      <button onClick={speakText} className="btn btn-primary">
+        🔊 Speak
+      </button>
+      <button
+        onClick={stopSpeech}
+        className="btn btn-danger"
+        disabled={!isSpeaking}
+        style={{ marginLeft: "25px" }}
+      >
+        ⛔ Stop
+      </button>
     </div>
   );
 };

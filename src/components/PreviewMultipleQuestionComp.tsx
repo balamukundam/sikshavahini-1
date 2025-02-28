@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useId, useState } from "react";
 import { EngToTelService } from "../services/engToTelugu";
 import PToolTip from "./PToolTip";
 
@@ -30,6 +30,8 @@ const PreviewMultipleQuestionComp = ({
     }
     return shuffled;
   };
+
+  const uniqueRadioName = useId();
 
   // Shuffle only once when component mounts
   useEffect(() => {
@@ -67,7 +69,7 @@ const PreviewMultipleQuestionComp = ({
               <input
                 className="form-check-input"
                 type="radio"
-                name="radioOptions"
+                name={uniqueRadioName}
                 id={`radio${index}`}
                 value={option}
                 checked={selected === option}

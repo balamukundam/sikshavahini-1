@@ -102,6 +102,16 @@ const DictionaryComponent = ({ text, curLang }: Props) => {
     fetchTranslation();
   }, [word]);
 
+  const speakText = () => {
+    if ("speechSynthesis" in window) {
+      const utterance = new SpeechSynthesisUtterance(word);
+      utterance.lang = "te"; // Set language
+      speechSynthesis.speak(utterance);
+    } else {
+      alert("Your browser does not support text-to-speech.");
+    }
+  };
+
   return (
     <div style={styles.fixedBox}>
       <p style={{ textAlign: "center" }}>🕉 Dictionary 🕉</p>
@@ -120,6 +130,10 @@ const DictionaryComponent = ({ text, curLang }: Props) => {
       ))} */}
 
       {/* <MultiSelectList getSelectedLangs={getSelectedLangs}></MultiSelectList> */}
+
+      <button onClick={speakText} className="btn btn-primary">
+        🔊 Read
+      </button>
     </div>
   );
 };
