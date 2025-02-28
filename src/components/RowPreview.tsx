@@ -7,13 +7,19 @@ import PreviewImageComponent from "./PreviewImageComponent";
 import PreviewTableComponent from "./PreviewTableComponent";
 import PreviewPoemComponent from "./PreviewPoemComponent";
 import PreviewSeparatorComponent from "./PreviewSeparatorComponent";
+import PreviewMultipleQuestionComp from "./PreviewMultipleQuestionComp";
 
 interface Props {
   dataRow: any; // Initial data passed to the component
   curLang: string;
+  updateDisctionary: (str: string) => void;
 }
 
-const RowPreview: React.FC<Props> = ({ dataRow, curLang }) => {
+const RowPreview: React.FC<Props> = ({
+  dataRow,
+  curLang,
+  updateDisctionary,
+}) => {
   // Initialize state with the dataRows
   if (dataRow["preferences"]["language"] !== "Default") {
     curLang = dataRow["preferences"]["language"];
@@ -41,6 +47,7 @@ const RowPreview: React.FC<Props> = ({ dataRow, curLang }) => {
                 <PreviewImageComponent
                   imageComp={item}
                   curLang={curLang}
+                  updateDisctionary={updateDisctionary}
                 ></PreviewImageComponent>
               </>
             )}
@@ -49,6 +56,7 @@ const RowPreview: React.FC<Props> = ({ dataRow, curLang }) => {
                 paraComp={item}
                 curLang={curLang}
                 orderType={0}
+                updateDisctionary={updateDisctionary}
               ></PreviewParaComponent>
             )}
             {item["cType"] === "3" && (
@@ -57,6 +65,7 @@ const RowPreview: React.FC<Props> = ({ dataRow, curLang }) => {
                   paraComp={item}
                   curLang={curLang}
                   orderType={1}
+                  updateDisctionary={updateDisctionary}
                 ></PreviewParaComponent>
               </>
             )}
@@ -66,6 +75,7 @@ const RowPreview: React.FC<Props> = ({ dataRow, curLang }) => {
                   paraComp={item}
                   curLang={curLang}
                   orderType={2}
+                  updateDisctionary={updateDisctionary}
                 ></PreviewParaComponent>
               </>
             )}
@@ -74,6 +84,7 @@ const RowPreview: React.FC<Props> = ({ dataRow, curLang }) => {
                 <PreviewTableComponent
                   tableComp={item}
                   curLang={curLang}
+                  updateDisctionary={updateDisctionary}
                 ></PreviewTableComponent>
               </>
             )}
@@ -83,6 +94,7 @@ const RowPreview: React.FC<Props> = ({ dataRow, curLang }) => {
                 <PreviewPoemComponent
                   poemComp={item}
                   curLang={curLang}
+                  updateDisctionary={updateDisctionary}
                 ></PreviewPoemComponent>
               </>
             )}
@@ -90,6 +102,15 @@ const RowPreview: React.FC<Props> = ({ dataRow, curLang }) => {
             {item["cType"] === "7" && (
               <>
                 <p>For future</p>
+              </>
+            )}
+            {item["cType"] === "11" && (
+              <>
+                <PreviewMultipleQuestionComp
+                  multiQuestComp={item}
+                  curLang={curLang}
+                  updateDisctionary={updateDisctionary}
+                ></PreviewMultipleQuestionComp>
               </>
             )}
             {item["cType"] === "99" && (

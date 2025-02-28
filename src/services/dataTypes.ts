@@ -28,6 +28,13 @@ export const BmkLanguages = {
     lines: string[];
   }
 
+  export interface ComponentMultiQuest extends BaseComponent {
+    lines: string[];
+    choices: string[];
+  }
+
+  
+
   export interface ComponentPoem extends BaseComponent {
       tag: string;
       title: string;
@@ -55,7 +62,7 @@ export const BmkLanguages = {
   }
   
   // Define a union type for all components
-  export type ComponentType = ComponentImage | ComponentPara | ComponentTable | ComponentPoem | ComponentSeparator;
+  export type ComponentType = ComponentImage | ComponentPara | ComponentTable | ComponentPoem | ComponentMultiQuest | ComponentSeparator;
   
   // DataRow contains an array of any ComponentType
   export interface DataRow {

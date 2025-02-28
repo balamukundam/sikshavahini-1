@@ -4,9 +4,10 @@ import { EngToTelService } from "../services/engToTelugu";
 interface Props {
   textToShow: string;
   curLang: string;
+  handleClick: (str: string) => void;
 }
 
-const PToolTip = ({ textToShow, curLang }: Props) => {
+const PToolTip = ({ textToShow, curLang, handleClick }: Props) => {
   let ett: EngToTelService = new EngToTelService();
   let bConvert = false;
 
@@ -25,6 +26,7 @@ const PToolTip = ({ textToShow, curLang }: Props) => {
               data-bs-toggle="tooltip"
               data-bs-placement="top"
               title={`${ett.getStringInUserLanguage("transcription", item)}`}
+              onClick={() => handleClick(item)}
             >
               {ett.getStringInUserLanguage(curLang, item) + " "}
             </a>

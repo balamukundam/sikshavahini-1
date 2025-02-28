@@ -13,6 +13,8 @@ import {
 import DropDown from "./DropDown";
 import EditRowPreferences from "./EditRowPreferences";
 import EditPoemComponent from "./EditPoemComponent";
+import EditMultiQuestComponent from "./EditMultiQuestComponent";
+import EditTableComponent from "./EditTableComponent";
 
 interface Props {
   rowData: any;
@@ -204,6 +206,7 @@ const RowInput: React.FC<Props> = ({
                         "Bullet comp",
                         "Table comp",
                         "Poem comp",
+                        "Multiple Choice Question",
                         "Seperator comp",
                       ]}
                       heading="Choose component"
@@ -272,7 +275,12 @@ const RowInput: React.FC<Props> = ({
 
                     {item["cType"] === "5" && (
                       <>
-                        <p>Tables component in development</p>
+                        <EditTableComponent
+                          rowIndex={rowIndex}
+                          compIndex={currentPage - 1}
+                          tableComponentData={item}
+                          onDataUpdate={onDataUpdate}
+                        ></EditTableComponent>
                       </>
                     )}
 
@@ -292,6 +300,16 @@ const RowInput: React.FC<Props> = ({
                         <p>For future</p>
                       </>
                     )}
+
+                    {item["cType"] === "11" && (
+                      <EditMultiQuestComponent
+                        rowIndex={rowIndex}
+                        compIndex={currentPage - 1}
+                        multiQuestComponentData={item}
+                        onDataUpdate={onDataUpdate}
+                      ></EditMultiQuestComponent>
+                    )}
+
                     {item["cType"] === "99" && (
                       <>
                         <EditSeperatorComponent
@@ -317,6 +335,7 @@ const RowInput: React.FC<Props> = ({
                       "Bullet comp",
                       "Table comp",
                       "Poem comp",
+                      "Multiple Choice Question",
                       "Seperator comp",
                     ]}
                     heading="Choose component"

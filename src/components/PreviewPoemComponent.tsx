@@ -5,9 +5,14 @@ import PToolTip from "./PToolTip";
 interface Props {
   poemComp: any;
   curLang: string;
+  updateDisctionary: (str: string) => void;
 }
 
-const PreviewPoemComponent = ({ poemComp, curLang }: Props) => {
+const PreviewPoemComponent = ({
+  poemComp,
+  curLang,
+  updateDisctionary,
+}: Props) => {
   let ett: EngToTelService = new EngToTelService();
   const cellStyle: React.CSSProperties = {
     border: "1px solid black",
@@ -37,6 +42,7 @@ const PreviewPoemComponent = ({ poemComp, curLang }: Props) => {
               <PToolTip
                 textToShow={poemComp["title"]}
                 curLang={curLang}
+                handleClick={updateDisctionary}
               ></PToolTip>
             </p>
           </div>
@@ -46,7 +52,11 @@ const PreviewPoemComponent = ({ poemComp, curLang }: Props) => {
       <div className="row" style={{ marginBottom: "25px" }}>
         <div className={"col-" + poemComp["pwidth"]}>
           <p>
-            <PToolTip textToShow={poemComp["tag"]} curLang={curLang}></PToolTip>
+            <PToolTip
+              textToShow={poemComp["tag"]}
+              curLang={curLang}
+              handleClick={updateDisctionary}
+            ></PToolTip>
           </p>
         </div>
 
@@ -57,7 +67,11 @@ const PreviewPoemComponent = ({ poemComp, curLang }: Props) => {
                 <div className={"col-" + (12 - poemComp["swidth"])}>
                   <>
                     <p style={{ marginLeft: getLineSpace() }}>
-                      <PToolTip textToShow={line} curLang={curLang}></PToolTip>
+                      <PToolTip
+                        textToShow={line}
+                        curLang={curLang}
+                        handleClick={updateDisctionary}
+                      ></PToolTip>
                     </p>
                   </>
                 </div>
@@ -67,6 +81,7 @@ const PreviewPoemComponent = ({ poemComp, curLang }: Props) => {
                     <PToolTip
                       textToShow={getLineSuffix()}
                       curLang={curLang}
+                      handleClick={updateDisctionary}
                     ></PToolTip>
                   </p>
                 </div>

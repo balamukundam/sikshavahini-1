@@ -14,6 +14,7 @@ import {
   ComponentSeparator,
   ComponentPoem,
   ComponentTable,
+  ComponentMultiQuest,
 } from "./services/dataTypes";
 import { downloadData } from "./services/downloadUtils";
 import React from "react";
@@ -26,6 +27,7 @@ import PreviewParaComponent from "./components/PreviewParaComponent";
 import Button from "./components/Button";
 import logotelugu from "/images/Bpic-2.png";
 import HelpPage from "./components/HelpPage";
+import DictionaryComponent from "./components/DictionaryComponent";
 
 function App() {
   let items1 = ["Level-1", "Level-2", "Level-3"];
@@ -68,15 +70,13 @@ function App() {
           const parsedJson = JSON.parse(e.target?.result as string);
           setJsonData(parsedJson);
           setTitleLesson(parsedJson?.titleLesson || "");
+          if (titleLesson !== "") setDictionaryText(titleLesson);
 
           //setDataRows(parsedJson?.dataRows ? [...parsedJson.dataRows] : []);
           setSubTitleLesson(parsedJson?.subTitleLesson || "");
           setDataRows((prevRows) => parsedJson?.dataRows || []);
           //addData(parsedJson?.dataRows[0]);
           //setDataRows(parsedJson?.dataRows);
-
-          console.log("fulljson", parsedJson?.dataRows);
-          console.log("Data read from json", dataRows);
 
           setAlertStatus("JSON file loaded!", true, true);
         } catch (error) {
@@ -93,6 +93,7 @@ function App() {
 
   const handleTitle = (item: string) => {
     setTitleLesson(item);
+    if (item !== "") setDictionaryText(item);
   };
 
   const handleSubTitle = (item: string) => {
@@ -101,10 +102,6 @@ function App() {
 
   const handleRows = (rows: any[]) => {
     setDataRows(rows);
-
-    console.log("rows", rows);
-    console.log("updatig...");
-    console.log("datarows", dataRows);
   };
 
   const getTestInLocalLanguage = (item: string) => {
@@ -128,6 +125,7 @@ function App() {
   const [alertText, setAlertText] = useState("Alert");
   const [alertColor, setAlertColor] = useState("primary");
   const [selectedScreen, setSelectedScreen] = useState("Design");
+  const [dictionaryText, setDictionaryText] = useState("svAgatam");
 
   const addData1 = () => {
     let dr = { components: [] };
@@ -229,6 +227,16 @@ function App() {
       title: "",
     };
   }
+  function getNewMultiQuestCompObject(): ComponentMultiQuest {
+    return {
+      width: "12",
+      language: "default",
+      border: false,
+      cType: "11",
+      lines: ["bhaaratadESamu raajadhaani EmiTi?"],
+      choices: ["DhillI", "haidaraabaadu", "muMbaayi", "ayOdhya"],
+    };
+  }
   function getNewPoemCompObject(): ComponentPoem {
     return {
       width: "12",
@@ -261,7 +269,7 @@ function App() {
       cType: "5",
       language: "default",
       title: "akaaraaMta@h puMliMga@h raama Sabda@h",
-      tHeader: ",Eka vacanamu, dvi vacanamu, bahu vacanamu",
+      tHeader: ",Eka, dvi, bahu",
       rows: [
         "1,raama@h, raamau, raamaa@h",
         "1.1, hE raama, hE raamau, hE raamaa@h",
@@ -286,6 +294,8 @@ function App() {
         return getNewPoemCompObject();
       case "Table comp":
         return getNewTableCompObject();
+      case "Multiple Choice Question":
+        return getNewMultiQuestCompObject();
       default:
         return getNewImageCompObject();
     }
@@ -402,10 +412,14 @@ function App() {
     setSelectedScreen(screen);
   }
 
+  function updateDisctionary(str: string) {
+    setDictionaryText(str);
+  }
+
   return (
     <div
       className="container-fluid"
-      style={{ minWidth: "210mm", width: "90%" }}
+      // style={{ minWidth: "210mm", width: "90%" }}
     >
       <Navbar lang={curLang}></Navbar>
 
@@ -421,46 +435,58 @@ function App() {
 
           <div className={"card bg-light mb-4 me-1"}>
             <div className="card-header text-center">Design</div>
-            <div className="card-body">
-              <div className="row" style={{ marginBottom: "25px" }}>
-                <div className="col-1">
-                  <TitleInput
-                    titleText={titleLesson}
-                    subTitleText={subTitleLesson}
-                    onTitleChange={handleTitle}
-                    onSubTitleChange={handleSubTitle}
-                  ></TitleInput>
-                </div>
-                <div className={"col-11 div-" + curLang + "gen fontup"}>
-                  <p className="text-center fontup2">
-                    {getTestInLocalLanguage(titleLesson)}
-                  </p>
-                  {subTitleLesson !== "" && (
-                    <p className="text-center">
-                      {getTestInLocalLanguage(subTitleLesson)}
-                    </p>
-                  )}
+            <div className="row">
+              <div className="col-9">
+                <div className="card-body">
+                  <div className="row" style={{ marginBottom: "25px" }}>
+                    <div className="col-1">
+                      <TitleInput
+                        titleText={titleLesson}
+                        subTitleText={subTitleLesson}
+                        onTitleChange={handleTitle}
+                        onSubTitleChange={handleSubTitle}
+                      ></TitleInput>
+                    </div>
+                    <div className={"col-11 div-" + curLang + "gen fontup"}>
+                      <p className="text-center fontup2">
+                        {getTestInLocalLanguage(titleLesson)}
+                      </p>
+                      {subTitleLesson !== "" && (
+                        <p className="text-center">
+                          {getTestInLocalLanguage(subTitleLesson)}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <RowsDesign
+                    initialDataRows={dataRows}
+                    onDataUpdate={updateComponent}
+                    addComponent={addComponent}
+                    insertComponent={insertComponent}
+                    moveComponent={moveComponent}
+                    deleteComponent={deleteComponent}
+                    moveRow={moveRow}
+                    deleteRow={deleteRow}
+                    curLang={curLang}
+                    preferencesUpdate={preferencesUpdate}
+                    updateDisctionary={updateDisctionary}
+                  ></RowsDesign>
+                  <div className="row" style={{ marginBottom: "25px" }}>
+                    <div className="col-1">
+                      <Button color="primary" symbol="➕" onClick={addRow}>
+                        Add Row
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <RowsDesign
-                initialDataRows={dataRows}
-                onDataUpdate={updateComponent}
-                addComponent={addComponent}
-                insertComponent={insertComponent}
-                moveComponent={moveComponent}
-                deleteComponent={deleteComponent}
-                moveRow={moveRow}
-                deleteRow={deleteRow}
-                curLang={curLang}
-                preferencesUpdate={preferencesUpdate}
-              ></RowsDesign>
-              <div className="row" style={{ marginBottom: "25px" }}>
-                <div className="col-1">
-                  <Button color="primary" symbol="➕" onClick={addRow}>
-                    Add Row
-                  </Button>
-                </div>
+              <div className="col-2">
+                <DictionaryComponent
+                  text={dictionaryText}
+                  curLang={curLang}
+                ></DictionaryComponent>
               </div>
             </div>
           </div>

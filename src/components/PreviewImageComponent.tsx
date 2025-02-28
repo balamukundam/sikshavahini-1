@@ -5,9 +5,14 @@ import PToolTip from "./PToolTip";
 interface Props {
   imageComp: any;
   curLang: string;
+  updateDisctionary: (str: string) => void;
 }
 
-const PreviewImageComponent = ({ imageComp, curLang }: Props) => {
+const PreviewImageComponent = ({
+  imageComp,
+  curLang,
+  updateDisctionary,
+}: Props) => {
   let ett: EngToTelService = new EngToTelService();
   return (
     <div>
@@ -26,6 +31,7 @@ const PreviewImageComponent = ({ imageComp, curLang }: Props) => {
             <PToolTip
               textToShow={imageComp["title"]}
               curLang={curLang}
+              handleClick={updateDisctionary}
             ></PToolTip>
           </p>
         </>
