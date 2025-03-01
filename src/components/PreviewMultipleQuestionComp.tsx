@@ -74,7 +74,7 @@ const PreviewMultipleQuestionComp = ({
                 className="form-check-input"
                 type="radio"
                 name={uniqueRadioName}
-                id={`radio${index}`}
+                id={`radio${uniqueRadioName}${index}`}
                 value={option}
                 checked={selected === option}
                 onChange={optionChanged}
