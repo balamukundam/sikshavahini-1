@@ -5,7 +5,7 @@ import PToolTip from "./PToolTip";
 interface Props {
   poemComp: any;
   curLang: string;
-  updateDisctionary: (str: string) => void;
+  updateDisctionary: (str: string, sentence: string) => void;
 }
 
 const PreviewPoemComponent = ({
@@ -32,6 +32,10 @@ const PreviewPoemComponent = ({
     return bLineSpace ? "0px" : poemComp["EvenLineExtraTab"] + "%";
   };
 
+  const createDictionary = (str: string) => {
+    updateDisctionary(str, "");
+  };
+
   return (
     <>
       {!!poemComp["title"] && (
@@ -42,7 +46,7 @@ const PreviewPoemComponent = ({
               <PToolTip
                 textToShow={poemComp["title"]}
                 curLang={curLang}
-                handleClick={updateDisctionary}
+                handleClick={createDictionary}
               ></PToolTip>
             </p>
           </div>
@@ -55,7 +59,7 @@ const PreviewPoemComponent = ({
             <PToolTip
               textToShow={poemComp["tag"]}
               curLang={curLang}
-              handleClick={updateDisctionary}
+              handleClick={createDictionary}
             ></PToolTip>
           </p>
         </div>
@@ -70,7 +74,7 @@ const PreviewPoemComponent = ({
                       <PToolTip
                         textToShow={line}
                         curLang={curLang}
-                        handleClick={updateDisctionary}
+                        handleClick={createDictionary}
                       ></PToolTip>
                     </p>
                   </>
@@ -81,7 +85,7 @@ const PreviewPoemComponent = ({
                     <PToolTip
                       textToShow={getLineSuffix()}
                       curLang={curLang}
-                      handleClick={updateDisctionary}
+                      handleClick={createDictionary}
                     ></PToolTip>
                   </p>
                 </div>

@@ -6,7 +6,7 @@ interface Props {
   paraComp: any;
   curLang: string;
   orderType: number; //0 normal, 1 bullet, 2 ordered
-  updateDisctionary: (str: string) => void;
+  updateDisctionary: (str: string, sentence: string) => void;
 }
 
 const PreviewParaComponent = ({
@@ -21,6 +21,7 @@ const PreviewParaComponent = ({
     ett.getStringInTelugu(paraComp["lines"].join())
   );
   utterance.lang = "te";
+  utterance.rate = 0.85;
 
   const speakText = () => {
     if ("speechSynthesis" in window) {
@@ -37,6 +38,10 @@ const PreviewParaComponent = ({
   const stopSpeech = () => {
     speechSynthesis.cancel(); // Stop speech
     setIsSpeaking(false);
+  };
+
+  const createDictionary = (str: string) => {
+    updateDisctionary(str, "");
   };
 
   let margin =
@@ -61,7 +66,7 @@ const PreviewParaComponent = ({
             <PToolTip
               textToShow={line}
               curLang={curLang}
-              handleClick={updateDisctionary}
+              handleClick={createDictionary}
             ></PToolTip>
           </p>
         ))}
@@ -73,7 +78,7 @@ const PreviewParaComponent = ({
               <PToolTip
                 textToShow={line}
                 curLang={curLang}
-                handleClick={updateDisctionary}
+                handleClick={createDictionary}
               ></PToolTip>
             </li>
           ))}
@@ -87,7 +92,7 @@ const PreviewParaComponent = ({
               <PToolTip
                 textToShow={line}
                 curLang={curLang}
-                handleClick={updateDisctionary}
+                handleClick={createDictionary}
               ></PToolTip>
             </li>
           ))}

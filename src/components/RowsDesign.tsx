@@ -29,7 +29,7 @@ interface Props {
   deleteComponent: (rowIndex: number, compIndex: number) => void;
   moveRow: (rowIndex: number) => void;
   preferencesUpdate: (rowIndex: number, updatedPreferences: any) => void;
-  updateDisctionary: (str: string) => void;
+  updateDisctionary: (str: string, sentence: string) => void;
 }
 
 const RowsDesign: React.FC<Props> = ({

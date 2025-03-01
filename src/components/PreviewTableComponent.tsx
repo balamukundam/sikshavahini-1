@@ -5,7 +5,7 @@ import PToolTip from "./PToolTip";
 interface Props {
   tableComp: any;
   curLang: string;
-  updateDisctionary: (str: string) => void;
+  updateDisctionary: (str: string, sentence: string) => void;
 }
 
 const PreviewTableComponent = ({
@@ -20,6 +20,10 @@ const PreviewTableComponent = ({
     textAlign: "left",
   };
 
+  const createDictionary = (str: string) => {
+    updateDisctionary(str, "");
+  };
+
   return (
     <>
       {!!tableComp["title"] && (
@@ -27,7 +31,7 @@ const PreviewTableComponent = ({
           <PToolTip
             textToShow={tableComp["title"]}
             curLang={curLang}
-            handleClick={updateDisctionary}
+            handleClick={createDictionary}
           ></PToolTip>
         </p>
       )}
@@ -41,7 +45,7 @@ const PreviewTableComponent = ({
                   <PToolTip
                     textToShow={line}
                     curLang={curLang}
-                    handleClick={updateDisctionary}
+                    handleClick={createDictionary}
                   ></PToolTip>
                 </th>
               ))}
@@ -57,7 +61,7 @@ const PreviewTableComponent = ({
                   <PToolTip
                     textToShow={cell}
                     curLang={curLang}
-                    handleClick={updateDisctionary}
+                    handleClick={createDictionary}
                   ></PToolTip>
                 </td>
               ))}

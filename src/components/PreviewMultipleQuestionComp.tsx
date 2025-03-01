@@ -5,7 +5,7 @@ import PToolTip from "./PToolTip";
 interface Props {
   multiQuestComp: any;
   curLang: string;
-  updateDisctionary: (str: string) => void;
+  updateDisctionary: (str: string, sentence: string) => void;
 }
 
 const PreviewMultipleQuestionComp = ({
@@ -29,6 +29,10 @@ const PreviewMultipleQuestionComp = ({
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; // Swap elements
     }
     return shuffled;
+  };
+
+  const createDictionary = (str: string) => {
+    updateDisctionary(str, "");
   };
 
   const uniqueRadioName = useId();
@@ -57,7 +61,7 @@ const PreviewMultipleQuestionComp = ({
           <PToolTip
             textToShow={line}
             curLang={curLang}
-            handleClick={updateDisctionary}
+            handleClick={createDictionary}
           ></PToolTip>
         </p>
       ))}
@@ -79,7 +83,7 @@ const PreviewMultipleQuestionComp = ({
                 <PToolTip
                   textToShow={multiQuestComp["choices"][option]}
                   curLang={curLang}
-                  handleClick={updateDisctionary}
+                  handleClick={createDictionary}
                 ></PToolTip>
               </label>
             </div>

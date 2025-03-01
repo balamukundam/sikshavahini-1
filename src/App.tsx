@@ -126,6 +126,7 @@ function App() {
   const [alertColor, setAlertColor] = useState("primary");
   const [selectedScreen, setSelectedScreen] = useState("Design");
   const [dictionaryText, setDictionaryText] = useState("svAgatam");
+  const [dictionarySentence, setDictionarySentence] = useState("");
 
   const addData1 = () => {
     let dr = { components: [] };
@@ -412,8 +413,9 @@ function App() {
     setSelectedScreen(screen);
   }
 
-  function updateDisctionary(str: string) {
+  function updateDisctionary(str: string, sentence: string) {
     setDictionaryText(str);
+    setDictionarySentence(sentence);
   }
 
   return (
@@ -485,6 +487,7 @@ function App() {
               <div className="col-2">
                 <DictionaryComponent
                   text={dictionaryText}
+                  sentence={dictionarySentence}
                   curLang={curLang}
                 ></DictionaryComponent>
               </div>

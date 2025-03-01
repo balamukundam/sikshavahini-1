@@ -12,7 +12,7 @@ import PreviewMultipleQuestionComp from "./PreviewMultipleQuestionComp";
 interface Props {
   dataRow: any; // Initial data passed to the component
   curLang: string;
-  updateDisctionary: (str: string) => void;
+  updateDisctionary: (str: string, sentence: string) => void;
 }
 
 const RowPreview: React.FC<Props> = ({

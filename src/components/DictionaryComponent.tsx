@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { EngToTelService } from "../services/engToTelugu";
 import MultiSelectList from "./MultiSelectList";
+import WiktionaryMeaning from "./WiktionaryMeaning";
 
 interface Props {
+  sentence: string;
   text: string;
   curLang: string;
 }
@@ -20,10 +22,12 @@ const styles = {
     padding: "10px 20px",
     borderRadius: "10px",
     boxShadow: "2px 2px 10px rgba(0, 0, 0, 0.2)",
+    overflowY: "auto" as const, // Explicitly typed as const
+    maxHeight: "100vh",
   },
 };
 
-const DictionaryComponent = ({ text, curLang }: Props) => {
+const DictionaryComponent = ({ text, curLang, sentence }: Props) => {
   const ett = new EngToTelService();
 
   const [transWord, setTransWord] = useState("");
@@ -96,7 +100,8 @@ const DictionaryComponent = ({ text, curLang }: Props) => {
     // Async function inside useEffect
     const fetchTranslation = async () => {
       const translation = await getMeaningInLang("en");
-      setTransWord(translation);
+
+      setTransWord(cleanSentence(translation));
     };
 
     fetchTranslation();
@@ -111,6 +116,24 @@ const DictionaryComponent = ({ text, curLang }: Props) => {
       alert("Your browser does not support text-to-speech.");
     }
   };
+
+  function cleanSentence(sentence: string): string {
+    const badWords = [
+      "fucking",
+      "fucker",
+      "fuck",
+      "shit",
+      "ass",
+      "bastard",
+      "bitch",
+      "nigger",
+    ]; // Add more words as needed
+    badWords.forEach((badWord) => {
+      const regex = new RegExp(`\\b${badWord}\\b`, "gi"); // Match whole word, case insensitive
+      sentence = sentence.replace(regex, "****"); // Replace with asterisks
+    });
+    return sentence;
+  }
 
   return (
     <div style={styles.fixedBox}>
@@ -134,6 +157,10 @@ const DictionaryComponent = ({ text, curLang }: Props) => {
       <button onClick={speakText} className="btn btn-primary">
         🔊 Read
       </button>
+
+      <WiktionaryMeaning
+        word={word.replace(/[.,!\s]+$/, "")}
+      ></WiktionaryMeaning>
     </div>
   );
 };
