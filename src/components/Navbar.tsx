@@ -37,7 +37,7 @@ const getLanguageHeaderData = (lang: BmkLanguage) => {
 
 const Navbar = (props: Props) => {
   return (
-    <div>
+    <div className="no-print">
       <div className="row">
         <div className="col-3 m3 l2">
           <img

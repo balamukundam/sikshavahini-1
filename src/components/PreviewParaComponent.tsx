@@ -40,8 +40,8 @@ const PreviewParaComponent = ({
     setIsSpeaking(false);
   };
 
-  const createDictionary = (str: string) => {
-    updateDisctionary(str, "");
+  const createDictionary = (str: string, sentence: string) => {
+    updateDisctionary(str, sentence);
   };
 
   let margin =
@@ -98,18 +98,19 @@ const PreviewParaComponent = ({
           ))}
         </ul>
       )}
-
-      <button onClick={speakText} className="btn btn-primary">
-        🔊 Speak
-      </button>
-      <button
-        onClick={stopSpeech}
-        className="btn btn-danger"
-        disabled={!isSpeaking}
-        style={{ marginLeft: "25px" }}
-      >
-        ⛔ Stop
-      </button>
+      <div className="no-print">
+        <button onClick={speakText} className="btn btn-primary">
+          🔊 Speak
+        </button>
+        <button
+          onClick={stopSpeech}
+          className="btn btn-danger"
+          disabled={!isSpeaking}
+          style={{ marginLeft: "25px" }}
+        >
+          ⛔ Stop
+        </button>
+      </div>
     </div>
   );
 };

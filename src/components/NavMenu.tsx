@@ -35,7 +35,7 @@ const NavMenu = ({
       data-bs-theme="dark"
       style={{ marginBottom: "25px" }}
     >
-      <div className="container-fluid">
+      <div className="container-fluid no-print">
         <button
           className="navbar-toggler"
           type="button"

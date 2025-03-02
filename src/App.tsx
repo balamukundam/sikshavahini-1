@@ -419,10 +419,7 @@ function App() {
   }
 
   return (
-    <div
-      className="container-fluid"
-      // style={{ minWidth: "210mm", width: "90%" }}
-    >
+    <div className="container-fluid" style={{ minWidth: "210mm" }}>
       <Navbar lang={curLang}></Navbar>
 
       <NavMenu
@@ -441,7 +438,7 @@ function App() {
               <div className="col-9">
                 <div className="card-body">
                   <div className="row" style={{ marginBottom: "25px" }}>
-                    <div className="col-1">
+                    <div className="col-1 no-print">
                       <TitleInput
                         titleText={titleLesson}
                         subTitleText={subTitleLesson}

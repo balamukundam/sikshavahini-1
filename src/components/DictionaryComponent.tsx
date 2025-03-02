@@ -31,21 +31,26 @@ const DictionaryComponent = ({ text, curLang, sentence }: Props) => {
   const ett = new EngToTelService();
 
   const [transWord, setTransWord] = useState("");
+  const [transSentence, setTransSentence] = useState("");
   const [transLangs, setTransLangs] = useState([""]);
   const [sl, setSl] = useState("te");
 
   let word = ett.getStringInUserLanguage(curLang, text);
+  let sentenceLang = ett.getStringInUserLanguage(curLang, sentence);
   let transcri = ett.getStringInTranscript(text);
 
   function getSelectedLangs(langs: string[]) {
     setTransLangs(langs);
   }
 
-  async function getMeaningInLang(lang: string): Promise<string> {
+  async function getMeaningInLang(
+    lang: string,
+    inword: string
+  ): Promise<string> {
     let tl: string = "te";
     if (lang == "Sanskrit") tl = "sa";
     if (lang == "en") tl = "en";
-    const cacheKey = `${sl}-${tl}-${word}`;
+    const cacheKey = `${sl}-${tl}-${inword}`;
     const cachedData = localStorage.getItem(cacheKey);
 
     if (cachedData) {
@@ -53,7 +58,7 @@ const DictionaryComponent = ({ text, curLang, sentence }: Props) => {
     }
 
     const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${tl}&dt=t&q=${encodeURIComponent(
-      word
+      inword
     )}`;
 
     try {
@@ -81,7 +86,7 @@ const DictionaryComponent = ({ text, curLang, sentence }: Props) => {
       const results: { [key: string]: string } = {};
 
       for (const lang of transLangs) {
-        results[lang] = await getMeaningInLang(lang);
+        results[lang] = await getMeaningInLang(lang, word);
       }
 
       setTranslations(results);
@@ -99,9 +104,13 @@ const DictionaryComponent = ({ text, curLang, sentence }: Props) => {
 
     // Async function inside useEffect
     const fetchTranslation = async () => {
-      const translation = await getMeaningInLang("en");
+      const translation = await getMeaningInLang("en", word);
+      const fullTranslation = await getMeaningInLang("en", sentenceLang);
+      console.log("fullTranslation:", fullTranslation);
+      console.log("sentence:", sentence);
 
       setTransWord(cleanSentence(translation));
+      setTransSentence(cleanSentence(fullTranslation));
     };
 
     fetchTranslation();
@@ -136,7 +145,7 @@ const DictionaryComponent = ({ text, curLang, sentence }: Props) => {
   }
 
   return (
-    <div style={styles.fixedBox}>
+    <div className="no-print" style={styles.fixedBox}>
       <p style={{ textAlign: "center" }}>🕉 Dictionary 🕉</p>
 
       <hr />
@@ -147,6 +156,10 @@ const DictionaryComponent = ({ text, curLang, sentence }: Props) => {
 
       <hr />
       <p>{transWord || "Loading..."}</p>
+      <hr />
+
+      <hr />
+      <p>{transSentence || "Loading..."}</p>
       <hr />
       {/* {transLangs.map((item) => (
         <p key={item}>{translations[item] || "Loading..."}</p>

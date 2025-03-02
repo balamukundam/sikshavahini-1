@@ -341,3 +341,10 @@
     border: 1px solid; 
     height: 2em;  
 }
+
+
+@media print {
+    .no-print {
+        display: none !important;
+    }
+}
