@@ -1,6 +1,7 @@
 export const BmkLanguages = {
     telugu: 'telugu',
     devanagari: 'devanagari',
+    transcription: 'transcription',
   } as const;
   
   export type BmkLanguage = keyof typeof BmkLanguages;

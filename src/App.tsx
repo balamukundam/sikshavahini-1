@@ -42,9 +42,17 @@ function App() {
   const [dataRows, setDataRows] = useState<DataRow[]>([]);
 
   const handleLanguageSelectItem = (item: string) => {
-    item === "Sanskrit"
-      ? setLanguage(BmkLanguages.devanagari)
-      : setLanguage(BmkLanguages.telugu);
+    switch (item) {
+      case "Transcription":
+        setLanguage(BmkLanguages.transcription);
+        break;
+      case "Sanskrit":
+        setLanguage(BmkLanguages.devanagari);
+        break;
+      default:
+        setLanguage(BmkLanguages.telugu);
+        break;
+    }
 
     setAlertStatus("Language: " + item, true, true);
   };
@@ -117,6 +125,75 @@ function App() {
 
     downloadData(dataToExport);
     setAlertStatus("JSON file Downloaded", true, true);
+  };
+
+  const handleCacheLoad = () => {
+    setAlertStatus();
+
+    try {
+      const cachedData = localStorage.getItem("SVjsonData"); // Change to sessionStorage if needed
+      if (cachedData) {
+        const parsedJson = JSON.parse(cachedData);
+        setJsonData(parsedJson);
+        setTitleLesson(parsedJson?.titleLesson || "");
+        if (titleLesson !== "") setDictionaryText(titleLesson);
+
+        setSubTitleLesson(parsedJson?.subTitleLesson || "");
+        setDataRows(parsedJson?.dataRows || []);
+
+        setAlertStatus("JSON data loaded from cache!", true, true);
+      } else {
+        setAlertStatus("No cached data found!", false, true);
+      }
+    } catch (error) {
+      setAlertStatus("Error loading cached data!", false, true);
+    }
+  };
+
+  const handleSaveToCache = () => {
+    try {
+      if (!jsonData) {
+        setAlertStatus("No data to save!", false, true);
+        return;
+      }
+
+      localStorage.setItem("SVjsonData", JSON.stringify(jsonData)); // Use sessionStorage if needed
+      setAlertStatus("JSON data saved to cache!", true, true);
+    } catch (error) {
+      setAlertStatus("Error saving data to cache!", false, true);
+    }
+  };
+
+  const handleClearCache = () => {
+    "https://drive.google.com/file/d/1YbeJANWwJZ8-IUSHiAvoOHLdNmTXJWME/view?usp=drive_link";
+  };
+
+  const loadJsonFromGoogleDrive = async () => {
+    setAlertStatus();
+    let fileId: string = "1YbeJANWwJZ8-IUSHiAvoOHLdNmTXJWME";
+
+    fileId = prompt("Enter File ID from Google:", fileId) || fileId;
+
+    const url = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=AIzaSyB1bsgI2dwHdmhlBsrZCwN5rwl3twuwoxE`;
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("Failed to load file");
+      }
+      const parsedJson = await response.json();
+
+      setJsonData(parsedJson);
+      setTitleLesson(parsedJson?.titleLesson || "");
+      if (titleLesson !== "") setDictionaryText(titleLesson);
+
+      setSubTitleLesson(parsedJson?.subTitleLesson || "");
+      setDataRows(parsedJson?.dataRows || []);
+
+      setAlertStatus("JSON file loaded from Google Drive!", true, true);
+    } catch (error) {
+      setAlertStatus("Error loading JSON file!", false, true);
+    }
   };
 
   const [jsonData, setJsonData] = useState(null);
@@ -246,7 +323,7 @@ function App() {
       cType: "6",
       tag: "SlO",
       OddLineSuffix: "|",
-      EvenLineSuffix: "||",
+      EvenLineSuffix: "॥",
       EvenLineExtraTab: 0,
       lines: [
         "SuklAMbaradharaM vishNuM SaSivarNaM chaturbhujaM",
@@ -426,6 +503,9 @@ function App() {
         onSelectLanguage={handleLanguageSelectItem}
         handleFileChange={handleFileChange}
         handleDownload={handleDownload}
+        handleCacheLoad={handleCacheLoad}
+        handleSaveToCache={handleSaveToCache}
+        loadJsonFromGoogleDrive={loadJsonFromGoogleDrive}
         onSelectScreen={onSelectScreen}
       ></NavMenu>
       {selectedScreen == "Design" && (

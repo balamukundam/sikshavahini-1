@@ -29,6 +29,12 @@ const languageHeaderData: Record<
     leftImage: logosanskrit,
     rightImage: logokids,
   },
+  transcription: {
+    titleName: "Balamukundam",
+    subTitleName: "Siksha Vahini",
+    leftImage: logotelugu,
+    rightImage: logokids,
+  },
 };
 
 const getLanguageHeaderData = (lang: BmkLanguage) => {

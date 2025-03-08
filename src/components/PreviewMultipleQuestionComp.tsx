@@ -39,7 +39,6 @@ const PreviewMultipleQuestionComp = ({
 
   // Shuffle only once when component mounts
   useEffect(() => {
-    console.log("Question Changed:", multiQuestComp);
     setShuffledAnswers(shuffleArray([...multiQuestComp["choices"]]));
   }, [multiQuestComp]);
 

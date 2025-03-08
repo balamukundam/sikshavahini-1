@@ -6,6 +6,9 @@ interface Props {
   onSelectLanguage: (item: string) => void;
   handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleDownload: () => void;
+  handleCacheLoad: () => void;
+  handleSaveToCache: () => void;
+  loadJsonFromGoogleDrive: () => void;
   onSelectScreen: (item: string) => void;
 }
 
@@ -13,6 +16,9 @@ const NavMenu = ({
   onSelectLanguage,
   handleFileChange,
   handleDownload,
+  handleCacheLoad,
+  handleSaveToCache,
+  loadJsonFromGoogleDrive,
   onSelectScreen,
 }: Props) => {
   const [selectedScreen, setSelectedScreen] = useState("Design");
@@ -51,7 +57,7 @@ const NavMenu = ({
           <ul className="navbar-nav me-auto">
             <li className="nav-item dropdown" style={{ paddingLeft: "10px" }}>
               <DropDown
-                items={["Default", "Telugu", "Sanskrit"]}
+                items={["Default", "Telugu", "Sanskrit", "Transcription"]}
                 heading="Language"
                 preselectedIndex={-1}
                 onSelectItem={onSelectLanguage}
@@ -71,6 +77,16 @@ const NavMenu = ({
 
                 <ul className="dropdown-menu">
                   <li className="nav-item">
+                    <a className="dropdown-item" onClick={handleCacheLoad}>
+                      Load Cache Data
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a className="dropdown-item" onClick={handleSaveToCache}>
+                      Save to Cache
+                    </a>
+                  </li>
+                  <li className="nav-item">
                     <a className="dropdown-item">
                       <label htmlFor="filePicker">Load JSON File</label>
                       <input
@@ -85,6 +101,14 @@ const NavMenu = ({
                   <li className="nav-item">
                     <a className="dropdown-item" onClick={handleDownload}>
                       Download
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a
+                      className="dropdown-item"
+                      onClick={loadJsonFromGoogleDrive}
+                    >
+                      Google Drive
                     </a>
                   </li>
                 </ul>

@@ -106,8 +106,6 @@ const DictionaryComponent = ({ text, curLang, sentence }: Props) => {
     const fetchTranslation = async () => {
       const translation = await getMeaningInLang("en", word);
       const fullTranslation = await getMeaningInLang("en", sentenceLang);
-      console.log("fullTranslation:", fullTranslation);
-      console.log("sentence:", sentence);
 
       setTransWord(cleanSentence(translation));
       setTransSentence(cleanSentence(fullTranslation));

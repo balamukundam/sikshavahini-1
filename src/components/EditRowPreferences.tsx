@@ -12,11 +12,19 @@ const EditRowPreferences: React.FC<Props> = ({
   onPreferencesUpdate,
 }) => {
   const onSelectLanguage = (value: string) => {
-    if (value == "Default") preferences.language = value;
-    else {
-      value === "Sanskrit"
-        ? (preferences.language = BmkLanguages.devanagari)
-        : (preferences.language = BmkLanguages.telugu);
+    switch (value) {
+      case "Default":
+        preferences.language = value;
+        break;
+      case "Transcription":
+        preferences.language = BmkLanguages.transcription;
+        break;
+      case "Sanskrit":
+        preferences.language = BmkLanguages.devanagari;
+        break;
+      default:
+        preferences.language = BmkLanguages.telugu;
+        break;
     }
 
     onPreferencesUpdate(preferences);
@@ -55,7 +63,7 @@ const EditRowPreferences: React.FC<Props> = ({
         <div className="col-3">
           <div className="input-group mb-4">
             <DropDown
-              items={["Default", "Telugu", "Sanskrit"]}
+              items={["Default", "Telugu", "Sanskrit", "Transcript"]}
               heading="Language"
               preselectedIndex={selectedLanguageIndex}
               onSelectItem={onSelectLanguage}
