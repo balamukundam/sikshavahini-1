@@ -28,6 +28,7 @@ import Button from "./components/Button";
 import logotelugu from "/images/Bpic-2.png";
 import HelpPage from "./components/HelpPage";
 import DictionaryComponent from "./components/DictionaryComponent";
+import TaragatiSelector from "./components/TaragatiSelector";
 
 function App() {
   let items1 = ["Level-1", "Level-2", "Level-3"];
@@ -169,10 +170,14 @@ function App() {
   };
 
   const loadJsonFromGoogleDrive = async () => {
-    setAlertStatus();
     let fileId: string = "1YbeJANWwJZ8-IUSHiAvoOHLdNmTXJWME";
 
     fileId = prompt("Enter File ID from Google:", fileId) || fileId;
+    loadFileWithId(fileId);
+  };
+
+  const loadFileWithId = async (fileId: string) => {
+    setAlertStatus();
 
     const url = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=AIzaSyB1bsgI2dwHdmhlBsrZCwN5rwl3twuwoxE`;
 
@@ -191,6 +196,7 @@ function App() {
       setDataRows(parsedJson?.dataRows || []);
 
       setAlertStatus("JSON file loaded from Google Drive!", true, true);
+      setSelectedScreen("Preview");
     } catch (error) {
       setAlertStatus("Error loading JSON file!", false, true);
     }
@@ -507,6 +513,7 @@ function App() {
         handleSaveToCache={handleSaveToCache}
         loadJsonFromGoogleDrive={loadJsonFromGoogleDrive}
         onSelectScreen={onSelectScreen}
+        selectedScreen={selectedScreen}
       ></NavMenu>
       {selectedScreen == "Design" && (
         <>
@@ -517,7 +524,7 @@ function App() {
             <div className="row">
               <div className="col-9">
                 <div className="card-body">
-                  <div className="row" style={{ marginBottom: "25px" }}>
+                  <div className="row" style={{ marginBottom: "5px" }}>
                     <div className="col-1 no-print">
                       <TitleInput
                         titleText={titleLesson}
@@ -551,7 +558,7 @@ function App() {
                     preferencesUpdate={preferencesUpdate}
                     updateDisctionary={updateDisctionary}
                   ></RowsDesign>
-                  <div className="row" style={{ marginBottom: "25px" }}>
+                  <div className="row" style={{ marginBottom: "5px" }}>
                     <div className="col-1">
                       <Button color="primary" symbol="➕" onClick={addRow}>
                         Add Row
@@ -572,7 +579,7 @@ function App() {
           </div>
 
           {/* 
-      <div className="row" style={{ marginBottom: "25px" }}>
+      <div className="row" style={{ marginBottom: "5px" }}>
         <div className="col-3">
           <div className={"card bg-light mb-4 me-1 div-" + curLang + "gen"}>
             <div className="card-header text-center">Design</div>
@@ -633,10 +640,41 @@ function App() {
 
       {selectedScreen == "Preview" && (
         <>
-          <div className={"card bg-light mb-4 me-1"}>
-            <div className="card-header text-center">Preview</div>
-            <div className="card-body"></div>
+          <div className={"col-12 div-" + curLang + "gen fontup"}>
+            <p className="text-center fontup2">
+              {getTestInLocalLanguage(titleLesson)}
+            </p>
+            {subTitleLesson !== "" && (
+              <p className="text-center">
+                {getTestInLocalLanguage(subTitleLesson)}
+              </p>
+            )}
           </div>
+
+          {dataRows.map((item: any, index: number) => (
+            <div className="row" style={{ marginBottom: "5px" }}>
+              <div className="col-11">
+                <RowPreview
+                  dataRow={item}
+                  curLang={curLang}
+                  updateDisctionary={updateDisctionary}
+                ></RowPreview>
+              </div>
+            </div>
+          ))}
+
+          <div className="col-2">
+            <DictionaryComponent
+              text={dictionaryText}
+              sentence={dictionarySentence}
+              curLang={curLang}
+            ></DictionaryComponent>
+          </div>
+        </>
+      )}
+      {selectedScreen == "Library" && (
+        <>
+          <TaragatiSelector loadFileWithId={loadFileWithId}></TaragatiSelector>
         </>
       )}
       {selectedScreen == "Help" && (

@@ -65,10 +65,10 @@ const PreviewMultipleQuestionComp = ({
         </p>
       ))}
 
-      <div className="container mt-3">
+      <div className="mt-3">
         <div className="form-check">
           {shuffledAnswers.map((option: number, index: number) => (
-            <div key={index} className="form-check">
+            <div key={index}>
               <input
                 className="form-check-input"
                 type="radio"

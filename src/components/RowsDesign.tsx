@@ -52,7 +52,7 @@ const RowsDesign: React.FC<Props> = ({
   return (
     <>
       {initialDataRows.map((item: any, index: number) => (
-        <div className="row" style={{ marginBottom: "25px" }}>
+        <div className="row" style={{ marginBottom: "5px" }}>
           <div className="col-1">
             <RowInput
               rowData={item}

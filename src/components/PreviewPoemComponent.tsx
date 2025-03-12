@@ -53,7 +53,7 @@ const PreviewPoemComponent = ({
         </div>
       )}
 
-      <div className="row" style={{ marginBottom: "25px" }}>
+      <div className="row" style={{ marginBottom: "5px" }}>
         <div className={"col-" + poemComp["pwidth"]}>
           <p>
             <PToolTip
@@ -65,7 +65,7 @@ const PreviewPoemComponent = ({
         </div>
 
         <div className={"col-" + (12 - poemComp["pwidth"])}>
-          <div className="row" style={{ marginBottom: "25px" }}>
+          <div className="row" style={{ marginBottom: "5px" }}>
             {poemComp["lines"].map((line: any) => (
               <>
                 <div className={"col-" + (12 - poemComp["swidth"])}>

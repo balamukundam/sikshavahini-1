@@ -39,7 +39,7 @@ const RowPreview: React.FC<Props> = ({
           )}
         </p>
       )}
-      <div className="row" style={{ marginBottom: "25px" }}>
+      <div className="row" style={{ marginBottom: "5px" }}>
         {dataRow["components"].map((item: any, index: number) => (
           <div className={"col-" + item["width"]}>
             {item["cType"] === "1" && (

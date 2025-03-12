@@ -10,6 +10,7 @@ interface Props {
   handleSaveToCache: () => void;
   loadJsonFromGoogleDrive: () => void;
   onSelectScreen: (item: string) => void;
+  selectedScreen: string;
 }
 
 const NavMenu = ({
@@ -20,26 +21,26 @@ const NavMenu = ({
   handleSaveToCache,
   loadJsonFromGoogleDrive,
   onSelectScreen,
+  selectedScreen,
 }: Props) => {
-  const [selectedScreen, setSelectedScreen] = useState("Design");
   const onDesignScreen = () => {
     onSelectScreen("Design");
-    setSelectedScreen("Design");
   };
   const onPreviewScreen = () => {
     onSelectScreen("Preview");
-    setSelectedScreen("Preview");
+  };
+  const onLibraryScreen = () => {
+    onSelectScreen("Library");
   };
   const onHelpScreen = () => {
     onSelectScreen("Help");
-    setSelectedScreen("Help");
   };
 
   return (
     <nav
       className="navbar navbar-expand-lg bg-primary"
       data-bs-theme="dark"
-      style={{ marginBottom: "25px" }}
+      style={{ marginBottom: "5px" }}
     >
       <div className="container-fluid no-print">
         <button
@@ -135,6 +136,17 @@ const NavMenu = ({
                 onClick={onPreviewScreen}
               >
                 Preview
+              </label>
+            </li>
+            <li className="nav-item" style={{ paddingLeft: "10px" }}>
+              <label
+                className={
+                  "btn btn-" +
+                  (selectedScreen == "Library" ? "danger" : "secondary")
+                }
+                onClick={onLibraryScreen}
+              >
+                Library
               </label>
             </li>
             <li className="nav-item" style={{ paddingLeft: "10px" }}>
