@@ -1,15 +1,18 @@
 import React from "react";
 import DropDown from "./DropDown";
 import { BmkLanguages } from "../services/dataTypes";
+import Button from "./Button";
 
 interface Props {
   preferences: any;
   onPreferencesUpdate: (updatedPreferences: any) => void;
+  onInsertRowBelow: (onInsertRowBelow: void) => void;
 }
 
 const EditRowPreferences: React.FC<Props> = ({
   preferences,
   onPreferencesUpdate,
+  onInsertRowBelow,
 }) => {
   const onSelectLanguage = (value: string) => {
     switch (value) {
@@ -43,7 +46,7 @@ const EditRowPreferences: React.FC<Props> = ({
   return (
     <>
       <div className="row">
-        <div className="col-9">
+        <div className="col-8">
           <div className="input-group mb-4">
             <span className="input-group-text" id="title-input">
               Title
@@ -60,7 +63,7 @@ const EditRowPreferences: React.FC<Props> = ({
             />
           </div>
         </div>
-        <div className="col-3">
+        <div className="col-2">
           <div className="input-group mb-4">
             <DropDown
               items={["Default", "Telugu", "Sanskrit", "Transcript"]}
@@ -68,6 +71,14 @@ const EditRowPreferences: React.FC<Props> = ({
               preselectedIndex={selectedLanguageIndex}
               onSelectItem={onSelectLanguage}
             ></DropDown>
+          </div>
+        </div>
+
+        <div className="col-2">
+          <div className="input-group mb-4">
+            <Button symbol="➕" onClick={onInsertRowBelow}>
+              Add Row Next
+            </Button>
           </div>
         </div>
       </div>

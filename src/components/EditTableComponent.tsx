@@ -37,6 +37,11 @@ const EditTableComponent: React.FC<Props> = ({
     onDataUpdate(rowIndex, compIndex, tableComponentData);
   };
 
+  const handleTLanguageChange = (value: string) => {
+    tableComponentData.langs = value;
+    onDataUpdate(rowIndex, compIndex, tableComponentData);
+  };
+
   return (
     <>
       <div className="row">
@@ -90,6 +95,20 @@ const EditTableComponent: React.FC<Props> = ({
           id="titleInputField"
           value={tableComponentData.tHeader}
           onChange={(e) => handleTHeaderChange(e.target.value)}
+        />
+
+        <span className="input-group-text" id="language-input">
+          Languages
+        </span>
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Language"
+          aria-label="Language"
+          aria-describedby="language-input"
+          id="languageInputField"
+          value={tableComponentData.langs}
+          onChange={(e) => handleTLanguageChange(e.target.value)}
         />
       </div>
 

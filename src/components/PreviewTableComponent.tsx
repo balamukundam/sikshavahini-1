@@ -24,6 +24,23 @@ const PreviewTableComponent = ({
     updateDisctionary(str, "");
   };
 
+  const getLang = (index: number): string => {
+    let langs: string[] = tableComp["langs"].split(",");
+    if (index < langs.length) {
+      switch (langs[index]) {
+        case "sa":
+          return "devanagari";
+        case "te":
+          return "telugu";
+        case "tr":
+          return "transcription";
+        default:
+          return curLang;
+      }
+    }
+    return curLang;
+  };
+
   return (
     <>
       {!!tableComp["title"] && (
@@ -40,15 +57,17 @@ const PreviewTableComponent = ({
         {!!tableComp["tHeader"] && (
           <thead>
             <tr>
-              {tableComp["tHeader"].split(",").map((line: any) => (
-                <th style={cellStyle}>
-                  <PToolTip
-                    textToShow={line}
-                    curLang={curLang}
-                    handleClick={createDictionary}
-                  ></PToolTip>
-                </th>
-              ))}
+              {tableComp["tHeader"]
+                .split(",")
+                .map((line: any, index: number) => (
+                  <th style={cellStyle}>
+                    <PToolTip
+                      textToShow={line}
+                      curLang={getLang(index)}
+                      handleClick={createDictionary}
+                    ></PToolTip>
+                  </th>
+                ))}
             </tr>
           </thead>
         )}
@@ -56,11 +75,11 @@ const PreviewTableComponent = ({
         <tbody>
           {tableComp["rows"].map((line: any) => (
             <tr>
-              {line.split(",").map((cell: any) => (
+              {line.split(",").map((cell: any, index: number) => (
                 <td style={cellStyle}>
                   <PToolTip
                     textToShow={cell}
-                    curLang={curLang}
+                    curLang={getLang(index)}
                     handleClick={createDictionary}
                   ></PToolTip>
                 </td>

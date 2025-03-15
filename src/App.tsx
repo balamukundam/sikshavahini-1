@@ -211,22 +211,22 @@ function App() {
   const [dictionaryText, setDictionaryText] = useState("svAgatam");
   const [dictionarySentence, setDictionarySentence] = useState("");
 
-  const addData1 = () => {
-    let dr = { components: [] };
-    let newArry = dataRows;
-    newArry.push(dr);
-    setDataRows(newArry);
-    console.log(dataRows);
-  };
+  // const addData1 = () => {
+  //   let dr = { components: [] };
+  //   let newArry = dataRows;
+  //   newArry.push(dr);
+  //   setDataRows(newArry);
+  //   console.log(dataRows);
+  // };
 
-  const addData = (dr: DataRow) => {
-    // Create a new array reference to update state
-    //let dr = { components: [] };
-    console.log("dr", dr);
-    setDataRows((prevRows) => [...prevRows, dr]);
-    let dr1 = { components: [] };
-    setDataRows((prevRows) => [...prevRows, dr1]);
-  };
+  // const addData = (dr: DataRow) => {
+  //   // Create a new array reference to update state
+  //   //let dr = { components: [] };
+  //   console.log("dr", dr);
+  //   setDataRows((prevRows) => [...prevRows, dr]);
+  //   let dr1 = { components: [] };
+  //   setDataRows((prevRows) => [...prevRows, dr1]);
+  // };
 
   const row1Changed = (event: React.ChangeEvent<HTMLInputElement>) => {
     const updatedRows = dataRows.map((row, rIdx) => ({
@@ -347,7 +347,7 @@ function App() {
 
   function getNewTableCompObject(): ComponentTable {
     return {
-      langs: "",
+      langs: "de,de,de,de",
       border: false,
       width: "12",
       cType: "5",
@@ -450,6 +450,17 @@ function App() {
         return { ...row, components: updatedComponents };
       })
     );
+  }
+
+  function insertRowBelow(rowIndex: number) {
+    setDataRows((prevRows) => {
+      const newRows = [...prevRows];
+      newRows.splice(rowIndex + 1, 0, {
+        preferences: { title: "", language: "Default", endline: "solid" },
+        components: [],
+      });
+      return newRows;
+    });
   }
 
   function moveRow(rowIndex: number) {
@@ -557,6 +568,7 @@ function App() {
                     curLang={curLang}
                     preferencesUpdate={preferencesUpdate}
                     updateDisctionary={updateDisctionary}
+                    insertRowBelow={insertRowBelow}
                   ></RowsDesign>
                   <div className="row" style={{ marginBottom: "5px" }}>
                     <div className="col-1">

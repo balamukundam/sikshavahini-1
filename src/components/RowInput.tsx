@@ -35,6 +35,7 @@ interface Props {
   moveComponent: (rowIndex: number, compIndex: number) => void;
   deleteComponent: (rowIndex: number, compIndex: number) => void;
   moveRow: (rowIndex: number) => void;
+  insertRowBelow: (rowIndex: number) => void;
   preferencesUpdate: (rowIndex: number, updatedPreferences: any) => void;
 }
 
@@ -50,6 +51,7 @@ const RowInput: React.FC<Props> = ({
   deleteComponent,
   moveRow,
   preferencesUpdate,
+  insertRowBelow,
 }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const openPopup = () => {
@@ -138,6 +140,10 @@ const RowInput: React.FC<Props> = ({
 
   const onPreferencesUpdate = (updatedPreferences: any) => {
     preferencesUpdate(rowIndex, updatedPreferences);
+  };
+
+  const onInsertRowBelow = () => {
+    insertRowBelow(rowIndex);
   };
 
   let item = currentPage > 0 ? rowData["components"][currentPage - 1] : null;
@@ -240,6 +246,7 @@ const RowInput: React.FC<Props> = ({
                   <EditRowPreferences
                     preferences={rowData["preferences"]}
                     onPreferencesUpdate={onPreferencesUpdate}
+                    onInsertRowBelow={onInsertRowBelow}
                   ></EditRowPreferences>
                 </div>
               </div>

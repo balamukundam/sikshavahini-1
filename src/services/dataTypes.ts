@@ -67,6 +67,11 @@ export const BmkLanguages = {
   
   // DataRow contains an array of any ComponentType
   export interface DataRow {
+    preferences: {
+      title: string;
+      language: string;
+      endline: string;
+    };
     components: ComponentType[];
   }
   
