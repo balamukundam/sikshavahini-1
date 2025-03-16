@@ -1841,7 +1841,7 @@ const data: Taragati[] = [
                 lang: "sa",
                 title2: "krUraa kaikEyI svasya icCAdvayaM Agrahayati",
                 name: "The Cruel Kaikeyi Demands Her Two Wishes",
-                url: "1SWaBuzqbjJH8HkVFqpNVZUswnNtN7nf7",
+                url: "1ZYrZsC_2DqPKmalMoYMbbhRLN18s54uI",
               },
               {
                 id: 5,
