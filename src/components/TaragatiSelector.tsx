@@ -2386,14 +2386,14 @@ const data: Taragati[] = [
         books: [
           {
             id: 4,
-            name: "Alphabets",
+            name: "Stories",
             documents: [
               {
-                id: 5,
-                name: "Egypt",
-                lang: "te",
-                title2: "SrIrAma",
-                url: "/docs/egypt.pdf",
+                id: 1,
+                name: "Clever Crow",
+                lang: "sa",
+                title2: "catura@h kAka@h",
+                url: "1SfMeDNptpN097gKVWME-nYAhFxTycdEU",
               },
             ],
           },
