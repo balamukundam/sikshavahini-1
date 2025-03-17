@@ -1870,14 +1870,14 @@ const data: Taragati[] = [
                 name: "	Rama Grieving for Sita, Finds Jatayu Dying	",
                 lang: "sa",
                 title2: "	rAma@h sItAM SOcan, jaTAyuM mriyamANaM paSyati	",
-                url: "",
+                url: "19NW3ShY_pb2iCZrOZ5BPhzORF_xVnZ_B",
               },
               {
                 id: 9,
                 name: "	A Monster Tries to Eat Rama and Lakshmana	",
                 lang: "sa",
                 title2: "	rAkshasa@h rAmalakshmaNaM ca bhakshayitum prayatatE	",
-                url: "",
+                url: "1YkK1ls6mDT0i1d9ukXkeqDP2s3VmO-Vo",
               },
               {
                 id: 10,
