@@ -10,11 +10,28 @@ interface Props {
 const PToolTip = ({ textToShow, curLang, handleClick }: Props) => {
   let ett: EngToTelService = new EngToTelService();
   let bConvert = false;
+  let originalOption = curLang;
 
-  const getConvert = () => {
+  const getConvert = (words: string) => {
     bConvert = !bConvert;
+    if (bConvert) {
+      if (words.startsWith("#te")) curLang = "telugu";
+      if (words.startsWith("#sa")) curLang = "devanagari";
+      if (words.startsWith("#de")) curLang = originalOption;
+    }
     return bConvert;
   };
+
+  function startsWithPattern(text: string): string {
+    if (
+      bConvert &&
+      (text.startsWith("#te") ||
+        text.startsWith("#sa") ||
+        text.startsWith("#de"))
+    )
+      return text.slice(3);
+    return text;
+  }
 
   const getSplitSenteces = (para: string, splChar: string): string[] => {
     let sentences: string[] = para.split(splChar);
@@ -37,12 +54,13 @@ const PToolTip = ({ textToShow, curLang, handleClick }: Props) => {
   return (
     <>
       {textToShow.split("`").map((words) =>
-        getConvert() ? (
-          getSplitSenteces(words, "।").map((sentence1) =>
+        getConvert(words) ? (
+          getSplitSenteces(startsWithPattern(words), "।").map((sentence1) =>
             getSplitSenteces(sentence1, ".").map((sentence2) =>
               sentence2.split(" ").map((item, index) => (
-                <a
+                <span
                   key={index}
+                  className={"div-" + curLang + "gen"}
                   data-bs-toggle="tooltip"
                   data-bs-placement="top"
                   title={`${ett.getStringInUserLanguage(
@@ -52,7 +70,7 @@ const PToolTip = ({ textToShow, curLang, handleClick }: Props) => {
                   onClick={() => handleClick(item, sentence2)}
                 >
                   {ett.getStringInUserLanguage(curLang, item) + " "}
-                </a>
+                </span>
               ))
             )
           )

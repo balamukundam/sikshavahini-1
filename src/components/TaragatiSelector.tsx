@@ -703,7 +703,7 @@ const data: Taragati[] = [
                 name: "test",
                 lang: "te",
                 title2: "	kathAprAraMbhamu	",
-                url: "",
+                url: "1kvu4rkEA2O29DtiWl5AUzkn1KjHQOixM",
               },
               {
                 id: 2,
@@ -1848,22 +1848,22 @@ const data: Taragati[] = [
                 name: "	Ravana's Sister is Mutilated by Lakshmana	",
                 lang: "sa",
                 title2: "	rAvaNasya bhaginI lakshmaNEna vikRtA bhavati	",
-                url: "",
+                url: "1uRUjfBS6H_iLmsIAjZ9jvDdDMZC2RPT_",
               },
               {
                 id: 6,
                 name: "	Marica's Magic Helps Ravana Kidnap Sita	",
                 lang: "sa",
                 title2:
-                  "	mArIca@h maayaarUpENa rAvaNasya sItAyA@h apaharaNaM kartuM sAhAyyaM karOti	",
-                url: "",
+                  "	mArIca@h maayaaM kRtvA rAvaNasya sItAyA@h apaharaNaM kartuM sAhAyyaM karOti	",
+                url: "1Mfialj23aV4DqEtIQHlKz3wFCCnWJDN6",
               },
               {
                 id: 7,
                 name: "	Ravana Cuts Off Jatayu's Wings	",
                 lang: "sa",
-                title2: "	rAvaNa@h jaTAyO@h pakshaM Cinatti	",
-                url: "",
+                title2: "	rAvaNa@h jaTAyO@h pakshaM Cinnati	",
+                url: "1NViIec4h_fuc4WZ5eyu-kZVabwW0dQ-Z",
               },
               {
                 id: 8,
