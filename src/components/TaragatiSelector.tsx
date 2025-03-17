@@ -1883,9 +1883,8 @@ const data: Taragati[] = [
                 id: 10,
                 name: "	Ravana Threatens to Eat Sita for Breakfast	",
                 lang: "sa",
-                title2:
-                  "	rAvaNa@h prAta@hbhOjArthaM sItAM khAditum dhamakI dadAti	",
-                url: "",
+                title2: "	rAvaNa@h prAtarASE sItAM khAdishyAmi iti avadat	",
+                url: "1dMf-NWkm9mqQnEpCy1iiTL-5bzPTWtDH",
               },
               {
                 id: 11,
