@@ -61,9 +61,14 @@ export const BmkLanguages = {
   export interface ComponentSeparator extends BaseComponent {
     sepType: string;
   }
+ 
+  export interface ComponentMusicNotes extends BaseComponent {
+    musicNotes: string;
+    title: string;
+  }
   
   // Define a union type for all components
-  export type ComponentType = ComponentImage | ComponentPara | ComponentTable | ComponentPoem | ComponentMultiQuest | ComponentSeparator;
+  export type ComponentType = ComponentImage | ComponentPara | ComponentTable | ComponentPoem | ComponentMultiQuest | ComponentMusicNotes | ComponentSeparator;
   
   // DataRow contains an array of any ComponentType
   export interface DataRow {

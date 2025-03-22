@@ -15,6 +15,7 @@ import EditRowPreferences from "./EditRowPreferences";
 import EditPoemComponent from "./EditPoemComponent";
 import EditMultiQuestComponent from "./EditMultiQuestComponent";
 import EditTableComponent from "./EditTableComponent";
+import EditMusicNotesComponent from "./EditMusicNotesComponent";
 
 interface Props {
   rowData: any;
@@ -214,6 +215,7 @@ const RowInput: React.FC<Props> = ({
                         "Poem comp",
                         "Multiple Choice Question",
                         "Seperator comp",
+                        "Music Notes comp",
                       ]}
                       heading="Choose component"
                       preselectedIndex={-1}
@@ -317,6 +319,17 @@ const RowInput: React.FC<Props> = ({
                       ></EditMultiQuestComponent>
                     )}
 
+                    {item["cType"] === "51" && (
+                      <>
+                        <EditMusicNotesComponent
+                          rowIndex={rowIndex}
+                          compIndex={currentPage - 1}
+                          musicNotesComponentData={item}
+                          onDataUpdate={onDataUpdate}
+                        ></EditMusicNotesComponent>
+                      </>
+                    )}
+
                     {item["cType"] === "99" && (
                       <>
                         <EditSeperatorComponent
@@ -344,6 +357,7 @@ const RowInput: React.FC<Props> = ({
                       "Poem comp",
                       "Multiple Choice Question",
                       "Seperator comp",
+                      "Music Notes comp",
                     ]}
                     heading="Choose component"
                     preselectedIndex={-1}

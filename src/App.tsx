@@ -15,6 +15,7 @@ import {
   ComponentPoem,
   ComponentTable,
   ComponentMultiQuest,
+  ComponentMusicNotes,
 } from "./services/dataTypes";
 import { downloadData } from "./services/downloadUtils";
 import React from "react";
@@ -29,6 +30,8 @@ import logotelugu from "/images/Bpic-2.png";
 import HelpPage from "./components/HelpPage";
 import DictionaryComponent from "./components/DictionaryComponent";
 import TaragatiSelector from "./components/TaragatiSelector";
+import ToneComponent from "./components/ToneComponent";
+import MusicNotesComponent from "./components/PreviewMusicNotesComponent";
 
 function App() {
   let items1 = ["Level-1", "Level-2", "Level-3"];
@@ -283,6 +286,16 @@ function App() {
       sepType: "curve",
     };
   }
+  function getNewMusicNotesCompObject(): ComponentMusicNotes {
+    return {
+      width: "3",
+      cType: "51",
+      language: "default",
+      border: false,
+      musicNotes: "SRGMPDNS+S+NDPMGRS",
+      title: "Notes",
+    };
+  }
 
   function getNewImageCompObject(): ComponentImage {
     return {
@@ -374,6 +387,8 @@ function App() {
         return getNewParaCompObject("4");
       case "Seperator comp":
         return getNewSeperatorCompObject();
+      case "Music Notes comp":
+        return getNewMusicNotesCompObject();
       case "Poem comp":
         return getNewPoemCompObject();
       case "Table comp":
@@ -699,6 +714,24 @@ function App() {
           </div>
         </>
       )}
+
+      {/* <div>
+        <h1>React + Vite + Tone.js</h1>
+        <ToneComponent
+          notes={[
+            { note: 60, duration: 1 },
+            { note: 61, duration: 1 },
+            { note: 65, duration: 2 },
+            { note: 64, duration: 1 },
+            { note: 61, duration: 1 },
+            { note: 60, duration: 1 },
+            { note: 61, duration: 1 },
+            { note: 64, duration: 1 },
+            { note: 61, duration: 1 },
+            { note: 60, duration: 2 },
+          ]}
+        />
+      </div> */}
     </div>
   );
 }

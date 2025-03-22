@@ -1891,7 +1891,7 @@ const data: Taragati[] = [
                 name: "	Rama is Accused of Cheating in Battle	",
                 lang: "sa",
                 title2: "	rAma@h yuddhE va~ncanasya ArOpa@h asti	",
-                url: "",
+                url: "1wG7qIIGqvIUlxWi7TjBkuuLzMoVtTZl_",
               },
               {
                 id: 12,
@@ -2161,140 +2161,160 @@ const data: Taragati[] = [
                 id: 1,
                 name: "	Chapter 1 v 36	",
                 lang: "sa",
-                title2: "	nihatya dhaartaraashTraanna@h	",
+                title2:
+                  "	nihatya dhArtarAshTrAnna@h kA prIti@h syAjjanArdana	। pApamEvASrayEdasmAnhatvaitAnAtatAyina@h		॥",
                 url: "",
               },
               {
                 id: 2,
                 name: "	Chapter 1 v 47	",
                 lang: "sa",
-                title2: "	Evamuktvaarjuna@h	",
+                title2:
+                  "EvamuktvArjuna@h sa~mkhyE rathOpastha upAviSat । visRjya saSaraM cApaM SOkasaMvignamAnasa@h 	॥",
                 url: "",
               },
               {
                 id: 3,
                 name: "	Chapter 2 v 3	",
                 lang: "sa",
-                title2: "	klaibyaM maa sma	",
+                title2:
+                  "klaibyaM mA sma gama@h pArtha naitattvayyupapadyatE 	। kshudraM hRdayadaurbalyaM tyaktvOttishTha parantapa 	॥",
                 url: "",
               },
               {
                 id: 4,
                 name: "	Chapter 2 v 22	",
                 lang: "sa",
-                title2: "	vaasaaMsi jIrNAni	",
+                title2:
+                  "vAsAMsi jIrNAni yathA vihAya navAni gRhNAti narO'parANi । tathA SarIrANi vihAya jIrNAnyanyAni saMyAti navAni dEhI ॥",
                 url: "",
               },
               {
                 id: 5,
                 name: "	Chapter 2 v 48	",
                 lang: "sa",
-                title2: "	yOgastha@h kuru	",
+                title2:
+                  "yOgastha@h kuru karmANi sa~mgaM tyaktvA dhana~njaya 	। siddhyasiddhyO@h samO bhUtvA samatvaM yOga ucyatE ॥",
                 url: "",
               },
               {
                 id: 6,
                 name: "	Chapter 2 v 65	",
                 lang: "sa",
-                title2: "	prasaadE sarvadu@khaanaaM	",
+                title2:
+                  "prasAdE sarvadu@hkhAnAM hAnirasyOpajAyatE । prasannacEtasO hyASu buddhi@h paryavatishThatE ॥",
                 url: "",
               },
               {
                 id: 7,
                 name: "	Chapter 3 v 19	",
                 lang: "sa",
-                title2: "	tasmaadasakta@h satatam	",
+                title2:
+                  "tasmAdasakta@h satataM kAryaM karma samAcara । asaktO hyAcarankarma paramApnOti pUrusha@h ॥",
                 url: "",
               },
               {
                 id: 8,
                 name: "	Chapter 3 v 21	",
                 lang: "sa",
-                title2: "	yadyadaacarati SrEShaTha@h	",
+                title2:
+                  "yadyadAcarati SrEshThastattadEvEtarO jana@h । sa yatpramANaM kurutE lOkastadanuvartatE ॥",
                 url: "",
               },
               {
                 id: 9,
                 name: "	Chapter 3 v 30	",
                 lang: "sa",
-                title2: "	mayi sarvaaNi karmaaNi	",
+                title2:
+                  "mayi sarvANi karmANi saMnyasyAdhyAtmacEtasA 	। nirASIrnirmamO bhUtvA yudhyasva vigatajvara@h ॥",
                 url: "",
               },
               {
                 id: 10,
                 name: "	Chapter 3 v 35	",
                 lang: "sa",
-                title2: "	SrEyaansvadharmO viguNa@h	",
+                title2:
+                  "SrEyAnsvadharmO viguNa: paradharmAtsvanushThitAt । svadharmE nidhanaM SrEya: paradharmO bhayAvaha:	॥",
                 url: "",
               },
               {
                 id: 11,
                 name: "	Chapter 4 v 10	",
                 lang: "sa",
-                title2: "	vItaraagabhayakrOdhaa	",
+                title2:
+                  "vItarAgabhayakrOdhA manmayA mAmupASritA@h । bahavO j~nAnatapasA pUtA madbhAvamAgatA@h  ॥",
                 url: "",
               },
               {
                 id: 12,
                 name: "	Chapter 4 v 19	",
                 lang: "sa",
-                title2: "	yasya sarvE samaaraMbhaa@h	",
+                title2:
+                  "yasya sarvE samArambhA@h kAmasa~mkalpavarjitA@h । j~nAnAgnidagdhakarmANaM tamAhu@h paNDitaM budhA@h  ॥",
                 url: "",
               },
               {
                 id: 13,
                 name: "	Chapter 5 v 10	",
                 lang: "sa",
-                title2: "	brahmaNyaadhyaaya karmaaNi	",
+                title2:
+                  "brahmaNyAdhAya karmANi sa~mgaM tyaktvA karOti ya@h । lipyatE na sa pApEna padmapatramivAmbhasA ॥",
                 url: "",
               },
               {
                 id: 14,
                 name: "	Chapter 9 v 4	",
                 lang: "sa",
-                title2: "	mayaa tatamidaM sarvaM	",
+                title2:
+                  "mayA tatamidaM sarvaM jagadavyaktamUrtinA 	। matsthAni sarvabhUtAni na cAhaM tEshvavasthita@h ॥",
                 url: "",
               },
               {
                 id: 15,
                 name: "	Chapter 9 v 7	",
                 lang: "sa",
-                title2: "	sarvabhUtaani kautEya	",
+                title2:
+                  "sarvabhUtAni kauntEya prakRtiM yAnti mAmikAm । kalpakshayE punastAni kalpAdau visRjAmyaham ॥",
                 url: "",
               },
               {
                 id: 16,
                 name: "	Chapter 9 v 26	",
                 lang: "sa",
-                title2: "	patraM pushpaM phalaM	",
+                title2:
+                  "patraM pushpaM phalaM tOyaM yO mE bhaktyA prayacCati । tadahaM bhaktyupahRtamaSnAmi prayatAtmana@h ॥",
                 url: "",
               },
               {
                 id: 17,
                 name: "	Chapter 10 v 3	",
                 lang: "sa",
-                title2: "	yO maamajamanaadiM ca	",
+                title2:
+                  "yO mAmajamanAdiM ca vEtti lOkamahESvaram | asammUDha@h sa martyEshu sarvapApai@h pramucyatE ॥",
                 url: "",
               },
               {
                 id: 18,
                 name: "	Chapter 15 v 12	",
                 lang: "sa",
-                title2: "	yadaadityagataM tEjO	",
+                title2:
+                  "yadAdityagataM tEjO jagadbhAsayatE'khilam । yaccandramasi yaccAgnau tattEjO viddhi mAmakam ॥",
                 url: "",
               },
               {
                 id: 19,
                 name: "	Chapter 18 v 53	",
                 lang: "sa",
-                title2: "	ahaMkaaraM balaM darpaM	",
+                title2:
+                  "aha~mkAraM balaM darpaM kAmaM krOdhaM parigraham । vimucya nirmama@h SAntO brahmabhUyAya kalpatE  ॥",
                 url: "",
               },
               {
                 id: 20,
                 name: "	Chapter 18 v 56	",
                 lang: "sa",
-                title2: "	sarvakarmANyapi sadaa	",
+                title2:
+                  "sarvakarmANyapi sadA kurvANO madvyapASraya@h । matprasAdAdavApnOti SASvataM padamavyayam ॥",
                 url: "",
               },
             ],

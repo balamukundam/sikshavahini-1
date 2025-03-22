@@ -8,6 +8,7 @@ import PreviewTableComponent from "./PreviewTableComponent";
 import PreviewPoemComponent from "./PreviewPoemComponent";
 import PreviewSeparatorComponent from "./PreviewSeparatorComponent";
 import PreviewMultipleQuestionComp from "./PreviewMultipleQuestionComp";
+import PreviewMusicNotesComponent from "./PreviewMusicNotesComponent";
 
 interface Props {
   dataRow: any; // Initial data passed to the component
@@ -111,6 +112,13 @@ const RowPreview: React.FC<Props> = ({
                   curLang={curLang}
                   updateDisctionary={updateDisctionary}
                 ></PreviewMultipleQuestionComp>
+              </>
+            )}
+            {item["cType"] === "51" && (
+              <>
+                <PreviewMusicNotesComponent
+                  nusicNotesComp={item}
+                ></PreviewMusicNotesComponent>
               </>
             )}
             {item["cType"] === "99" && (
