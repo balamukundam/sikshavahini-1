@@ -32,6 +32,7 @@ import DictionaryComponent from "./components/DictionaryComponent";
 import TaragatiSelector from "./components/TaragatiSelector";
 import ToneComponent from "./components/ToneComponent";
 import MusicNotesComponent from "./components/PreviewMusicNotesComponent";
+import TalamComponent from "./components/TalamComponent";
 
 function App() {
   let items1 = ["Level-1", "Level-2", "Level-3"];
@@ -213,6 +214,11 @@ function App() {
   const [selectedScreen, setSelectedScreen] = useState("Design");
   const [dictionaryText, setDictionaryText] = useState("svAgatam");
   const [dictionarySentence, setDictionarySentence] = useState("");
+  const [dictionaryShow, setDictionaryShow] = useState(false);
+  const [talamShow, setTalamShow] = useState(false);
+  const [stopPlayClicked, setStopPlayClicked] = useState(false);
+  const [talamImage, setTalamImage] = useState("/images/Sunaadam.jpg");
+  const [talamNote, setTalamNote] = useState("");
 
   // const addData1 = () => {
   //   let dr = { components: [] };
@@ -288,7 +294,7 @@ function App() {
   }
   function getNewMusicNotesCompObject(): ComponentMusicNotes {
     return {
-      width: "3",
+      width: "12",
       cType: "51",
       language: "default",
       border: false,
@@ -525,6 +531,20 @@ function App() {
   function updateDisctionary(str: string, sentence: string) {
     setDictionaryText(str);
     setDictionarySentence(sentence);
+    setDictionaryShow(true);
+    setTalamShow(false);
+  }
+
+  function updateTalam(image: string, note: string) {
+    setDictionaryShow(false);
+    setTalamShow(note !== "Stop");
+    setTalamImage(image);
+    setTalamNote(note);
+    setStopPlayClicked(false);
+  }
+
+  function stopPlaying() {
+    setStopPlayClicked(true);
   }
 
   return (
@@ -581,9 +601,12 @@ function App() {
                     moveRow={moveRow}
                     deleteRow={deleteRow}
                     curLang={curLang}
+                    talamShow={talamShow}
+                    stopPlayClicked={stopPlayClicked}
                     preferencesUpdate={preferencesUpdate}
                     updateDisctionary={updateDisctionary}
                     insertRowBelow={insertRowBelow}
+                    updateTalam={updateTalam}
                   ></RowsDesign>
                   <div className="row" style={{ marginBottom: "5px" }}>
                     <div className="col-1">
@@ -596,11 +619,20 @@ function App() {
               </div>
 
               <div className="col-2">
-                <DictionaryComponent
-                  text={dictionaryText}
-                  sentence={dictionarySentence}
-                  curLang={curLang}
-                ></DictionaryComponent>
+                {dictionaryShow && (
+                  <DictionaryComponent
+                    text={dictionaryText}
+                    sentence={dictionarySentence}
+                    curLang={curLang}
+                  ></DictionaryComponent>
+                )}
+                {talamShow && (
+                  <TalamComponent
+                    image={talamImage}
+                    note={talamNote}
+                    stopPlaying={stopPlaying}
+                  ></TalamComponent>
+                )}
               </div>
             </div>
           </div>
@@ -684,18 +716,30 @@ function App() {
                 <RowPreview
                   dataRow={item}
                   curLang={curLang}
+                  talamShow={talamShow}
+                  stopPlayClicked={stopPlayClicked}
                   updateDisctionary={updateDisctionary}
+                  updateTalam={updateTalam}
                 ></RowPreview>
               </div>
             </div>
           ))}
 
           <div className="col-2">
-            <DictionaryComponent
-              text={dictionaryText}
-              sentence={dictionarySentence}
-              curLang={curLang}
-            ></DictionaryComponent>
+            {dictionaryShow && (
+              <DictionaryComponent
+                text={dictionaryText}
+                sentence={dictionarySentence}
+                curLang={curLang}
+              ></DictionaryComponent>
+            )}
+            {talamShow && (
+              <TalamComponent
+                image={talamImage}
+                note={talamNote}
+                stopPlaying={stopPlaying}
+              ></TalamComponent>
+            )}
           </div>
         </>
       )}

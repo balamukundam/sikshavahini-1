@@ -3,11 +3,19 @@ import * as Tone from "tone";
 
 interface Props {
   nusicNotesComp: any;
+  talamShow: boolean;
+  stopPlayClicked: boolean;
+  updateTalam: (image: string, note: string) => void;
 }
 
-const PreviewMusicNotesComponent = ({ nusicNotesComp }: Props) => {
+const PreviewMusicNotesComponent = ({
+  nusicNotesComp,
+  talamShow,
+  stopPlayClicked,
+  updateTalam,
+}: Props) => {
   const [count, setCount] = useState(1);
-  const [currentNote, setCurrentNote] = useState(1);
+  const [currentNote, setCurrentNote] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [synth, setSynth] = useState<Tone.PolySynth | null>(null);
   const [talamSynth, setTalamSynth] = useState<Tone.PolySynth | null>(null);
@@ -15,6 +23,9 @@ const PreviewMusicNotesComponent = ({ nusicNotesComp }: Props) => {
   const [image, setImage] = useState("/images/Sunaadam.jpg");
   const [noteText, setNoteText] = useState("Start");
   const [timeInterval, setTimeInterval] = useState(1000);
+  const [startEventNumber, setStartEventNumber] = useState(0);
+  const [endEventNumber, setEndEventNumber] = useState(0);
+  const [selectedEventNumber, setSelectedEventNumber] = useState(-1);
 
   // ✅ Image paths for each count
   const images = [
@@ -28,10 +39,21 @@ const PreviewMusicNotesComponent = ({ nusicNotesComp }: Props) => {
     "/images/img6.jpeg",
   ];
 
-  let notesPerBeatForTable: number[] = [1, 2, 3, 4];
+  const showTalam = (image: string, noteText: string) => {
+    setImage(image);
+    setNoteText(noteText);
+    updateTalam(image, noteText);
+  };
+
+  let notesPerBeatForTable: number[] = [1, 2];
 
   const basicSpeed = 800;
   // setTimeInterval(basicSpeed);
+  useEffect(() => {
+    if (stopPlayClicked) {
+      stopTimer();
+    }
+  }, [stopPlayClicked]);
 
   const getNotes = (): any[] => {
     let eventNotes: any[] = [];
@@ -233,11 +255,18 @@ const PreviewMusicNotesComponent = ({ nusicNotesComp }: Props) => {
   useEffect(() => {
     if (synth && talamSynth && !intervalRef.current) {
       console.log("Starting Interval...");
+      if (startEventNumber == 0 && endEventNumber == 0) {
+        setEndEventNumber(totalEvents - 1);
+      }
+
       intervalRef.current = setInterval(() => {
         setCurrentNote((prevCount) => {
           console.log("started:...");
-          if (prevCount === totalEvents) {
-            prevCount = 0;
+          if (prevCount < startEventNumber) {
+            prevCount = startEventNumber;
+          }
+          if (prevCount === endEventNumber + 1) {
+            prevCount = startEventNumber;
           }
 
           let getTableEventNbrs = getTableAndEventNumber(prevCount);
@@ -247,11 +276,18 @@ const PreviewMusicNotesComponent = ({ nusicNotesComp }: Props) => {
 
           let thisEvent = events[currentTable][currentEvent];
           const nextNote = thisEvent.note;
-          setImage(images[thisEvent.talam]);
-          setNoteText(thisEvent.noteText);
+          showTalam(images[thisEvent.talam], thisEvent.noteText);
 
           if (nextNote !== 0) {
             const noteName = Tone.Frequency(nextNote, "midi").toNote();
+            const element = document.getElementById(`note-${prevCount}`);
+            if (element) {
+              element.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+                inline: "center",
+              });
+            }
             // ✅ Trigger the note
             synth.triggerAttackRelease(noteName, "4n");
           }
@@ -286,8 +322,8 @@ const PreviewMusicNotesComponent = ({ nusicNotesComp }: Props) => {
   // ✅ Stop Timer and Drone
   const stopTimer = () => {
     pauseTimer();
-    setCurrentNote(1);
-    setImage("/images/Sunaadam.jpg");
+    setCurrentNote(0);
+    showTalam("/images/Sunaadam.jpg", "Stop");
   };
 
   // ✅ Stop Timer and Drone
@@ -313,114 +349,157 @@ const PreviewMusicNotesComponent = ({ nusicNotesComp }: Props) => {
     }
   };
 
+  const handleClick = (index: number) => {
+    setSelectedEventNumber(index);
+  };
+
+  const clickStartEvent = () => {
+    setStartEventNumber(selectedEventNumber);
+    setEndEventNumber(totalEvents - 1);
+  };
+
+  const clickEndEvent = () => {
+    setEndEventNumber(selectedEventNumber);
+  };
+
+  const clearSelections = () => {
+    setSelectedEventNumber(-1);
+    setStartEventNumber(0);
+    setEndEventNumber(totalEvents - 1);
+  };
+
+  const getNoteStyle = (
+    globalIndex: number,
+    globalIndexStart: number,
+    tableIndex: number
+  ): React.CSSProperties => {
+    if (
+      globalIndex <= currentNote - 1 &&
+      globalIndexStart >=
+        Math.floor((currentNote - 1) / notesPerBeatForTable[tableIndex]) *
+          notesPerBeatForTable[tableIndex]
+    ) {
+      return {
+        padding: "1px",
+        textAlign: "center" as const, // ✅ Fix type issue
+        backgroundColor: "yellow",
+        color: "red",
+        cursor: "pointer",
+      };
+    }
+
+    if (!talamShow && globalIndex === selectedEventNumber) {
+      return {
+        padding: "1px",
+        textAlign: "center" as const, // ✅ Fix type issue
+        backgroundColor: "orange",
+        color: "white",
+        cursor: "pointer",
+      };
+    }
+
+    if (
+      !(startEventNumber == 0 && endEventNumber == totalEvents - 1) &&
+      globalIndex >= startEventNumber &&
+      globalIndex <= endEventNumber
+    ) {
+      return {
+        padding: "1px",
+        textAlign: "center" as const, // ✅ Fix type issue
+        backgroundColor: "#87CEFA",
+        color: "white",
+        cursor: "pointer",
+      };
+    }
+
+    return {
+      padding: "1px",
+      textAlign: "center" as const, // ✅ Fix type issue
+      backgroundColor: "transparent",
+      color: "black",
+      cursor: "pointer",
+    };
+  };
+
   return (
     <>
-      <>
-        {tables.map((rows, tableIndex) => (
-          <table
-            style={{
-              borderCollapse: "collapse",
-              width: "100%",
-              border: "2px solid black",
-            }}
-          >
-            <tbody>
-              {rows.map((row, rowIndex) => {
-                return (
-                  <tr key={rowIndex}>
-                    {row.map((item, columnIndex) => {
-                      // Calculate the global index based on row and column
-                      return (
-                        <td
-                          key={columnIndex}
-                          style={{
-                            border: "1px solid black", // Border for each cell
-                            padding: "10px",
-                            textAlign: "center",
-                          }}
-                        >
-                          {item.map((note, noteIndex) => {
-                            const globalIndexStart =
-                              startEventForTable(tableIndex) +
-                              rowIndex * 8 * notesPerBeatForTable[tableIndex] +
-                              columnIndex * notesPerBeatForTable[tableIndex];
-                            const globalIndex =
-                              startEventForTable(tableIndex) +
-                              rowIndex * 8 * notesPerBeatForTable[tableIndex] +
-                              columnIndex * notesPerBeatForTable[tableIndex] +
-                              noteIndex;
-                            return (
-                              <span
-                                key={globalIndex}
-                                style={{
-                                  padding: "10px",
-                                  textAlign: "center",
-                                  backgroundColor:
-                                    globalIndex <= currentNote - 1 &&
-                                    globalIndexStart >=
-                                      Math.floor(
-                                        (currentNote - 1) /
-                                          notesPerBeatForTable[tableIndex]
-                                      ) *
-                                        notesPerBeatForTable[tableIndex]
-                                      ? "yellow"
-                                      : "transparent",
-                                  color:
-                                    globalIndex <= currentNote - 1 &&
-                                    globalIndexStart >=
-                                      Math.floor(
-                                        (currentNote - 1) /
-                                          notesPerBeatForTable[tableIndex]
-                                      ) *
-                                        notesPerBeatForTable[tableIndex]
-                                      ? "red"
-                                      : "black",
-                                }}
-                              >
-                                {note}
-                              </span>
-                            );
-                          })}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        ))}
-      </>
-
       <div style={{ textAlign: "center", marginTop: "20px" }}>
-        <h1>{noteText}</h1>
-        <img
-          src={image}
-          alt={`Count ${count}`}
-          style={{
-            width: 150,
-            height: 150,
-            objectFit: "cover",
-            borderRadius: 8,
-            border: "2px solid #ccc",
-          }}
-        />
         <div style={{ marginTop: 20 }}>
           <button
             onClick={startTimer}
+            disabled={talamShow}
             style={{
               padding: "10px 20px",
               margin: "5px",
-              backgroundColor: "#4CAF50",
+              backgroundColor: talamShow ? "#ccc" : "#4CAF50", // ✅ Gray when disabled
               color: "white",
               border: "none",
               borderRadius: 5,
-              cursor: "pointer",
+              cursor: talamShow ? "not-allowed" : "pointer", // ✅ Change cursor
+              opacity: talamShow ? 0.7 : 1, // ✅ Reduce opacity for a disabled look
             }}
           >
-            Start
+            Play
           </button>
-          <button
+
+          {selectedEventNumber >= 0 && (
+            <button
+              onClick={clickStartEvent}
+              disabled={talamShow}
+              style={{
+                padding: "10px 20px",
+                margin: "5px",
+                backgroundColor: talamShow ? "#ccc" : "#87CEFA", // ✅ Gray when disabled
+                color: "white",
+                border: "none",
+                borderRadius: 5,
+                cursor: talamShow ? "not-allowed" : "pointer", // ✅ Change cursor
+                opacity: talamShow ? 0.7 : 1, // ✅ Reduce opacity for a disabled look
+              }}
+            >
+              Set Start
+            </button>
+          )}
+
+          {selectedEventNumber >= 0 && (
+            <button
+              onClick={clickEndEvent}
+              disabled={talamShow}
+              style={{
+                padding: "10px 20px",
+                margin: "5px",
+                backgroundColor: talamShow ? "#ccc" : "#87CEFA", // ✅ Gray when disabled
+                color: "white",
+                border: "none",
+                borderRadius: 5,
+                cursor: talamShow ? "not-allowed" : "pointer", // ✅ Change cursor
+                opacity: talamShow ? 0.7 : 1, // ✅ Reduce opacity for a disabled look
+              }}
+            >
+              Set End
+            </button>
+          )}
+
+          {selectedEventNumber >= 0 && (
+            <button
+              onClick={clearSelections}
+              disabled={talamShow}
+              style={{
+                padding: "10px 20px",
+                margin: "5px",
+                backgroundColor: talamShow ? "#ccc" : "#87CEFA", // ✅ Gray when disabled
+                color: "white",
+                border: "none",
+                borderRadius: 5,
+                cursor: talamShow ? "not-allowed" : "pointer", // ✅ Change cursor
+                opacity: talamShow ? 0.7 : 1, // ✅ Reduce opacity for a disabled look
+              }}
+            >
+              Clear Selection
+            </button>
+          )}
+
+          {/* <button
             onClick={pauseTimer}
             style={{
               padding: "10px 20px",
@@ -447,9 +526,76 @@ const PreviewMusicNotesComponent = ({ nusicNotesComp }: Props) => {
             }}
           >
             Stop
-          </button>
+          </button> */}
         </div>
       </div>
+      <>
+        {tables.map((rows, tableIndex) => (
+          <>
+            <h3>Notes per beat = {notesPerBeatForTable[tableIndex]} </h3>
+            <table
+              style={{
+                borderCollapse: "collapse",
+                width: "100%",
+                border: "2px solid black",
+              }}
+            >
+              <tbody>
+                {rows.map((row, rowIndex) => {
+                  return (
+                    <tr key={rowIndex}>
+                      {row.map((item, columnIndex) => {
+                        // Calculate the global index based on row and column
+                        return (
+                          <td
+                            key={columnIndex}
+                            style={{
+                              border: "1px solid black", // Border for each cell
+                              padding: "10px",
+                              textAlign: "center",
+                            }}
+                          >
+                            {item.map((note, noteIndex) => {
+                              const globalIndexStart =
+                                startEventForTable(tableIndex) +
+                                rowIndex *
+                                  8 *
+                                  notesPerBeatForTable[tableIndex] +
+                                columnIndex * notesPerBeatForTable[tableIndex];
+                              const globalIndex =
+                                startEventForTable(tableIndex) +
+                                rowIndex *
+                                  8 *
+                                  notesPerBeatForTable[tableIndex] +
+                                columnIndex * notesPerBeatForTable[tableIndex] +
+                                noteIndex;
+                              return (
+                                <span
+                                  key={globalIndex}
+                                  id={`note-${globalIndex}`}
+                                  onClick={() => handleClick(globalIndex)}
+                                  style={getNoteStyle(
+                                    globalIndex,
+                                    globalIndexStart,
+                                    tableIndex
+                                  )}
+                                >
+                                  {note}
+                                </span>
+                              );
+                            })}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+            <hr></hr>
+          </>
+        ))}
+      </>
     </>
   );
 };

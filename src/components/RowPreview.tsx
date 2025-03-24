@@ -13,13 +13,19 @@ import PreviewMusicNotesComponent from "./PreviewMusicNotesComponent";
 interface Props {
   dataRow: any; // Initial data passed to the component
   curLang: string;
+  talamShow: boolean;
+  stopPlayClicked: boolean;
   updateDisctionary: (str: string, sentence: string) => void;
+  updateTalam: (image: string, note: string) => void;
 }
 
 const RowPreview: React.FC<Props> = ({
   dataRow,
   curLang,
+  talamShow,
+  stopPlayClicked,
   updateDisctionary,
+  updateTalam,
 }) => {
   // Initialize state with the dataRows
   if (dataRow["preferences"]["language"] !== "Default") {
@@ -118,6 +124,9 @@ const RowPreview: React.FC<Props> = ({
               <>
                 <PreviewMusicNotesComponent
                   nusicNotesComp={item}
+                  stopPlayClicked={stopPlayClicked}
+                  talamShow={talamShow}
+                  updateTalam={updateTalam}
                 ></PreviewMusicNotesComponent>
               </>
             )}

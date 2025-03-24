@@ -13,6 +13,8 @@ import {
 interface Props {
   initialDataRows: any[]; // Initial data passed to the component
   curLang: string;
+  talamShow: boolean;
+  stopPlayClicked: boolean;
   onDataUpdate: (
     rowIndex: number,
     compIndex: number,
@@ -31,11 +33,14 @@ interface Props {
   preferencesUpdate: (rowIndex: number, updatedPreferences: any) => void;
   updateDisctionary: (str: string, sentence: string) => void;
   insertRowBelow: (rowIndex: number) => void;
+  updateTalam: (image: string, note: string) => void;
 }
 
 const RowsDesign: React.FC<Props> = ({
   initialDataRows,
   curLang,
+  talamShow,
+  stopPlayClicked,
   onDataUpdate,
   deleteRow,
   addComponent,
@@ -46,6 +51,7 @@ const RowsDesign: React.FC<Props> = ({
   preferencesUpdate,
   updateDisctionary,
   insertRowBelow,
+  updateTalam,
 }) => {
   // Initialize state with the dataRows
   // const [dataRows, setDataRows] = useState<any[]>(initialDataRows);
@@ -76,7 +82,10 @@ const RowsDesign: React.FC<Props> = ({
             <RowPreview
               dataRow={item}
               curLang={curLang}
+              talamShow={talamShow}
+              stopPlayClicked={stopPlayClicked}
               updateDisctionary={updateDisctionary}
+              updateTalam={updateTalam}
             ></RowPreview>
           </div>
         </div>
