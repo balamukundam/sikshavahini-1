@@ -123,7 +123,7 @@ const RowPreview: React.FC<Props> = ({
             {item["cType"] === "51" && (
               <>
                 <PreviewMusicNotesComponent
-                  nusicNotesComp={item}
+                  musicNotesComp={item}
                   stopPlayClicked={stopPlayClicked}
                   talamShow={talamShow}
                   updateTalam={updateTalam}

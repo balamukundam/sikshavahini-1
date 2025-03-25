@@ -2,14 +2,14 @@ import { useState, useRef, useEffect } from "react";
 import * as Tone from "tone";
 
 interface Props {
-  nusicNotesComp: any;
+  musicNotesComp: any;
   talamShow: boolean;
   stopPlayClicked: boolean;
   updateTalam: (image: string, note: string) => void;
 }
 
 const PreviewMusicNotesComponent = ({
-  nusicNotesComp,
+  musicNotesComp,
   talamShow,
   stopPlayClicked,
   updateTalam,
@@ -28,7 +28,7 @@ const PreviewMusicNotesComponent = ({
   const [selectedEventNumber, setSelectedEventNumber] = useState(-1);
 
   // ✅ Image paths for each count
-  const images = [
+  let images = [
     "/images/img0.jpeg",
     "/images/img1.jpeg",
     "/images/img2.jpeg",
@@ -39,6 +39,29 @@ const PreviewMusicNotesComponent = ({
     "/images/img6.jpeg",
   ];
 
+  useEffect(() => {
+    console.log("musicNotesComp changed! Recalculating...");
+    // Add your recalculation logic here
+  }, [musicNotesComp]);
+
+  const checkValidTalamNumbers = (
+    input: string,
+    startN: number,
+    endN: number
+  ): boolean => {
+    return input
+      .split(",") // Split by comma
+      .map((num) => num.trim()) // Remove extra spaces
+      .map(Number) // Convert to number
+      .every((n) => !isNaN(n) && n >= startN && n <= endN); // Check if within range
+  };
+  if (checkValidTalamNumbers(musicNotesComp.talamSeq, 0, 6)) {
+    images = musicNotesComp.talamSeq
+      .split(",") // Split by comma
+      .map((num: string) => num.trim()) // Trim spaces
+      .map((num: string) => `/images/img${num}.jpeg`); // Format as "image-0x"
+  }
+
   const showTalam = (image: string, noteText: string) => {
     setImage(image);
     setNoteText(noteText);
@@ -46,22 +69,34 @@ const PreviewMusicNotesComponent = ({
   };
 
   let notesPerBeatForTable: number[] = [1, 2];
+  if (checkValidTalamNumbers(musicNotesComp.speeds, 1, 4)) {
+    notesPerBeatForTable = musicNotesComp.speeds
+      .split(",")
+      .map((num: string) => num.trim());
+  }
 
-  const basicSpeed = 800;
-  // setTimeInterval(basicSpeed);
   useEffect(() => {
     if (stopPlayClicked) {
       stopTimer();
     }
   }, [stopPlayClicked]);
 
+  let baseNbr = 60;
+  if (musicNotesComp.pitch) {
+    baseNbr = musicNotesComp.pitch;
+  }
+
+  let basicSpeed: number = 1000;
+  if (musicNotesComp.bpm) {
+    basicSpeed = 60000 / musicNotesComp.bpm;
+  }
+
   const getNotes = (): any[] => {
     let eventNotes: any[] = [];
-    let baseNbr = 60;
     let previousNoteNbr = -1;
     let noteText = "";
 
-    nusicNotesComp["musicNotes"].split("").forEach((char: string) => {
+    musicNotesComp["musicNotes"].split("").forEach((char: string) => {
       if (
         char == "S" ||
         char == "R" ||
@@ -157,7 +192,7 @@ const PreviewMusicNotesComponent = ({
           beatCount = beatCount + 1;
           row.push(cellText);
           cellText = [];
-          if (beatCount == 8) {
+          if (beatCount == images.length) {
             beatCount = 0;
             thisRows.push(row);
             row = [];
@@ -206,9 +241,9 @@ const PreviewMusicNotesComponent = ({
       }).toDestination();
 
       const chord = [
-        Tone.Frequency(55, "midi").toNote(), // C4
-        Tone.Frequency(60, "midi").toNote(), // E4
-        Tone.Frequency(48, "midi").toNote(), // G4
+        Tone.Frequency(baseNbr - 5, "midi").toNote(), // C4
+        Tone.Frequency(baseNbr, "midi").toNote(), // E4
+        Tone.Frequency(baseNbr - 12, "midi").toNote(), // G4
       ];
 
       newDrone.triggerAttack(chord); // Start chord
@@ -294,14 +329,12 @@ const PreviewMusicNotesComponent = ({
 
           if (
             thisEvent.beatRequired &&
-            (thisEvent.talam == 0 ||
-              thisEvent.talam == 4 ||
-              thisEvent.talam == 6)
+            images[thisEvent.talam] === "/images/img0.jpeg"
           ) {
             const notesToPlay = [
-              Tone.Frequency(60, "midi").toNote(), // C4
-              Tone.Frequency(67, "midi").toNote(), // G4
-              Tone.Frequency(72, "midi").toNote(), // C5
+              Tone.Frequency(baseNbr, "midi").toNote(), // C4
+              Tone.Frequency(baseNbr + 7, "midi").toNote(), // G4
+              Tone.Frequency(baseNbr + 12, "midi").toNote(), // C5
             ];
             talamSynth?.triggerAttackRelease(notesToPlay, "2n", Tone.now());
           }
@@ -559,13 +592,13 @@ const PreviewMusicNotesComponent = ({
                               const globalIndexStart =
                                 startEventForTable(tableIndex) +
                                 rowIndex *
-                                  8 *
+                                  images.length *
                                   notesPerBeatForTable[tableIndex] +
                                 columnIndex * notesPerBeatForTable[tableIndex];
                               const globalIndex =
                                 startEventForTable(tableIndex) +
                                 rowIndex *
-                                  8 *
+                                  images.length *
                                   notesPerBeatForTable[tableIndex] +
                                 columnIndex * notesPerBeatForTable[tableIndex] +
                                 noteIndex;

@@ -16,6 +16,7 @@ import {
   ComponentTable,
   ComponentMultiQuest,
   ComponentMusicNotes,
+  noteOptions,
 } from "./services/dataTypes";
 import { downloadData } from "./services/downloadUtils";
 import React from "react";
@@ -33,6 +34,7 @@ import TaragatiSelector from "./components/TaragatiSelector";
 import ToneComponent from "./components/ToneComponent";
 import MusicNotesComponent from "./components/PreviewMusicNotesComponent";
 import TalamComponent from "./components/TalamComponent";
+import MusicSettings from "./components/MusicSettings";
 
 function App() {
   let items1 = ["Level-1", "Level-2", "Level-3"];
@@ -41,6 +43,8 @@ function App() {
   let ett: EngToTelService = new EngToTelService();
 
   const [curLang, setLanguage] = useState<BmkLanguage>(BmkLanguages.telugu);
+
+  const [musicSettings, setMusicSettings] = useState({ bpm: 60, pitch: 60 });
 
   const [titleLesson, setTitleLesson] = useState("");
   const [subTitleLesson, setSubTitleLesson] = useState("");
@@ -300,6 +304,11 @@ function App() {
       border: false,
       musicNotes: "SRGMPDNS+S+NDPMGRS",
       title: "Notes",
+      pitch: 60,
+      speeds: "1,2",
+      melakarta: 15,
+      talamSeq: "0,1,2,3,0,6,0,6",
+      bpm: 60,
     };
   }
 
@@ -547,6 +556,18 @@ function App() {
     setStopPlayClicked(true);
   }
 
+  musicSettings;
+
+  function isMusicSettingsRequired(): boolean {
+    return dataRows.some((row) =>
+      row.components.some((component) => component.cType === "51")
+    );
+  }
+
+  function onMusicSettingsChange(msdata: any): void {
+    setMusicSettings(msdata);
+  }
+
   return (
     <div className="container-fluid" style={{ minWidth: "210mm" }}>
       <Navbar lang={curLang}></Navbar>
@@ -590,6 +611,29 @@ function App() {
                       )}
                     </div>
                   </div>
+                  {isMusicSettingsRequired() && (
+                    <div className="row" style={{ marginBottom: "5px" }}>
+                      <div className="col-1 no-print">
+                        <MusicSettings
+                          musicSettings={musicSettings}
+                          onMusicSettingsChange={onMusicSettingsChange}
+                        ></MusicSettings>
+                      </div>
+                      <div className={"col-11 div-" + curLang + "gen fontup"}>
+                        <div className="d-flex justify-content-center align-items-center gap-3">
+                          <p className="text-center m-0">
+                            Musinc Settings : Shruthi -{" "}
+                            {
+                              noteOptions.find(
+                                (n) => n.value === musicSettings.pitch
+                              )?.label
+                            }{" "}
+                            ; Laya - {musicSettings.bpm} BPM
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   <RowsDesign
                     initialDataRows={dataRows}
