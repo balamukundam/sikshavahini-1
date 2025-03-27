@@ -58,24 +58,6 @@ const EditMusicNotesComponent: React.FC<Props> = ({
     onDataUpdate(rowIndex, compIndex, musicNotesComponentData);
   };
 
-  const handleBpmChange = (value: string) => {
-    musicNotesComponentData.bpm = Number(value);
-    onDataUpdate(rowIndex, compIndex, musicNotesComponentData);
-  };
-
-  const handlePitchChange = (value: string) => {
-    musicNotesComponentData.pitch = Number(value);
-    onDataUpdate(rowIndex, compIndex, musicNotesComponentData);
-  };
-
-  const handleSelectionChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    musicNotesComponentData.pitch = Number(event.target.value);
-
-    onDataUpdate(rowIndex, compIndex, musicNotesComponentData);
-  };
-
   return (
     <>
       <div className="row">
@@ -113,44 +95,6 @@ const EditMusicNotesComponent: React.FC<Props> = ({
             />
           </div>
         </div>
-        <div className="col-3">
-          <div className="input-group mb-4">
-            <span className="input-group-text" id="width-input">
-              Pitch
-            </span>
-            <select
-              className="form-select"
-              value={musicNotesComponentData.pitch}
-              onChange={handleSelectionChange}
-              style={{ maxWidth: "150px" }} // Optional: Adjust width as needed
-            >
-              {noteOptions.map((note) => (
-                <option key={note.value} value={note.value}>
-                  {note.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        <div className="col-3">
-          <div className="input-group mb-4">
-            <span className="input-group-text" id="width-input">
-              BPM
-            </span>
-
-            <input
-              type="number"
-              className="form-control"
-              min="45"
-              max="100"
-              id="widthInputField"
-              aria-describedby="width-input"
-              value={musicNotesComponentData.bpm}
-              onChange={(e) => handleBpmChange(e.target.value)}
-            />
-          </div>
-        </div>
       </div>
       <textarea
         rows={8}
@@ -160,10 +104,9 @@ const EditMusicNotesComponent: React.FC<Props> = ({
         autoCapitalize="off"
         placeholder="Add text"
         style={{ width: "100%" }}
+        value={musicNotesComponentData.musicNotes}
         onChange={(e) => handleParaChange(e.target.value)}
-      >
-        {musicNotesComponentData.musicNotes}
-      </textarea>
+      />
     </>
   );
 };

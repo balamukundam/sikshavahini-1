@@ -17,6 +17,8 @@ import {
   ComponentMultiQuest,
   ComponentMusicNotes,
   noteOptions,
+  melakartaDataList,
+  musicSets,
 } from "./services/dataTypes";
 import { downloadData } from "./services/downloadUtils";
 import React from "react";
@@ -44,7 +46,11 @@ function App() {
 
   const [curLang, setLanguage] = useState<BmkLanguage>(BmkLanguages.telugu);
 
-  const [musicSettings, setMusicSettings] = useState({ bpm: 60, pitch: 60 });
+  const [musicSettings, setMusicSettings] = useState<musicSets>({
+    bpm: 60,
+    pitch: 60,
+    melakarta: 15,
+  });
 
   const [titleLesson, setTitleLesson] = useState("");
   const [subTitleLesson, setSubTitleLesson] = useState("");
@@ -304,11 +310,8 @@ function App() {
       border: false,
       musicNotes: "SRGMPDNS+S+NDPMGRS",
       title: "Notes",
-      pitch: 60,
       speeds: "1,2",
-      melakarta: 15,
       talamSeq: "0,1,2,3,0,6,0,6",
-      bpm: 60,
     };
   }
 
@@ -556,17 +559,23 @@ function App() {
     setStopPlayClicked(true);
   }
 
-  musicSettings;
-
   function isMusicSettingsRequired(): boolean {
     return dataRows.some((row) =>
       row.components.some((component) => component.cType === "51")
     );
   }
 
-  function onMusicSettingsChange(msdata: any): void {
+  function onMusicSettingsChange(msdata: musicSets): void {
     setMusicSettings(msdata);
   }
+
+  const getNameByValue = (value: number): string | undefined => {
+    for (const chakra of melakartaDataList) {
+      const foundItem = chakra.items.find((item) => item.value === value);
+      if (foundItem) return foundItem.name;
+    }
+    return undefined; // Return undefined if not found
+  };
 
   return (
     <div className="container-fluid" style={{ minWidth: "210mm" }}>
@@ -620,16 +629,30 @@ function App() {
                         ></MusicSettings>
                       </div>
                       <div className={"col-11 div-" + curLang + "gen fontup"}>
-                        <div className="d-flex justify-content-center align-items-center gap-3">
-                          <p className="text-center m-0">
-                            Musinc Settings : Shruthi -{" "}
-                            {
-                              noteOptions.find(
-                                (n) => n.value === musicSettings.pitch
-                              )?.label
-                            }{" "}
-                            ; Laya - {musicSettings.bpm} BPM
-                          </p>
+                        <div className="row justify-content-center">
+                          <div className="col-lg-8 col-md-10 col-sm-12">
+                            <div className="card shadow-sm border-0 rounded-3">
+                              <div className="card-body text-center">
+                                <p className="m-0 fw-bold text-primary">
+                                  <span className="text-dark">Shruthi:</span>{" "}
+                                  {
+                                    noteOptions.find(
+                                      (n) => n.value === musicSettings.pitch
+                                    )?.label
+                                  }
+                                </p>
+                                <p className="m-0 fw-bold text-success">
+                                  <span className="text-dark">Laya:</span>{" "}
+                                  {musicSettings.bpm} BPM
+                                </p>
+                                <p className="m-0 fw-bold text-danger">
+                                  <span className="text-dark">Melakartha:</span>{" "}
+                                  {getNameByValue(musicSettings.melakarta)}{" "}
+                                  Ragam
+                                </p>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -637,6 +660,7 @@ function App() {
 
                   <RowsDesign
                     initialDataRows={dataRows}
+                    musicSettings={musicSettings}
                     onDataUpdate={updateComponent}
                     addComponent={addComponent}
                     insertComponent={insertComponent}
@@ -759,6 +783,8 @@ function App() {
               <div className="col-11">
                 <RowPreview
                   dataRow={item}
+                  rowNbr={index}
+                  musicSettings={musicSettings}
                   curLang={curLang}
                   talamShow={talamShow}
                   stopPlayClicked={stopPlayClicked}

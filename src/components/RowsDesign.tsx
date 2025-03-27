@@ -8,10 +8,12 @@ import {
   BmkLanguages,
   DataRow,
   ComponentType,
+  musicSets,
 } from "../services/dataTypes";
 
 interface Props {
   initialDataRows: any[]; // Initial data passed to the component
+  musicSettings: musicSets;
   curLang: string;
   talamShow: boolean;
   stopPlayClicked: boolean;
@@ -38,6 +40,7 @@ interface Props {
 
 const RowsDesign: React.FC<Props> = ({
   initialDataRows,
+  musicSettings,
   curLang,
   talamShow,
   stopPlayClicked,
@@ -81,6 +84,8 @@ const RowsDesign: React.FC<Props> = ({
           <div className="col-11">
             <RowPreview
               dataRow={item}
+              rowNbr={index}
+              musicSettings={musicSettings}
               curLang={curLang}
               talamShow={talamShow}
               stopPlayClicked={stopPlayClicked}

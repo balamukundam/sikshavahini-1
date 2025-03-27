@@ -1,17 +1,24 @@
 import { useState, useRef, useEffect } from "react";
 import * as Tone from "tone";
+import { musicSets } from "../services/dataTypes";
 
 interface Props {
   musicNotesComp: any;
+  musicSettings: musicSets;
   talamShow: boolean;
   stopPlayClicked: boolean;
+  rowg: number;
+  colg: number;
   updateTalam: (image: string, note: string) => void;
 }
 
 const PreviewMusicNotesComponent = ({
   musicNotesComp,
+  musicSettings,
   talamShow,
   stopPlayClicked,
+  rowg,
+  colg,
   updateTalam,
 }: Props) => {
   const [count, setCount] = useState(1);
@@ -82,13 +89,13 @@ const PreviewMusicNotesComponent = ({
   }, [stopPlayClicked]);
 
   let baseNbr = 60;
-  if (musicNotesComp.pitch) {
-    baseNbr = musicNotesComp.pitch;
+  if (musicSettings.pitch) {
+    baseNbr = musicSettings.pitch;
   }
 
   let basicSpeed: number = 1000;
-  if (musicNotesComp.bpm) {
-    basicSpeed = 60000 / musicNotesComp.bpm;
+  if (musicSettings.bpm) {
+    basicSpeed = 60000 / musicSettings.bpm;
   }
 
   const getNotes = (): any[] => {
@@ -115,21 +122,87 @@ const PreviewMusicNotesComponent = ({
         }
         previousNoteNbr = -1;
       }
+      let Radd = 0;
+      let Gadd = 0;
+      let Madd = 5;
+      let Dadd = 0;
+      let Nadd = 0;
+      let melanumber36: number = musicSettings.melakarta;
+      if (melanumber36 > 36) {
+        melanumber36 = melanumber36 - 36;
+        Madd = 6;
+      }
+      let melaBy6 = Math.ceil(melanumber36 / 6);
+      let melaRem6 = melanumber36 % 6;
+
+      switch (melaBy6) {
+        case 1:
+          Radd = 1;
+          Gadd = 2;
+          break;
+        case 2:
+          Radd = 1;
+          Gadd = 3;
+          break;
+        case 3:
+          Radd = 1;
+          Gadd = 4;
+          break;
+        case 4:
+          Radd = 2;
+          Gadd = 3;
+          break;
+        case 5:
+          Radd = 2;
+          Gadd = 4;
+          break;
+        case 6:
+          Radd = 3;
+          Gadd = 4;
+          break;
+      }
+      switch (melaRem6) {
+        case 1:
+          Dadd = 8;
+          Nadd = 9;
+          break;
+        case 2:
+          Dadd = 8;
+          Nadd = 10;
+          break;
+        case 3:
+          Dadd = 8;
+          Nadd = 11;
+          break;
+        case 4:
+          Dadd = 9;
+          Nadd = 10;
+          break;
+        case 5:
+          Dadd = 9;
+          Nadd = 11;
+          break;
+        case 0:
+          Dadd = 10;
+          Nadd = 11;
+          break;
+      }
+
       switch (char) {
         case "S":
           previousNoteNbr = baseNbr;
           noteText = char;
           break;
         case "R":
-          previousNoteNbr = baseNbr + 1;
+          previousNoteNbr = baseNbr + Radd;
           noteText = char;
           break;
         case "G":
-          previousNoteNbr = baseNbr + 4;
+          previousNoteNbr = baseNbr + Gadd;
           noteText = char;
           break;
         case "M":
-          previousNoteNbr = baseNbr + 5;
+          previousNoteNbr = baseNbr + Madd;
           noteText = char;
           break;
         case "P":
@@ -137,11 +210,11 @@ const PreviewMusicNotesComponent = ({
           noteText = char;
           break;
         case "D":
-          previousNoteNbr = baseNbr + 8;
+          previousNoteNbr = baseNbr + Dadd;
           noteText = char;
           break;
         case "N":
-          previousNoteNbr = baseNbr + 11;
+          previousNoteNbr = baseNbr + Nadd;
           noteText = char;
           break;
         case ";":
@@ -220,6 +293,14 @@ const PreviewMusicNotesComponent = ({
     totalEvents = totalEvents + eventsAndRwows.events.length;
   });
 
+  const getEventsCount = (): number => {
+    totalEvents = 0;
+    events.forEach((items) => {
+      totalEvents = totalEvents + items.length;
+    });
+    return totalEvents;
+  };
+
   // const rows: string[][][] = eventsAndRwows.rows;
 
   // ✅ Get note and image based on count
@@ -227,6 +308,11 @@ const PreviewMusicNotesComponent = ({
   // ✅ Start Timer and Audio Context
   const startTimer = async () => {
     console.log("Starting Timer...");
+    console.log(getEventsCount());
+    totalEvents = getEventsCount();
+    if (startEventNumber == 0 && endEventNumber == 0) {
+      setEndEventNumber(getEventsCount() - 1);
+    }
 
     if (Tone.context.state !== "running") {
       await Tone.start(); // Ensure audio context is running
@@ -290,12 +376,12 @@ const PreviewMusicNotesComponent = ({
   useEffect(() => {
     if (synth && talamSynth && !intervalRef.current) {
       console.log("Starting Interval...");
-      if (startEventNumber == 0 && endEventNumber == 0) {
-        setEndEventNumber(totalEvents - 1);
-      }
 
       intervalRef.current = setInterval(() => {
         setCurrentNote((prevCount) => {
+          console.log("start:...", startEventNumber);
+          console.log("end:...", endEventNumber);
+
           console.log("started:...");
           if (prevCount < startEventNumber) {
             prevCount = startEventNumber;
@@ -315,7 +401,9 @@ const PreviewMusicNotesComponent = ({
 
           if (nextNote !== 0) {
             const noteName = Tone.Frequency(nextNote, "midi").toNote();
-            const element = document.getElementById(`note-${prevCount}`);
+            const element = document.getElementById(
+              `note-${rowg}-${colg}-${prevCount}`
+            );
             if (element) {
               element.scrollIntoView({
                 behavior: "smooth",
@@ -605,7 +693,7 @@ const PreviewMusicNotesComponent = ({
                               return (
                                 <span
                                   key={globalIndex}
-                                  id={`note-${globalIndex}`}
+                                  id={`note-${rowg}-${colg}-${globalIndex}`}
                                   onClick={() => handleClick(globalIndex)}
                                   style={getNoteStyle(
                                     globalIndex,

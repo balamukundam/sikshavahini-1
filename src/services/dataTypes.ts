@@ -6,6 +6,13 @@ export const BmkLanguages = {
   
   export type BmkLanguage = keyof typeof BmkLanguages;
 
+  export interface musicSets{
+    bpm: number,
+    pitch: number,
+    melakarta: number,
+
+  }
+
   export interface BaseComponent {
     width: string;
     cType: string;
@@ -54,7 +61,6 @@ export const BmkLanguages = {
   tHeader: string;
   rows: string[];
   langs: string;
-
  }
 
 
@@ -65,12 +71,8 @@ export const BmkLanguages = {
   export interface ComponentMusicNotes extends BaseComponent {
     musicNotes: string;
     title: string;
-    pitch: number;
     speeds: string;
-    melakarta: number;
     talamSeq: string;
-    bpm: number;
-
   }
   
   // Define a union type for all components

@@ -2439,6 +2439,38 @@ const data: Taragati[] = [
       },
     ],
   },
+  {
+    id: 2,
+    name: "Music Classes",
+    subjects: [
+      {
+        id: 3,
+        name: "Basic Lessons",
+        books: [
+          {
+            id: 1,
+            name: "Sarali Swaras",
+            documents: [
+              {
+                id: 1,
+                lang: "tr",
+                title2: "",
+                name: "All Sarali Swaras",
+                url: "",
+              },
+              {
+                id: 2,
+                lang: "tr",
+                title2: "",
+                name: "Sarali Swara-1",
+                url: "",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 const TaragatiSelector = ({ loadFileWithId }: Props) => {

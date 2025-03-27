@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { DataRow } from "../services/dataTypes";
+import { DataRow, musicSets } from "../services/dataTypes";
 import { EngToTelService } from "../services/engToTelugu";
 import PreviewParaComponent from "./PreviewParaComponent";
 import PreviewImageComponent from "./PreviewImageComponent";
@@ -12,6 +12,8 @@ import PreviewMusicNotesComponent from "./PreviewMusicNotesComponent";
 
 interface Props {
   dataRow: any; // Initial data passed to the component
+  rowNbr: number;
+  musicSettings: musicSets;
   curLang: string;
   talamShow: boolean;
   stopPlayClicked: boolean;
@@ -21,6 +23,8 @@ interface Props {
 
 const RowPreview: React.FC<Props> = ({
   dataRow,
+  rowNbr,
+  musicSettings,
   curLang,
   talamShow,
   stopPlayClicked,
@@ -124,8 +128,11 @@ const RowPreview: React.FC<Props> = ({
               <>
                 <PreviewMusicNotesComponent
                   musicNotesComp={item}
+                  musicSettings={musicSettings}
                   stopPlayClicked={stopPlayClicked}
                   talamShow={talamShow}
+                  rowg={rowNbr}
+                  colg={index}
                   updateTalam={updateTalam}
                 ></PreviewMusicNotesComponent>
               </>
