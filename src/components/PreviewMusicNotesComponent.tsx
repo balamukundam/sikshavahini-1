@@ -667,6 +667,13 @@ const PreviewMusicNotesComponent = ({
                     <tr key={rowIndex}>
                       {row.map((item, columnIndex) => {
                         // Calculate the global index based on row and column
+                        const globalIndexStart =
+                          startEventForTable(tableIndex) +
+                          rowIndex *
+                            images.length *
+                            notesPerBeatForTable[tableIndex] +
+                          columnIndex * notesPerBeatForTable[tableIndex];
+
                         return (
                           <td
                             key={columnIndex}
@@ -674,15 +681,13 @@ const PreviewMusicNotesComponent = ({
                               border: "1px solid black", // Border for each cell
                               padding: "10px",
                               textAlign: "center",
+                              backgroundColor:
+                                images[columnIndex] === "/images/img0.jpeg"
+                                  ? "lightgrey"
+                                  : "transparent",
                             }}
                           >
                             {item.map((note, noteIndex) => {
-                              const globalIndexStart =
-                                startEventForTable(tableIndex) +
-                                rowIndex *
-                                  images.length *
-                                  notesPerBeatForTable[tableIndex] +
-                                columnIndex * notesPerBeatForTable[tableIndex];
                               const globalIndex =
                                 startEventForTable(tableIndex) +
                                 rowIndex *
