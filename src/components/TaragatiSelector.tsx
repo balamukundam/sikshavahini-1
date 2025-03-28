@@ -2620,6 +2620,26 @@ const data: Taragati[] = [
               },
             ],
           },
+          {
+            id: 3,
+            name: "Datu Swaras",
+            documents: [
+              {
+                id: 1,
+                lang: "tr",
+                title2: "",
+                name: "Datu Swara-1",
+                url: "1WoiTPGAV52NuCHvmbBk1iJkuEO6GHhFy",
+              },
+              {
+                id: 2,
+                lang: "tr",
+                title2: "",
+                name: "Datu Swara-2",
+                url: "1yXOlKvmWC8QNx9mqTu0zIYlaluEYd4yE",
+              },
+            ],
+          },
         ],
       },
     ],
