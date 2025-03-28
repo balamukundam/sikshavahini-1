@@ -2440,7 +2440,7 @@ const data: Taragati[] = [
     ],
   },
   {
-    id: 2,
+    id: 3,
     name: "Music Classes",
     subjects: [
       {
@@ -2552,7 +2552,7 @@ const data: Taragati[] = [
             ],
           },
           {
-            id: 1,
+            id: 2,
             name: "Janta Swaras",
             documents: [
               {
@@ -2568,6 +2568,55 @@ const data: Taragati[] = [
                 title2: "",
                 name: "Janta Swara-2",
                 url: "1JirYlPNAySYFzZQUP9jPBZkm76SNrTXO",
+              },
+              {
+                id: 3,
+                lang: "tr",
+                title2: "",
+                name: "Janta Swara-3",
+                url: "1DcOLTqy9c8B-gjDrFatNUpSNHbHIQI2q",
+              },
+              {
+                id: 4,
+                lang: "tr",
+                title2: "",
+                name: "Janta Swara-4",
+                url: "1oUOrE-q3TdmPrwLOaJXWSxejFLrxkEfg",
+              },
+              {
+                id: 5,
+                lang: "tr",
+                title2: "",
+                name: "Janta Swara-5",
+                url: "1webdcCwGpuyCqSC3lcHDdosNv8y5ks1L",
+              },
+              {
+                id: 6,
+                lang: "tr",
+                title2: "",
+                name: "Janta Swara-6",
+                url: "1p3upByPyvb-2qujAkMm4JuZ07VuTGLsd",
+              },
+              {
+                id: 7,
+                lang: "tr",
+                title2: "",
+                name: "Janta Swara-7",
+                url: "1Xm86TeJbXrRGbDtBNu0JkaLKxXWLNf2T",
+              },
+              {
+                id: 8,
+                lang: "tr",
+                title2: "",
+                name: "Janta Swara-8",
+                url: "1T2wiZZeXg2TPUt90kr2_9L1k8IHwJLsv",
+              },
+              {
+                id: 9,
+                lang: "tr",
+                title2: "",
+                name: "Janta Swara-9",
+                url: "18lOxxMHoakJ2QLWZOHyCbFM0xyD3ckZf",
               },
             ],
           },
