@@ -210,7 +210,7 @@ function App() {
       setDataRows(parsedJson?.dataRows || []);
 
       setAlertStatus("JSON file loaded from Google Drive!", true, true);
-      setSelectedScreen("Preview");
+      setSelectedScreen("Design");
     } catch (error) {
       setAlertStatus("Error loading JSON file!", false, true);
     }
