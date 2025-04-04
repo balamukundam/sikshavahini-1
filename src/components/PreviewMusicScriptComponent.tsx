@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import * as Tone from "tone";
 import { musicSets } from "../services/dataTypes";
-import { musicService } from "../services/musicService";
 
 interface Props {
   musicNotesComp: any;
@@ -13,24 +12,7 @@ interface Props {
   updateTalam: (image: string, note: string) => void;
 }
 
-// ✅ Image paths for each count
-let images = [0, 1, 2, 3, 0, 6, 0, 6];
-//   "/images/img0.jpeg",
-//   "/images/img1.jpeg",
-//   "/images/img2.jpeg",
-//   "/images/img3.jpeg",
-//   "/images/img0.jpeg",
-//   "/images/img6.jpeg",
-//   "/images/img0.jpeg",
-//   "/images/img6.jpeg",
-// ];
-
-let ms: musicService = new musicService();
-//let events: any[] = [];
-//let tables: string[][][][] = [];
-let totalEvents = 0;
-
-const PreviewMusicNotesComponent = ({
+const PreviewMusicScriptComponent = ({
   musicNotesComp,
   musicSettings,
   talamShow,
@@ -51,34 +33,22 @@ const PreviewMusicNotesComponent = ({
   const [startEventNumber, setStartEventNumber] = useState(0);
   const [endEventNumber, setEndEventNumber] = useState(0);
   const [selectedEventNumber, setSelectedEventNumber] = useState(-1);
-  const [tables, setTables] = useState<string[][][][]>([]);
-  const [events, setEvents] = useState<any[]>([]);
 
-  const initialize = () => {
-    ms.getNotesRaw(musicNotesComp["musicNotes"]);
-    ms.getNotesRaw(musicNotesComp["musicNotes"]);
-
-    const eventstemp: any[] = [];
-    const tablestemp: string[][][][] = [];
-
-    notesPerBeatForTable.forEach((nbp) => {
-      let eventsAndRwows = getEvents(
-        ms.getNoteNbrsArray(),
-        ms.getNoteTextArray(),
-        nbp
-      );
-
-      eventstemp.push(eventsAndRwows.events);
-      tablestemp.push(eventsAndRwows.rows);
-
-      totalEvents = totalEvents + eventsAndRwows.events.length;
-    });
-    setTables(tablestemp);
-    setEvents(eventstemp);
-  };
+  // ✅ Image paths for each count
+  let images = [
+    "/images/img0.jpeg",
+    "/images/img1.jpeg",
+    "/images/img2.jpeg",
+    "/images/img3.jpeg",
+    "/images/img0.jpeg",
+    "/images/img6.jpeg",
+    "/images/img0.jpeg",
+    "/images/img6.jpeg",
+  ];
 
   useEffect(() => {
-    initialize();
+    console.log("musicNotesComp changed! Recalculating...");
+    // Add your recalculation logic here
   }, [musicNotesComp]);
 
   const checkValidTalamNumbers = (
@@ -96,7 +66,7 @@ const PreviewMusicNotesComponent = ({
     images = musicNotesComp.talamSeq
       .split(",") // Split by comma
       .map((num: string) => num.trim()) // Trim spaces
-      .map((num: string) => Number(num)); // Format as "image-0x"
+      .map((num: string) => `/images/img${num}.jpeg`); // Format as "image-0x"
   }
 
   const showTalam = (image: string, noteText: string) => {
@@ -128,11 +98,149 @@ const PreviewMusicNotesComponent = ({
     basicSpeed = 60000 / musicSettings.bpm;
   }
 
-  const getEvents = (
-    noteNbrs: number[],
-    noteTexts: string[],
-    notesPerBeat: number
-  ): any => {
+  const getNotes = (): any[] => {
+    let eventNotes: any[] = [];
+    let previousNoteNbr = -1;
+    let noteText = "";
+
+    musicNotesComp["musicNotes"].split("").forEach((char: string) => {
+      if (
+        char == "S" ||
+        char == "R" ||
+        char == "G" ||
+        char == "M" ||
+        char == "P" ||
+        char == "D" ||
+        char == "N" ||
+        char == ";"
+      ) {
+        if (previousNoteNbr != -1) {
+          eventNotes.push({
+            note: previousNoteNbr,
+            noteText: noteText,
+          });
+        }
+        previousNoteNbr = -1;
+      }
+      let Radd = 0;
+      let Gadd = 0;
+      let Madd = 5;
+      let Dadd = 0;
+      let Nadd = 0;
+      let melanumber36: number = musicSettings.melakarta;
+      if (melanumber36 > 36) {
+        melanumber36 = melanumber36 - 36;
+        Madd = 6;
+      }
+      let melaBy6 = Math.ceil(melanumber36 / 6);
+      let melaRem6 = melanumber36 % 6;
+
+      switch (melaBy6) {
+        case 1:
+          Radd = 1;
+          Gadd = 2;
+          break;
+        case 2:
+          Radd = 1;
+          Gadd = 3;
+          break;
+        case 3:
+          Radd = 1;
+          Gadd = 4;
+          break;
+        case 4:
+          Radd = 2;
+          Gadd = 3;
+          break;
+        case 5:
+          Radd = 2;
+          Gadd = 4;
+          break;
+        case 6:
+          Radd = 3;
+          Gadd = 4;
+          break;
+      }
+      switch (melaRem6) {
+        case 1:
+          Dadd = 8;
+          Nadd = 9;
+          break;
+        case 2:
+          Dadd = 8;
+          Nadd = 10;
+          break;
+        case 3:
+          Dadd = 8;
+          Nadd = 11;
+          break;
+        case 4:
+          Dadd = 9;
+          Nadd = 10;
+          break;
+        case 5:
+          Dadd = 9;
+          Nadd = 11;
+          break;
+        case 0:
+          Dadd = 10;
+          Nadd = 11;
+          break;
+      }
+
+      switch (char) {
+        case "S":
+          previousNoteNbr = baseNbr;
+          noteText = char;
+          break;
+        case "R":
+          previousNoteNbr = baseNbr + Radd;
+          noteText = char;
+          break;
+        case "G":
+          previousNoteNbr = baseNbr + Gadd;
+          noteText = char;
+          break;
+        case "M":
+          previousNoteNbr = baseNbr + Madd;
+          noteText = char;
+          break;
+        case "P":
+          previousNoteNbr = baseNbr + 7;
+          noteText = char;
+          break;
+        case "D":
+          previousNoteNbr = baseNbr + Dadd;
+          noteText = char;
+          break;
+        case "N":
+          previousNoteNbr = baseNbr + Nadd;
+          noteText = char;
+          break;
+        case ";":
+          previousNoteNbr = 0;
+          noteText = char;
+          break;
+
+        case "-":
+          previousNoteNbr = previousNoteNbr - 12;
+          noteText = noteText + "\u0323";
+          break;
+        case "+":
+          previousNoteNbr = previousNoteNbr + 12;
+          noteText = noteText + "\u0307";
+          break;
+      }
+    });
+    if (previousNoteNbr != -1) {
+      eventNotes.push({
+        note: previousNoteNbr,
+        noteText: noteText,
+      });
+    }
+    return eventNotes;
+  };
+  const getEvents = (notes: any[], notesPerBeat: number): any => {
     let thisEvents: any[] = [];
     let thisRows: string[][][] = [];
     let beatCount: number = 0;
@@ -141,15 +249,15 @@ const PreviewMusicNotesComponent = ({
     let row: string[][] = [];
     let bTalamStarted: Boolean = true;
     while (bTalamStarted) {
-      for (let i = 0; i < noteNbrs.length; i++) {
+      for (let i = 0; i < notes.length; i++) {
         bTalamStarted = true;
         thisEvents.push({
-          note: noteNbrs[i],
-          noteText: noteTexts[i],
+          note: notes[i].note,
+          noteText: notes[i].noteText,
           beatRequired: noteCount == 0,
           talam: beatCount,
         });
-        cellText.push(noteTexts[i]);
+        cellText.push(notes[i].noteText);
 
         noteCount = noteCount + 1;
         if (noteCount == notesPerBeat) {
@@ -170,9 +278,34 @@ const PreviewMusicNotesComponent = ({
     return { events: thisEvents, rows: thisRows };
   };
 
-  const getEventsCount = (): number =>
-    events.reduce((sum, items) => sum + items.length, 0);
+  // ✅ MIDI note values (C4, C#4, E4, F4, G4, G#4, B4, C5)
+  const notes = getNotes();
 
+  const events: any[] = [];
+  const tables: string[][][][] = [];
+  let totalEvents = 0;
+
+  notesPerBeatForTable.forEach((nbp) => {
+    let eventsAndRwows = getEvents(notes, nbp);
+
+    events.push(eventsAndRwows.events);
+    tables.push(eventsAndRwows.rows);
+    totalEvents = totalEvents + eventsAndRwows.events.length;
+  });
+
+  const getEventsCount = (): number => {
+    totalEvents = 0;
+    events.forEach((items) => {
+      totalEvents = totalEvents + items.length;
+    });
+    return totalEvents;
+  };
+
+  // const rows: string[][][] = eventsAndRwows.rows;
+
+  // ✅ Get note and image based on count
+
+  // ✅ Start Timer and Audio Context
   const startTimer = async () => {
     console.log("Starting Timer...");
     console.log(getEventsCount());
@@ -211,7 +344,7 @@ const PreviewMusicNotesComponent = ({
       setSynth(newSynth);
     }
     if (!talamSynth) {
-      console.log("Initializing TalamSynth...");
+      console.log("Initializing Synth...");
       const newSynth = new Tone.PolySynth(Tone.Synth, {
         volume: -10, // Lower volume
       }).toDestination();
@@ -246,6 +379,10 @@ const PreviewMusicNotesComponent = ({
 
       intervalRef.current = setInterval(() => {
         setCurrentNote((prevCount) => {
+          console.log("start:...", startEventNumber);
+          console.log("end:...", endEventNumber);
+
+          console.log("started:...");
           if (prevCount < startEventNumber) {
             prevCount = startEventNumber;
           }
@@ -260,10 +397,7 @@ const PreviewMusicNotesComponent = ({
 
           let thisEvent = events[currentTable][currentEvent];
           const nextNote = thisEvent.note;
-          showTalam(
-            "/images/img" + images[thisEvent.talam] + ".jpeg",
-            thisEvent.noteText
-          );
+          showTalam(images[thisEvent.talam], thisEvent.noteText);
 
           if (nextNote !== 0) {
             const noteName = Tone.Frequency(nextNote, "midi").toNote();
@@ -278,14 +412,13 @@ const PreviewMusicNotesComponent = ({
               });
             }
             // ✅ Trigger the note
-            if (timeInterval > 750) {
-              synth.triggerAttackRelease(noteName, "2n");
-            } else {
-              synth.triggerAttackRelease(noteName, "4n");
-            }
+            synth.triggerAttackRelease(noteName, "4n");
           }
 
-          if (thisEvent.beatRequired && images[thisEvent.talam] === 0) {
+          if (
+            thisEvent.beatRequired &&
+            images[thisEvent.talam] === "/images/img0.jpeg"
+          ) {
             const notesToPlay = [
               Tone.Frequency(baseNbr, "midi").toNote(), // C4
               Tone.Frequency(baseNbr + 7, "midi").toNote(), // G4
@@ -549,7 +682,7 @@ const PreviewMusicNotesComponent = ({
                               padding: "10px",
                               textAlign: "center",
                               backgroundColor:
-                                images[columnIndex] === 0
+                                images[columnIndex] === "/images/img0.jpeg"
                                   ? "lightgrey"
                                   : "transparent",
                             }}
@@ -593,4 +726,4 @@ const PreviewMusicNotesComponent = ({
   );
 };
 
-export default PreviewMusicNotesComponent;
+export default PreviewMusicScriptComponent;

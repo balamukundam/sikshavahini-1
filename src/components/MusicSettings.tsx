@@ -80,8 +80,8 @@ const MusicSettings = ({ musicSettings, onMusicSettingsChange }: Props) => {
                   <input
                     type="number"
                     className="form-control"
-                    min="45"
-                    max="100"
+                    min="20"
+                    max="120"
                     id="widthInputField"
                     aria-describedby="width-input"
                     value={musicSettings.bpm}

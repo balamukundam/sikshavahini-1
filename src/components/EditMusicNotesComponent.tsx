@@ -12,32 +12,6 @@ interface Props {
   ) => void;
 }
 
-const noteOptions = [
-  { label: "E", value: 76 },
-  { label: "D#", value: 75 },
-  { label: "D", value: 74 },
-  { label: "C#", value: 73 },
-  { label: "C", value: 72 },
-  { label: "B", value: 71 },
-  { label: "A#", value: 70 },
-  { label: "A", value: 69 },
-  { label: "G#", value: 68 },
-  { label: "G", value: 67 },
-  { label: "F#", value: 66 },
-  { label: "F", value: 65 },
-  { label: "E", value: 64 },
-  { label: "D#", value: 63 },
-  { label: "D", value: 62 },
-  { label: "C#", value: 61 },
-  { label: "C", value: 60 },
-  { label: "B", value: 59 },
-  { label: "A#", value: 58 },
-  { label: "A", value: 57 },
-  { label: "G#", value: 56 },
-  { label: "G", value: 55 },
-  { label: "F#", value: 54 },
-];
-
 const EditMusicNotesComponent: React.FC<Props> = ({
   rowIndex,
   compIndex,
@@ -45,23 +19,32 @@ const EditMusicNotesComponent: React.FC<Props> = ({
   onDataUpdate,
 }) => {
   const handleSpeedsChange = (value: string) => {
-    musicNotesComponentData.speeds = value;
-    onDataUpdate(rowIndex, compIndex, musicNotesComponentData);
+    const updatedComponent = {
+      ...musicNotesComponentData,
+      speeds: value,
+    };
+    onDataUpdate(rowIndex, compIndex, updatedComponent);
   };
   const handleParaChange = (value: string) => {
-    musicNotesComponentData.musicNotes = value;
-    onDataUpdate(rowIndex, compIndex, musicNotesComponentData);
+    const updatedComponent = {
+      ...musicNotesComponentData,
+      musicNotes: value,
+    };
+    onDataUpdate(rowIndex, compIndex, updatedComponent);
   };
 
   const handleTalamChange = (value: string) => {
-    musicNotesComponentData.talamSeq = value;
-    onDataUpdate(rowIndex, compIndex, musicNotesComponentData);
+    const updatedComponent = {
+      ...musicNotesComponentData,
+      talamSeq: value,
+    };
+    onDataUpdate(rowIndex, compIndex, updatedComponent);
   };
 
   return (
     <>
       <div className="row">
-        <div className="col-3">
+        <div className="col-4">
           <div className="input-group mb-4">
             <span className="input-group-text" id="title-input">
               Speeds
@@ -78,7 +61,7 @@ const EditMusicNotesComponent: React.FC<Props> = ({
             />
           </div>
         </div>
-        <div className="col-3">
+        <div className="col-8">
           <div className="input-group mb-4">
             <span className="input-group-text" id="title-input">
               Talam

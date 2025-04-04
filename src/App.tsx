@@ -704,64 +704,6 @@ function App() {
               </div>
             </div>
           </div>
-
-          {/* 
-      <div className="row" style={{ marginBottom: "5px" }}>
-        <div className="col-3">
-          <div className={"card bg-light mb-4 me-1 div-" + curLang + "gen"}>
-            <div className="card-header text-center">Design</div>
-            <div className="card-body">
-              <RowsDesign
-                initialDataRows={dataRows}
-                curLang={curLang}
-                onDataUpdate={handleRows}
-              ></RowsDesign>
-            </div>
-          </div>
-        </div>
-        <div className="col-9">
-          <div className={"card bg-light ms-1 mb-4 div-" + curLang + "gen"}>
-            <div className="card-header text-center">Preview</div>
-            <div className="card-body">
-              <p className="text-center fontup2">
-                {curLang === BmkLanguages.telugu
-                  ? ett.getStringInTelugu(titleLesson)
-                  : ett.getStringInSanskrit(titleLesson)}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div> */}
-
-          {/* {alertVisible && (
-        <Alert onClose={() => setAlertVisibility(false)}>
-          Hello World{" "}
-          <p>
-            ab<b>seer</b>cd
-          </p>
-        </Alert>
-      )}
-
-      <Button
-        color="danger"
-        onClick={() => {
-          console.log("Clicked");
-          setAlertVisibility(true);
-        }}
-      >
-        My Button
-      </Button>
-
-      <ListGroup
-        items={items1}
-        heading="Cities"
-        onSelectItem={handleSelectItem}
-      />
-      <ListGroup
-        items={items2}
-        heading="Names"
-        onSelectItem={handleSelectItem}
-      /> */}
         </>
       )}
 
