@@ -16,6 +16,7 @@ import {
   ComponentTable,
   ComponentMultiQuest,
   ComponentMusicNotes,
+  ComponentMusicLKalpanaNotes,
   noteOptions,
   melakartaDataList,
   musicSets,
@@ -26,15 +27,11 @@ import { EngToTelService } from "./services/engToTelugu";
 import TitleInput from "./components/TitleInput";
 import RowsDesign from "./components/RowsDesign";
 import RowPreview from "./components/RowPreview";
-import RowInput from "./components/RowInput";
-import PreviewParaComponent from "./components/PreviewParaComponent";
 import Button from "./components/Button";
 import logotelugu from "/images/Bpic-2.png";
 import HelpPage from "./components/HelpPage";
 import DictionaryComponent from "./components/DictionaryComponent";
 import TaragatiSelector from "./components/TaragatiSelector";
-import ToneComponent from "./components/ToneComponent";
-import MusicNotesComponent from "./components/PreviewMusicNotesComponent";
 import TalamComponent from "./components/TalamComponent";
 import MusicSettings from "./components/MusicSettings";
 
@@ -315,6 +312,22 @@ function App() {
     };
   }
 
+  function getNewMusicKalpanaSwaraCompObject(): ComponentMusicLKalpanaNotes {
+    return {
+      width: "12",
+      cType: "55",
+      language: "default",
+      border: false,
+      musicNotes: "S; R;;; G;;; M;\n P;M;G;R;S;R;G;M;",
+      musicPallavi: "P;D;P;;;G;M;",
+      lyricsPallavi: "tu ; la ; Si ; ; ; da ; la ;",
+      pStart: "0",
+      title: "Notes",
+      npb: "4",
+      talamSeq: "0,1,2",
+    };
+  }
+
   function getNewImageCompObject(): ComponentImage {
     return {
       width: "3",
@@ -407,6 +420,8 @@ function App() {
         return getNewSeperatorCompObject();
       case "Music Notes comp":
         return getNewMusicNotesCompObject();
+      case "Music Kalpana Swara comp":
+        return getNewMusicKalpanaSwaraCompObject();
       case "Poem comp":
         return getNewPoemCompObject();
       case "Table comp":

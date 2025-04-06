@@ -9,6 +9,7 @@ import PreviewPoemComponent from "./PreviewPoemComponent";
 import PreviewSeparatorComponent from "./PreviewSeparatorComponent";
 import PreviewMultipleQuestionComp from "./PreviewMultipleQuestionComp";
 import PreviewMusicNotesComponent from "./PreviewMusicNotesComponent";
+import PreviewMusicKalapanaSwaramComponent from "./PreviewMusicKalapanaSwaramComponent";
 
 interface Props {
   dataRow: any; // Initial data passed to the component
@@ -137,6 +138,20 @@ const RowPreview: React.FC<Props> = ({
                 ></PreviewMusicNotesComponent>
               </>
             )}
+            {item["cType"] === "55" && (
+              <>
+                <PreviewMusicKalapanaSwaramComponent
+                  musicNotesComp={item}
+                  musicSettings={musicSettings}
+                  stopPlayClicked={stopPlayClicked}
+                  talamShow={talamShow}
+                  rowg={rowNbr}
+                  colg={index}
+                  updateTalam={updateTalam}
+                ></PreviewMusicKalapanaSwaramComponent>
+              </>
+            )}
+
             {item["cType"] === "99" && (
               <>
                 <PreviewSeparatorComponent

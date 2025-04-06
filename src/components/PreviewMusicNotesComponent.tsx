@@ -56,7 +56,6 @@ const PreviewMusicNotesComponent = ({
 
   const initialize = () => {
     ms.getNotesRaw(musicNotesComp["musicNotes"]);
-    ms.getNotesRaw(musicNotesComp["musicNotes"]);
 
     const eventstemp: any[] = [];
     const tablestemp: string[][][][] = [];

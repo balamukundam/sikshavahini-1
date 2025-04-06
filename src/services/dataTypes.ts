@@ -74,9 +74,19 @@ export const BmkLanguages = {
     speeds: string;
     talamSeq: string;
   }
+
+  export interface ComponentMusicLKalpanaNotes extends BaseComponent {
+    musicNotes: string;
+    musicPallavi: string;
+    lyricsPallavi: string;
+    pStart: string;
+    title: string;
+    npb: string;
+    talamSeq: string;
+  }
   
   // Define a union type for all components
-  export type ComponentType = ComponentImage | ComponentPara | ComponentTable | ComponentPoem | ComponentMultiQuest | ComponentMusicNotes | ComponentSeparator;
+  export type ComponentType = ComponentImage | ComponentPara | ComponentTable | ComponentPoem | ComponentMultiQuest | ComponentMusicNotes | ComponentMusicLKalpanaNotes | ComponentSeparator;
   
   // DataRow contains an array of any ComponentType
   export interface DataRow {

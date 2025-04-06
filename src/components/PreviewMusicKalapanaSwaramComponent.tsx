@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import * as Tone from "tone";
 import { musicSets } from "../services/dataTypes";
+import { musicService } from "../services/musicService";
 
 interface Props {
   musicNotesComp: any;
@@ -12,7 +13,23 @@ interface Props {
   updateTalam: (image: string, note: string) => void;
 }
 
-const PreviewMusicScriptComponent = ({
+// ✅ Image paths for each count
+let images = [0, 1, 2, 3, 0, 6, 0, 6];
+//   "/images/img0.jpeg",
+//   "/images/img1.jpeg",
+//   "/images/img2.jpeg",
+//   "/images/img3.jpeg",
+//   "/images/img0.jpeg",
+//   "/images/img6.jpeg",
+//   "/images/img0.jpeg",
+//   "/images/img6.jpeg",
+// ];
+
+//let events: any[] = [];
+//let tables: string[][][][] = [];
+let totalEvents = 0;
+
+const PreviewMusicKalapanaSwaramComponent = ({
   musicNotesComp,
   musicSettings,
   talamShow,
@@ -33,22 +50,43 @@ const PreviewMusicScriptComponent = ({
   const [startEventNumber, setStartEventNumber] = useState(0);
   const [endEventNumber, setEndEventNumber] = useState(0);
   const [selectedEventNumber, setSelectedEventNumber] = useState(-1);
+  const [tables, setTables] = useState<any[][][][]>([]);
+  const [events, setEvents] = useState<any[]>([]);
 
-  // ✅ Image paths for each count
-  let images = [
-    "/images/img0.jpeg",
-    "/images/img1.jpeg",
-    "/images/img2.jpeg",
-    "/images/img3.jpeg",
-    "/images/img0.jpeg",
-    "/images/img6.jpeg",
-    "/images/img0.jpeg",
-    "/images/img6.jpeg",
-  ];
+  const initialize = () => {
+    let msp: musicService = new musicService();
+    msp.getNotesRaw(musicNotesComp["musicPallavi"]);
+    let lyrics = musicNotesComp["lyricsPallavi"].split(" ");
+
+    const eventstemp: any[] = [];
+    const tablestemp: string[][][][] = [];
+
+    musicNotesComp["musicNotes"].split("\n").forEach((mnLine: string) => {
+      if (mnLine.trim() !== "") {
+        let msn: musicService = new musicService();
+        msn.getNotesRaw(mnLine.trim());
+
+        let eventsAndRwows = getEvents(
+          msp.getNoteNbrsArray(),
+          msp.getNoteTextArray(),
+          lyrics,
+          Number(musicNotesComp["pStart"]),
+          msn.getNoteNbrsArray(),
+          msn.getNoteTextArray(),
+          notesPerBeatForTable
+        );
+        eventstemp.push(eventsAndRwows.events);
+        tablestemp.push(eventsAndRwows.rows);
+        totalEvents = totalEvents + eventsAndRwows.events.length;
+      }
+    });
+
+    setTables(tablestemp);
+    setEvents(eventstemp);
+  };
 
   useEffect(() => {
-    console.log("musicNotesComp changed! Recalculating...");
-    // Add your recalculation logic here
+    initialize();
   }, [musicNotesComp]);
 
   const checkValidTalamNumbers = (
@@ -66,7 +104,7 @@ const PreviewMusicScriptComponent = ({
     images = musicNotesComp.talamSeq
       .split(",") // Split by comma
       .map((num: string) => num.trim()) // Trim spaces
-      .map((num: string) => `/images/img${num}.jpeg`); // Format as "image-0x"
+      .map((num: string) => Number(num)); // Format as "image-0x"
   }
 
   const showTalam = (image: string, noteText: string) => {
@@ -75,11 +113,9 @@ const PreviewMusicScriptComponent = ({
     updateTalam(image, noteText);
   };
 
-  let notesPerBeatForTable: number[] = [1, 2];
-  if (checkValidTalamNumbers(musicNotesComp.speeds, 1, 4)) {
-    notesPerBeatForTable = musicNotesComp.speeds
-      .split(",")
-      .map((num: string) => num.trim());
+  let notesPerBeatForTable: number = 4;
+  if (Number(musicNotesComp.npb) > 0) {
+    notesPerBeatForTable = Number(musicNotesComp.npb);
   }
 
   useEffect(() => {
@@ -98,166 +134,62 @@ const PreviewMusicScriptComponent = ({
     basicSpeed = 60000 / musicSettings.bpm;
   }
 
-  const getNotes = (): any[] => {
-    let eventNotes: any[] = [];
-    let previousNoteNbr = -1;
-    let noteText = "";
-
-    musicNotesComp["musicNotes"].split("").forEach((char: string) => {
-      if (
-        char == "S" ||
-        char == "R" ||
-        char == "G" ||
-        char == "M" ||
-        char == "P" ||
-        char == "D" ||
-        char == "N" ||
-        char == ";"
-      ) {
-        if (previousNoteNbr != -1) {
-          eventNotes.push({
-            note: previousNoteNbr,
-            noteText: noteText,
-          });
-        }
-        previousNoteNbr = -1;
-      }
-      let Radd = 0;
-      let Gadd = 0;
-      let Madd = 5;
-      let Dadd = 0;
-      let Nadd = 0;
-      let melanumber36: number = musicSettings.melakarta;
-      if (melanumber36 > 36) {
-        melanumber36 = melanumber36 - 36;
-        Madd = 6;
-      }
-      let melaBy6 = Math.ceil(melanumber36 / 6);
-      let melaRem6 = melanumber36 % 6;
-
-      switch (melaBy6) {
-        case 1:
-          Radd = 1;
-          Gadd = 2;
-          break;
-        case 2:
-          Radd = 1;
-          Gadd = 3;
-          break;
-        case 3:
-          Radd = 1;
-          Gadd = 4;
-          break;
-        case 4:
-          Radd = 2;
-          Gadd = 3;
-          break;
-        case 5:
-          Radd = 2;
-          Gadd = 4;
-          break;
-        case 6:
-          Radd = 3;
-          Gadd = 4;
-          break;
-      }
-      switch (melaRem6) {
-        case 1:
-          Dadd = 8;
-          Nadd = 9;
-          break;
-        case 2:
-          Dadd = 8;
-          Nadd = 10;
-          break;
-        case 3:
-          Dadd = 8;
-          Nadd = 11;
-          break;
-        case 4:
-          Dadd = 9;
-          Nadd = 10;
-          break;
-        case 5:
-          Dadd = 9;
-          Nadd = 11;
-          break;
-        case 0:
-          Dadd = 10;
-          Nadd = 11;
-          break;
-      }
-
-      switch (char) {
-        case "S":
-          previousNoteNbr = baseNbr;
-          noteText = char;
-          break;
-        case "R":
-          previousNoteNbr = baseNbr + Radd;
-          noteText = char;
-          break;
-        case "G":
-          previousNoteNbr = baseNbr + Gadd;
-          noteText = char;
-          break;
-        case "M":
-          previousNoteNbr = baseNbr + Madd;
-          noteText = char;
-          break;
-        case "P":
-          previousNoteNbr = baseNbr + 7;
-          noteText = char;
-          break;
-        case "D":
-          previousNoteNbr = baseNbr + Dadd;
-          noteText = char;
-          break;
-        case "N":
-          previousNoteNbr = baseNbr + Nadd;
-          noteText = char;
-          break;
-        case ";":
-          previousNoteNbr = 0;
-          noteText = char;
-          break;
-
-        case "-":
-          previousNoteNbr = previousNoteNbr - 12;
-          noteText = noteText + "\u0323";
-          break;
-        case "+":
-          previousNoteNbr = previousNoteNbr + 12;
-          noteText = noteText + "\u0307";
-          break;
-      }
-    });
-    if (previousNoteNbr != -1) {
-      eventNotes.push({
-        note: previousNoteNbr,
-        noteText: noteText,
-      });
-    }
-    return eventNotes;
-  };
-  const getEvents = (notes: any[], notesPerBeat: number): any => {
+  const getEvents = (
+    noteNbrsP: number[],
+    noteTextsP: string[],
+    lyrics: string[],
+    pStart: number,
+    noteNbrsN: number[],
+    noteTextsN: string[],
+    notesPerBeat: number
+  ): any => {
     let thisEvents: any[] = [];
-    let thisRows: string[][][] = [];
+    let thisRows: any[][][] = [];
     let beatCount: number = 0;
     let noteCount: number = 0;
-    let cellText: string[] = [];
-    let row: string[][] = [];
+    let cellText: any[] = [];
+    let row: any[][] = [];
     let bTalamStarted: Boolean = true;
+
+    let notesGiven = noteNbrsN.length - pStart;
+    let notesPerTalam = notesPerBeat * images.length;
+    let startGaps = notesPerTalam - (notesGiven % notesPerTalam);
+    if (startGaps == notesPerTalam) startGaps = 0;
+
+    let noteNbrs: number[] = [];
+    let noteTexts: string[] = [];
+    let noteLyrics: string[] = [];
+
+    for (let i = 0; i < startGaps; i++) {
+      noteNbrs.push(0);
+      noteTexts.push(";");
+      noteLyrics.push("");
+    }
+    noteNbrs = [...noteNbrs, ...noteNbrsN];
+    noteNbrs = [...noteNbrs, ...noteNbrsP];
+    noteTexts = [...noteTexts, ...noteTextsN];
+    noteTexts = [...noteTexts, ...noteTextsP];
+    for (let i = 0; i < noteNbrsN.length; i++) {
+      noteLyrics.push("");
+    }
+    for (let i = 0; i < noteNbrs.length; i++) {
+      if (i < lyrics.length) {
+        noteLyrics.push(lyrics[i]);
+      } else {
+        noteLyrics.push("");
+      }
+    }
+
     while (bTalamStarted) {
-      for (let i = 0; i < notes.length; i++) {
+      for (let i = 0; i < noteNbrs.length; i++) {
         bTalamStarted = true;
         thisEvents.push({
-          note: notes[i].note,
-          noteText: notes[i].noteText,
+          note: noteNbrs[i],
+          noteText: noteTexts[i],
           beatRequired: noteCount == 0,
           talam: beatCount,
         });
-        cellText.push(notes[i].noteText);
+        cellText.push({ note: noteTexts[i], lyric: noteLyrics[i] });
 
         noteCount = noteCount + 1;
         if (noteCount == notesPerBeat) {
@@ -278,34 +210,9 @@ const PreviewMusicScriptComponent = ({
     return { events: thisEvents, rows: thisRows };
   };
 
-  // ✅ MIDI note values (C4, C#4, E4, F4, G4, G#4, B4, C5)
-  const notes = getNotes();
+  const getEventsCount = (): number =>
+    events.reduce((sum, items) => sum + items.length, 0);
 
-  const events: any[] = [];
-  const tables: string[][][][] = [];
-  let totalEvents = 0;
-
-  notesPerBeatForTable.forEach((nbp) => {
-    let eventsAndRwows = getEvents(notes, nbp);
-
-    events.push(eventsAndRwows.events);
-    tables.push(eventsAndRwows.rows);
-    totalEvents = totalEvents + eventsAndRwows.events.length;
-  });
-
-  const getEventsCount = (): number => {
-    totalEvents = 0;
-    events.forEach((items) => {
-      totalEvents = totalEvents + items.length;
-    });
-    return totalEvents;
-  };
-
-  // const rows: string[][][] = eventsAndRwows.rows;
-
-  // ✅ Get note and image based on count
-
-  // ✅ Start Timer and Audio Context
   const startTimer = async () => {
     console.log("Starting Timer...");
     console.log(getEventsCount());
@@ -344,7 +251,7 @@ const PreviewMusicScriptComponent = ({
       setSynth(newSynth);
     }
     if (!talamSynth) {
-      console.log("Initializing Synth...");
+      console.log("Initializing TalamSynth...");
       const newSynth = new Tone.PolySynth(Tone.Synth, {
         volume: -10, // Lower volume
       }).toDestination();
@@ -379,10 +286,6 @@ const PreviewMusicScriptComponent = ({
 
       intervalRef.current = setInterval(() => {
         setCurrentNote((prevCount) => {
-          console.log("start:...", startEventNumber);
-          console.log("end:...", endEventNumber);
-
-          console.log("started:...");
           if (prevCount < startEventNumber) {
             prevCount = startEventNumber;
           }
@@ -393,11 +296,14 @@ const PreviewMusicScriptComponent = ({
           let getTableEventNbrs = getTableAndEventNumber(prevCount);
           let currentTable = getTableEventNbrs.tableNbr;
           let currentEvent = getTableEventNbrs.eventNbr;
-          setTimeInterval(basicSpeed / notesPerBeatForTable[currentTable]);
+          setTimeInterval(basicSpeed / notesPerBeatForTable);
 
           let thisEvent = events[currentTable][currentEvent];
           const nextNote = thisEvent.note;
-          showTalam(images[thisEvent.talam], thisEvent.noteText);
+          showTalam(
+            "/images/img" + images[thisEvent.talam] + ".jpeg",
+            thisEvent.noteText
+          );
 
           if (nextNote !== 0) {
             const noteName = Tone.Frequency(nextNote, "midi").toNote();
@@ -412,13 +318,14 @@ const PreviewMusicScriptComponent = ({
               });
             }
             // ✅ Trigger the note
-            synth.triggerAttackRelease(noteName, "4n");
+            if (timeInterval > 750) {
+              synth.triggerAttackRelease(noteName, "2n");
+            } else {
+              synth.triggerAttackRelease(noteName, "4n");
+            }
           }
 
-          if (
-            thisEvent.beatRequired &&
-            images[thisEvent.talam] === "/images/img0.jpeg"
-          ) {
+          if (thisEvent.beatRequired && images[thisEvent.talam] === 0) {
             const notesToPlay = [
               Tone.Frequency(baseNbr, "midi").toNote(), // C4
               Tone.Frequency(baseNbr + 7, "midi").toNote(), // G4
@@ -489,16 +396,26 @@ const PreviewMusicScriptComponent = ({
     setEndEventNumber(totalEvents - 1);
   };
 
+  const isSahityamRequired = (row: any[]): boolean => {
+    let sahRequired = false;
+    row.forEach((column: any[]) => {
+      column.forEach((cell) => {
+        if (cell.lyric !== "") sahRequired = true;
+      });
+    });
+    return sahRequired;
+  };
+
   const getNoteStyle = (
     globalIndex: number,
     globalIndexStart: number,
-    tableIndex: number
+    tableIndex: number = 0
   ): React.CSSProperties => {
     if (
       globalIndex <= currentNote - 1 &&
       globalIndexStart >=
-        Math.floor((currentNote - 1) / notesPerBeatForTable[tableIndex]) *
-          notesPerBeatForTable[tableIndex]
+        Math.floor((currentNote - 1) / notesPerBeatForTable) *
+          notesPerBeatForTable
     ) {
       return {
         padding: "1px",
@@ -653,7 +570,7 @@ const PreviewMusicScriptComponent = ({
       <>
         {tables.map((rows, tableIndex) => (
           <>
-            <h3>Notes per beat = {notesPerBeatForTable[tableIndex]} </h3>
+            <h3>Notes per beat = {notesPerBeatForTable} </h3>
             <table
               style={{
                 borderCollapse: "collapse",
@@ -664,56 +581,106 @@ const PreviewMusicScriptComponent = ({
               <tbody>
                 {rows.map((row, rowIndex) => {
                   return (
-                    <tr key={rowIndex}>
-                      {row.map((item, columnIndex) => {
-                        // Calculate the global index based on row and column
-                        const globalIndexStart =
-                          startEventForTable(tableIndex) +
-                          rowIndex *
-                            images.length *
-                            notesPerBeatForTable[tableIndex] +
-                          columnIndex * notesPerBeatForTable[tableIndex];
+                    <>
+                      <tr key={rowIndex}>
+                        {row.map((item, columnIndex) => {
+                          // Calculate the global index based on row and column
+                          const globalIndexStart =
+                            startEventForTable(tableIndex) +
+                            rowIndex * images.length * notesPerBeatForTable +
+                            columnIndex * notesPerBeatForTable;
 
-                        return (
-                          <td
-                            key={columnIndex}
-                            style={{
-                              border: "1px solid black", // Border for each cell
-                              padding: "10px",
-                              textAlign: "center",
-                              backgroundColor:
-                                images[columnIndex] === "/images/img0.jpeg"
-                                  ? "lightgrey"
-                                  : "transparent",
-                            }}
-                          >
-                            {item.map((note, noteIndex) => {
-                              const globalIndex =
-                                startEventForTable(tableIndex) +
-                                rowIndex *
-                                  images.length *
-                                  notesPerBeatForTable[tableIndex] +
-                                columnIndex * notesPerBeatForTable[tableIndex] +
-                                noteIndex;
-                              return (
-                                <span
-                                  key={globalIndex}
-                                  id={`note-${rowg}-${colg}-${globalIndex}`}
-                                  onClick={() => handleClick(globalIndex)}
-                                  style={getNoteStyle(
-                                    globalIndex,
-                                    globalIndexStart,
-                                    tableIndex
-                                  )}
-                                >
-                                  {note}
-                                </span>
-                              );
-                            })}
-                          </td>
-                        );
-                      })}
-                    </tr>
+                          return (
+                            <td
+                              key={columnIndex}
+                              style={{
+                                border: "1px solid black", // Border for each cell
+                                padding: "10px",
+                                textAlign: "center",
+                                backgroundColor:
+                                  images[columnIndex] === 0
+                                    ? "lightgrey"
+                                    : "transparent",
+                              }}
+                            >
+                              {item.map((note, noteIndex) => {
+                                const globalIndex =
+                                  startEventForTable(tableIndex) +
+                                  rowIndex *
+                                    images.length *
+                                    notesPerBeatForTable +
+                                  columnIndex * notesPerBeatForTable +
+                                  noteIndex;
+                                return (
+                                  <span
+                                    key={globalIndex}
+                                    id={`note-${rowg}-${colg}-${globalIndex}`}
+                                    onClick={() => handleClick(globalIndex)}
+                                    style={getNoteStyle(
+                                      globalIndex,
+                                      globalIndexStart,
+                                      tableIndex
+                                    )}
+                                  >
+                                    {note.note}
+                                  </span>
+                                );
+                              })}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                      {isSahityamRequired(row) && (
+                        <tr key={rowIndex + "s"}>
+                          {row.map((item, columnIndex) => {
+                            // Calculate the global index based on row and column
+                            const globalIndexStart =
+                              startEventForTable(tableIndex) +
+                              rowIndex * images.length * notesPerBeatForTable +
+                              columnIndex * notesPerBeatForTable;
+
+                            return (
+                              <td
+                                key={columnIndex}
+                                style={{
+                                  border: "1px solid black", // Border for each cell
+                                  padding: "10px",
+                                  textAlign: "center",
+                                  backgroundColor:
+                                    images[columnIndex] === 0
+                                      ? "lightgrey"
+                                      : "transparent",
+                                }}
+                              >
+                                {item.map((note, noteIndex) => {
+                                  const globalIndex =
+                                    startEventForTable(tableIndex) +
+                                    rowIndex *
+                                      images.length *
+                                      notesPerBeatForTable +
+                                    columnIndex * notesPerBeatForTable +
+                                    noteIndex;
+                                  return (
+                                    <span
+                                      key={globalIndex}
+                                      id={`note-${rowg}-${colg}-${globalIndex}`}
+                                      onClick={() => handleClick(globalIndex)}
+                                      style={getNoteStyle(
+                                        globalIndex,
+                                        globalIndexStart,
+                                        tableIndex
+                                      )}
+                                    >
+                                      {note.lyric}
+                                    </span>
+                                  );
+                                })}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      )}
+                    </>
                   );
                 })}
               </tbody>
@@ -726,4 +693,4 @@ const PreviewMusicScriptComponent = ({
   );
 };
 
-export default PreviewMusicScriptComponent;
+export default PreviewMusicKalapanaSwaramComponent;
