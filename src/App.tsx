@@ -20,6 +20,7 @@ import {
   noteOptions,
   melakartaDataList,
   musicSets,
+  ComponentMusicGeethams,
 } from "./services/dataTypes";
 import { downloadData } from "./services/downloadUtils";
 import React from "react";
@@ -34,6 +35,8 @@ import DictionaryComponent from "./components/DictionaryComponent";
 import TaragatiSelector from "./components/TaragatiSelector";
 import TalamComponent from "./components/TalamComponent";
 import MusicSettings from "./components/MusicSettings";
+import PitchBendSynth from "./components/PitchBendSynth";
+import { RagamFactory, RagamName } from "./services/RagamFactory";
 
 function App() {
   let items1 = ["Level-1", "Level-2", "Level-3"];
@@ -44,14 +47,16 @@ function App() {
   const [curLang, setLanguage] = useState<BmkLanguage>(BmkLanguages.telugu);
 
   const [musicSettings, setMusicSettings] = useState<musicSets>({
-    bpm: 60,
+    bpm: 30,
     pitch: 60,
+    instrument: "Basic",
     melakarta: 15,
   });
 
   const [titleLesson, setTitleLesson] = useState("");
   const [subTitleLesson, setSubTitleLesson] = useState("");
   const [dataRows, setDataRows] = useState<DataRow[]>([]);
+  const [ragam, setRagam] = useState<RagamName>("");
 
   const handleLanguageSelectItem = (item: string) => {
     switch (item) {
@@ -97,6 +102,9 @@ function App() {
           setDataRows((prevRows) => parsedJson?.dataRows || []);
           //addData(parsedJson?.dataRows[0]);
           //setDataRows(parsedJson?.dataRows);
+          setRagam("");
+
+          onMusicSettingsChange(parsedJson?.musicSettings);
 
           setAlertStatus("JSON file loaded!", true, true);
         } catch (error) {
@@ -127,6 +135,16 @@ function App() {
   const getTestInLocalLanguage = (item: string) => {
     return ett.getStringInUserLanguage(curLang, item);
   };
+  const updateRagam = (item: RagamName) => {
+    if (ragam !== item) {
+      let msdata: musicSets = musicSettings;
+      msdata.melakarta = RagamFactory.getRagamDetails(item).melakarta;
+      msdata.bpm = 45;
+      msdata.instrument = "Basic";
+      setRagam(item);
+      onMusicSettingsChange(msdata);
+    }
+  };
 
   const handleDownload = () => {
     const dataToExport = {
@@ -152,6 +170,9 @@ function App() {
 
         setSubTitleLesson(parsedJson?.subTitleLesson || "");
         setDataRows(parsedJson?.dataRows || []);
+        setRagam("");
+        if (parsedJson?.musicSettings)
+          onMusicSettingsChange(parsedJson.musicSettings);
 
         setAlertStatus("JSON data loaded from cache!", true, true);
       } else {
@@ -205,6 +226,9 @@ function App() {
 
       setSubTitleLesson(parsedJson?.subTitleLesson || "");
       setDataRows(parsedJson?.dataRows || []);
+      setRagam("");
+      if (parsedJson?.musicSettings)
+        onMusicSettingsChange(parsedJson.musicSettings);
 
       setAlertStatus("JSON file loaded from Google Drive!", true, true);
       setSelectedScreen("Design");
@@ -312,19 +336,40 @@ function App() {
     };
   }
 
+  function getNewMusicGeethamCompObject(): ComponentMusicGeethams {
+    return {
+      width: "12",
+      cType: "52",
+      language: "default",
+      border: false,
+      musicNotes:
+        "MPDS+S+R+ R+S+DPMP RMPDMP DPMGRS S;RMGR SRGRS; RMPDMP DPMGRS S;RMGR SRGRS;",
+      musicLyrics: [
+        "Sri ; Ga Na na tha Sin dhu ; ra va rna ka ru Na Sa ga ra ka ri va da naa ; lam ; bo ; da ra la ku mi ka ra ; am ; ba ; su ta a ma ra vi nu ta lam ; bo ; da ra la ku mi ka ra ;",
+        "Si ddha cha ; ra na ga na se ; vi ta si ddhi vi naa ya ka te ; na mo na mo lam ; bo ; da ra la ku mi ka ra ; am ; ba ; su ta a ma ra vi nu ta lam ; bo ; da ra la ku mi ka ra ;",
+        "sa ka la vi dya ; aa di pu ; ji ta sa ; rvo ; tta ma te ; na mo na mo lam ; bo ; da ra la ku mi ka ra ; am ; ba ; su ta a ma ra vi nu ta lam ; bo ; da ra la ku mi ka ra ;",
+      ],
+      title: "Geetham-01",
+      speeds: "1,2,4",
+      talamSeq: "0,6,0,1,2,3",
+      ragam: "Malahari",
+    };
+  }
+
   function getNewMusicKalpanaSwaraCompObject(): ComponentMusicLKalpanaNotes {
     return {
       width: "12",
       cType: "55",
       language: "default",
       border: false,
-      musicNotes: "S; R;;; G;;; M;\n P;M;G;R;S;R;G;M;",
-      musicPallavi: "P;D;P;;;G;M;",
-      lyricsPallavi: "tu ; la ; Si ; ; ; da ; la ;",
-      pStart: "0",
+      musicNotes:
+        "P;D;N; \n G;M;P;D;N; \n S+; N; D; P; M; G; M; P; D; N; \n R+ ; S+ ; S+; N; N; D; P; M; G; M; P; D; N; ",
+      musicPallavi: "NS+; ND; P;PM G; M; P ; ; D P M G ;",
+      lyricsPallavi: "Si va ; Si va *; Si ; va ; ya ; na ; ra ; ; ; da ; ; ;",
+      pStart: "2",
       title: "Notes",
       npb: "4",
-      talamSeq: "0,1,2",
+      talamSeq: "0,1,2,3,0,6,0,6",
     };
   }
 
@@ -420,6 +465,8 @@ function App() {
         return getNewSeperatorCompObject();
       case "Music Notes comp":
         return getNewMusicNotesCompObject();
+      case "Music Geethams comp":
+        return getNewMusicGeethamCompObject();
       case "Music Kalpana Swara comp":
         return getNewMusicKalpanaSwaraCompObject();
       case "Poem comp":
@@ -576,12 +623,26 @@ function App() {
 
   function isMusicSettingsRequired(): boolean {
     return dataRows.some((row) =>
-      row.components.some((component) => component.cType === "51")
+      row.components.some(
+        (component) =>
+          component.cType === "51" ||
+          component.cType === "52" ||
+          component.cType === "55"
+      )
     );
   }
 
   function onMusicSettingsChange(msdata: musicSets): void {
-    setMusicSettings(msdata);
+    if (msdata) {
+      const updatedSettings = {
+        ...musicSettings, // copy old settings
+        ...(msdata.bpm && { bpm: msdata.bpm }),
+        ...(msdata.pitch && { pitch: msdata.pitch }),
+        ...(msdata.instrument && { instrument: msdata.instrument }),
+        ...(msdata.melakarta && { melakarta: msdata.melakarta }), // fixed: previously you used bpm by mistake
+      };
+      setMusicSettings(updatedSettings);
+    }
   }
 
   const getNameByValue = (value: number): string | undefined => {
@@ -660,10 +721,20 @@ function App() {
                                   <span className="text-dark">Laya:</span>{" "}
                                   {musicSettings.bpm} BPM
                                 </p>
+                                <p className="m-0 fw-bold text-secondary">
+                                  <span className="text-dark">Instrument:</span>{" "}
+                                  {musicSettings.instrument}
+                                </p>
+                                {ragam !== "" && (
+                                  <p className="m-0 fw-bold text-secondary">
+                                    <span className="text-dark">Ragam:</span>{" "}
+                                    {ragam}
+                                  </p>
+                                )}
                                 <p className="m-0 fw-bold text-danger">
                                   <span className="text-dark">Melakartha:</span>{" "}
-                                  {getNameByValue(musicSettings.melakarta)}{" "}
-                                  Ragam
+                                  {musicSettings.melakarta}
+                                  {getNameByValue(musicSettings.melakarta)}
                                 </p>
                               </div>
                             </div>
@@ -690,6 +761,7 @@ function App() {
                     updateDisctionary={updateDisctionary}
                     insertRowBelow={insertRowBelow}
                     updateTalam={updateTalam}
+                    setRagam={updateRagam}
                   ></RowsDesign>
                   <div className="row" style={{ marginBottom: "5px" }}>
                     <div className="col-1">
@@ -719,6 +791,13 @@ function App() {
               </div>
             </div>
           </div>
+
+          {false && (
+            <div>
+              <p>Test12</p>
+              <PitchBendSynth></PitchBendSynth>
+            </div>
+          )}
         </>
       )}
 
@@ -747,6 +826,7 @@ function App() {
                   stopPlayClicked={stopPlayClicked}
                   updateDisctionary={updateDisctionary}
                   updateTalam={updateTalam}
+                  setRagam={updateRagam}
                 ></RowPreview>
               </div>
             </div>

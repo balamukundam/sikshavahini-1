@@ -2,6 +2,11 @@ import { useState, useRef, useEffect } from "react";
 import * as Tone from "tone";
 import { musicSets } from "../services/dataTypes";
 import { musicService } from "../services/musicService";
+import {
+  InstrumentFactory,
+  InstrumentType,
+  SynthInstrument,
+} from "../services/InstrumentFactory";
 
 interface Props {
   musicNotesComp: any;
@@ -42,7 +47,9 @@ const PreviewMusicNotesComponent = ({
   const [count, setCount] = useState(1);
   const [currentNote, setCurrentNote] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const [synth, setSynth] = useState<Tone.PolySynth | null>(null);
+  const [synth, setSynth] = useState<
+    Tone.Synth | Tone.MonoSynth | Tone.PluckSynth | Tone.FMSynth | null
+  >(null);
   const [talamSynth, setTalamSynth] = useState<Tone.PolySynth | null>(null);
   const [drone, setDrone] = useState<Tone.PolySynth | null>(null);
   const [image, setImage] = useState("/images/Sunaadam.jpg");
@@ -54,7 +61,11 @@ const PreviewMusicNotesComponent = ({
   const [tables, setTables] = useState<string[][][][]>([]);
   const [events, setEvents] = useState<any[]>([]);
 
+  const pitchShiftRef = useRef<Tone.PitchShift | null>(null);
+
   const initialize = () => {
+    ms.setBaseNoteNbr(musicSettings.pitch);
+    ms.setMelaNbr(musicSettings.melakarta);
     ms.getNotesRaw(musicNotesComp["musicNotes"]);
 
     const eventstemp: any[] = [];
@@ -78,7 +89,7 @@ const PreviewMusicNotesComponent = ({
 
   useEffect(() => {
     initialize();
-  }, [musicNotesComp]);
+  }, [musicNotesComp, musicSettings]);
 
   const checkValidTalamNumbers = (
     input: string,
@@ -203,11 +214,19 @@ const PreviewMusicNotesComponent = ({
       console.log("Drone Started with Chord:", chord);
     }
 
+    if (!pitchShiftRef.current) {
+      pitchShiftRef.current = new Tone.PitchShift().toDestination();
+    }
+
     // ✅ Initialize Synth for Playing Notes
     if (!synth) {
-      console.log("Initializing Synth...");
-      const newSynth = new Tone.PolySynth(Tone.Synth).toDestination();
-      setSynth(newSynth);
+      console.log("Initializing Synth...", musicSettings.instrument);
+      // const newSynth = new Tone.PolySynth(Tone.Synth).toDestination();
+      const instrumentInstance = InstrumentFactory.createInstrument(
+        musicSettings.instrument
+      );
+      instrumentInstance.connect(pitchShiftRef.current); // Connect to pitch shift
+      setSynth(instrumentInstance);
     }
     if (!talamSynth) {
       console.log("Initializing TalamSynth...");
@@ -277,11 +296,14 @@ const PreviewMusicNotesComponent = ({
               });
             }
             // ✅ Trigger the note
-            if (timeInterval > 750) {
-              synth.triggerAttackRelease(noteName, "2n");
-            } else {
-              synth.triggerAttackRelease(noteName, "4n");
-            }
+            synth.triggerRelease();
+            synth.triggerAttack(noteName);
+            // if (timeInterval > 750) {
+
+            //   synth.triggerAttackRelease(noteName, "2n");
+            // } else {
+            //   synth.triggerAttackRelease(noteName, "4n");
+            // }
           }
 
           if (thisEvent.beatRequired && images[thisEvent.talam] === 0) {
@@ -330,7 +352,7 @@ const PreviewMusicNotesComponent = ({
     }
 
     if (synth) {
-      synth.releaseAll(); // Stop playing notes
+      synth.triggerRelease(); // Stop playing notes
       setSynth(null);
       console.log("Synth Stopped");
     }

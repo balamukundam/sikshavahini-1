@@ -5,6 +5,7 @@ import {
   musicSets,
 } from "../services/dataTypes";
 import Button from "./Button";
+import { InstrumentType } from "../services/InstrumentFactory";
 
 interface Props {
   onMusicSettingsChange: (item: musicSets) => void;
@@ -14,6 +15,13 @@ interface Props {
 const MusicSettings = ({ musicSettings, onMusicSettingsChange }: Props) => {
   const handleBpmChange = (value: string) => {
     onMusicSettingsChange({ ...musicSettings, bpm: Number(value) });
+  };
+
+  const handleInstrumentChange = (value: string) => {
+    onMusicSettingsChange({
+      ...musicSettings,
+      instrument: value as InstrumentType,
+    });
   };
 
   const handlePitchSelectionChange = (
@@ -90,6 +98,30 @@ const MusicSettings = ({ musicSettings, onMusicSettingsChange }: Props) => {
                 </div>
               </div>
               <div className="col-6">
+                <div className="input-group mb-4">
+                  <span className="input-group-text" id="width-input">
+                    Instrument:
+                  </span>
+
+                  <select
+                    className="form-select"
+                    value={musicSettings.instrument}
+                    onChange={(e) => handleInstrumentChange(e.target.value)}
+                    style={{ padding: "5px" }}
+                  >
+                    <option value="Flute">Flute</option>
+                    {/* <option value="violine">Violin</option> */}
+                    <option value="Pluck">Pluck</option>
+                    {/* <option value="fm">FM Synth</option>
+                    <option value="mono">Mono Synth</option> */}
+                    <option value="Basic">Basic Synth</option>
+                    {/* <option value="veena">Veena</option> */}
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12">
                 <div className="input-group mb-4">
                   <span className="input-group-text" id="width-input">
                     Melakartha

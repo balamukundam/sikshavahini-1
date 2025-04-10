@@ -10,6 +10,8 @@ import PreviewSeparatorComponent from "./PreviewSeparatorComponent";
 import PreviewMultipleQuestionComp from "./PreviewMultipleQuestionComp";
 import PreviewMusicNotesComponent from "./PreviewMusicNotesComponent";
 import PreviewMusicKalapanaSwaramComponent from "./PreviewMusicKalapanaSwaramComponent";
+import PreviewMusicGeethamComponent from "./PreviewMusicGeethamComponent";
+import { RagamName } from "../services/RagamFactory";
 
 interface Props {
   dataRow: any; // Initial data passed to the component
@@ -20,6 +22,7 @@ interface Props {
   stopPlayClicked: boolean;
   updateDisctionary: (str: string, sentence: string) => void;
   updateTalam: (image: string, note: string) => void;
+  setRagam: (ragam: RagamName) => void;
 }
 
 const RowPreview: React.FC<Props> = ({
@@ -31,6 +34,7 @@ const RowPreview: React.FC<Props> = ({
   stopPlayClicked,
   updateDisctionary,
   updateTalam,
+  setRagam,
 }) => {
   // Initialize state with the dataRows
   if (dataRow["preferences"]["language"] !== "Default") {
@@ -136,6 +140,20 @@ const RowPreview: React.FC<Props> = ({
                   colg={index}
                   updateTalam={updateTalam}
                 ></PreviewMusicNotesComponent>
+              </>
+            )}
+            {item["cType"] === "52" && (
+              <>
+                <PreviewMusicGeethamComponent
+                  musicGeethamComp={item}
+                  musicSettings={musicSettings}
+                  stopPlayClicked={stopPlayClicked}
+                  talamShow={talamShow}
+                  rowg={rowNbr}
+                  colg={index}
+                  updateTalam={updateTalam}
+                  setRagam={setRagam}
+                ></PreviewMusicGeethamComponent>
               </>
             )}
             {item["cType"] === "55" && (

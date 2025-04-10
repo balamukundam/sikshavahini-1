@@ -1,3 +1,6 @@
+import { InstrumentType } from "./InstrumentFactory";
+import { RagamName } from "./RagamFactory";
+
 export const BmkLanguages = {
     telugu: 'telugu',
     devanagari: 'devanagari',
@@ -9,6 +12,7 @@ export const BmkLanguages = {
   export interface musicSets{
     bpm: number,
     pitch: number,
+    instrument: InstrumentType,
     melakarta: number,
 
   }
@@ -75,6 +79,15 @@ export const BmkLanguages = {
     talamSeq: string;
   }
 
+  export interface ComponentMusicGeethams extends BaseComponent {
+    musicNotes: string;
+    musicLyrics: string[];
+    title: string;
+    speeds: string;
+    talamSeq: string;
+    ragam: RagamName;
+  }
+
   export interface ComponentMusicLKalpanaNotes extends BaseComponent {
     musicNotes: string;
     musicPallavi: string;
@@ -86,7 +99,7 @@ export const BmkLanguages = {
   }
   
   // Define a union type for all components
-  export type ComponentType = ComponentImage | ComponentPara | ComponentTable | ComponentPoem | ComponentMultiQuest | ComponentMusicNotes | ComponentMusicLKalpanaNotes | ComponentSeparator;
+  export type ComponentType = ComponentImage | ComponentPara | ComponentTable | ComponentPoem | ComponentMultiQuest | ComponentMusicNotes | ComponentMusicGeethams | ComponentMusicLKalpanaNotes | ComponentSeparator;
   
   // DataRow contains an array of any ComponentType
   export interface DataRow {

@@ -2,15 +2,22 @@ import { useState, useRef, useEffect } from "react";
 import * as Tone from "tone";
 import { musicSets } from "../services/dataTypes";
 import { musicService } from "../services/musicService";
+import {
+  InstrumentFactory,
+  InstrumentType,
+  SynthInstrument,
+} from "../services/InstrumentFactory";
+import { RagamName } from "../services/RagamFactory";
 
 interface Props {
-  musicNotesComp: any;
+  musicGeethamComp: any;
   musicSettings: musicSets;
   talamShow: boolean;
   stopPlayClicked: boolean;
   rowg: number;
   colg: number;
   updateTalam: (image: string, note: string) => void;
+  setRagam: (ragam: RagamName) => void;
 }
 
 // ✅ Image paths for each count
@@ -25,23 +32,27 @@ let images = [0, 1, 2, 3, 0, 6, 0, 6];
 //   "/images/img6.jpeg",
 // ];
 
+let ms: musicService = new musicService();
 //let events: any[] = [];
 //let tables: string[][][][] = [];
 let totalEvents = 0;
 
-const PreviewMusicKalapanaSwaramComponent = ({
-  musicNotesComp,
+const PreviewMusicGeethamComponent = ({
+  musicGeethamComp,
   musicSettings,
   talamShow,
   stopPlayClicked,
   rowg,
   colg,
   updateTalam,
+  setRagam,
 }: Props) => {
   const [count, setCount] = useState(1);
   const [currentNote, setCurrentNote] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const [synth, setSynth] = useState<Tone.PolySynth | null>(null);
+  const [synth, setSynth] = useState<
+    Tone.Synth | Tone.MonoSynth | Tone.PluckSynth | Tone.FMSynth | null
+  >(null);
   const [talamSynth, setTalamSynth] = useState<Tone.PolySynth | null>(null);
   const [drone, setDrone] = useState<Tone.PolySynth | null>(null);
   const [image, setImage] = useState("/images/Sunaadam.jpg");
@@ -52,42 +63,55 @@ const PreviewMusicKalapanaSwaramComponent = ({
   const [selectedEventNumber, setSelectedEventNumber] = useState(-1);
   const [tables, setTables] = useState<any[][][][]>([]);
   const [events, setEvents] = useState<any[]>([]);
+  const [notesPerBeatForTable, setNotesPerBeatForTable] = useState<number[]>(
+    []
+  );
+  const [tableHeaderrs, setTableHeaders] = useState<string[]>([]);
+
+  const pitchShiftRef = useRef<Tone.PitchShift | null>(null);
 
   const initialize = () => {
-    let msp: musicService = new musicService();
-    msp.getNotesRaw(musicNotesComp["musicPallavi"]);
-    let lyrics = musicNotesComp["lyricsPallavi"].split(" ");
+    setRagam(musicGeethamComp["ragam"]);
+    ms.setBaseNoteNbr(musicSettings.pitch);
+    ms.setMelaNbr(musicSettings.melakarta);
+    ms.getNotesRaw(musicGeethamComp["musicNotes"]);
 
     const eventstemp: any[] = [];
     const tablestemp: string[][][][] = [];
+    const tempNotesPerBeatForTable: number[] = [];
+    const tempTableHeaders: string[] = [];
+    checkedTalamNumbers.forEach((nbp) => {
+      musicGeethamComp["musicLyrics"].forEach(
+        (charanamLine: string, index: number) => {
+          let eventsAndRwows = getEvents(
+            ms.getNoteNbrsArray(),
+            ms.getNoteTextArray(),
+            charanamLine.split(" "),
+            nbp
+          );
+          tempTableHeaders.push(
+            "Charanam-" + (index + 1) + " (  notes per beat = " + nbp + ")"
+          );
+          tempNotesPerBeatForTable.push(nbp);
 
-    musicNotesComp["musicNotes"].split("\n").forEach((mnLine: string) => {
-      if (mnLine.trim() !== "") {
-        let msn: musicService = new musicService();
-        msn.getNotesRaw(mnLine.trim());
+          eventstemp.push(eventsAndRwows.events);
+          tablestemp.push(eventsAndRwows.rows);
 
-        let eventsAndRwows = getEvents(
-          msp.getNoteNbrsArray(),
-          msp.getNoteTextArray(),
-          lyrics,
-          Number(musicNotesComp["pStart"]),
-          msn.getNoteNbrsArray(),
-          msn.getNoteTextArray(),
-          notesPerBeatForTable
-        );
-        eventstemp.push(eventsAndRwows.events);
-        tablestemp.push(eventsAndRwows.rows);
-        totalEvents = totalEvents + eventsAndRwows.events.length;
-      }
+          totalEvents = totalEvents + eventsAndRwows.events.length;
+        }
+      );
     });
+    setNotesPerBeatForTable(tempNotesPerBeatForTable);
+    setTableHeaders(tempTableHeaders);
 
+    console.log("eventstemp", eventstemp);
     setTables(tablestemp);
     setEvents(eventstemp);
   };
 
   useEffect(() => {
     initialize();
-  }, [musicNotesComp]);
+  }, [musicGeethamComp, musicSettings]);
 
   const checkValidTalamNumbers = (
     input: string,
@@ -100,8 +124,8 @@ const PreviewMusicKalapanaSwaramComponent = ({
       .map(Number) // Convert to number
       .every((n) => !isNaN(n) && n >= startN && n <= endN); // Check if within range
   };
-  if (checkValidTalamNumbers(musicNotesComp.talamSeq, 0, 9)) {
-    images = musicNotesComp.talamSeq
+  if (checkValidTalamNumbers(musicGeethamComp.talamSeq, 0, 6)) {
+    images = musicGeethamComp.talamSeq
       .split(",") // Split by comma
       .map((num: string) => num.trim()) // Trim spaces
       .map((num: string) => Number(num)); // Format as "image-0x"
@@ -113,9 +137,11 @@ const PreviewMusicKalapanaSwaramComponent = ({
     updateTalam(image, noteText);
   };
 
-  let notesPerBeatForTable: number = 4;
-  if (Number(musicNotesComp.npb) > 0) {
-    notesPerBeatForTable = Number(musicNotesComp.npb);
+  let checkedTalamNumbers: number[] = [1, 2];
+  if (checkValidTalamNumbers(musicGeethamComp.speeds, 1, 4)) {
+    checkedTalamNumbers = musicGeethamComp.speeds
+      .split(",")
+      .map((num: string) => num.trim());
   }
 
   useEffect(() => {
@@ -135,12 +161,9 @@ const PreviewMusicKalapanaSwaramComponent = ({
   }
 
   const getEvents = (
-    noteNbrsP: number[],
-    noteTextsP: string[],
-    lyrics: string[],
-    pStart: number,
-    noteNbrsN: number[],
-    noteTextsN: string[],
+    noteNbrs: number[],
+    noteTexts: string[],
+    charanamLine: string[],
     notesPerBeat: number
   ): any => {
     let thisEvents: any[] = [];
@@ -148,63 +171,29 @@ const PreviewMusicKalapanaSwaramComponent = ({
     let beatCount: number = 0;
     let noteCount: number = 0;
     let cellText: any[] = [];
-    let row: any[][] = [];
+    let row: string[][] = [];
     let bTalamStarted: Boolean = true;
 
-    let notesGiven = noteNbrsN.length - pStart;
-    let notesPerTalam = notesPerBeat * images.length;
-    let startGaps = notesPerTalam - (notesGiven % notesPerTalam);
-    if (startGaps == notesPerTalam) startGaps = 0;
-
-    let noteNbrs: number[] = [];
-    let noteTexts: string[] = [];
     let noteLyrics: string[] = [];
 
-    for (let i = 0; i < startGaps; i++) {
-      noteNbrs.push(0);
-      noteTexts.push(";");
-      noteLyrics.push("");
-    }
-    noteNbrs = [...noteNbrs, ...noteNbrsN];
-    noteNbrs = [...noteNbrs, ...noteNbrsP];
-    noteTexts = [...noteTexts, ...noteTextsN];
-    noteTexts = [...noteTexts, ...noteTextsP];
-    for (let i = 0; i < noteNbrsN.length; i++) {
-      noteLyrics.push("");
-    }
-
     for (let i = 0; i < noteNbrs.length; i++) {
-      if (i < lyrics.length) {
-        noteLyrics.push(lyrics[i]);
+      if (i < charanamLine.length) {
+        noteLyrics.push(charanamLine[i]);
       } else {
         noteLyrics.push(";");
       }
     }
 
-    let endGaps = notesPerTalam - (noteNbrs.length % notesPerTalam);
-    if (endGaps == notesPerTalam) endGaps = 0;
-
-    for (let i = 0; i < endGaps; i++) {
-      noteNbrs.push(0);
-      noteTexts.push(";");
-      noteLyrics.push(";");
-    }
-
     while (bTalamStarted) {
-      let starFound: boolean = false;
       for (let i = 0; i < noteNbrs.length; i++) {
         bTalamStarted = true;
-        if (noteLyrics[i].startsWith("*")) {
-          starFound = true;
-          noteLyrics[i] = noteLyrics[i].replace("*", "");
-        }
         thisEvents.push({
           note: noteNbrs[i],
           noteText: noteTexts[i],
           beatRequired: noteCount == 0,
           talam: beatCount,
-          optional: starFound,
         });
+
         cellText.push({ note: noteTexts[i], lyric: noteLyrics[i] });
 
         noteCount = noteCount + 1;
@@ -260,11 +249,19 @@ const PreviewMusicKalapanaSwaramComponent = ({
       console.log("Drone Started with Chord:", chord);
     }
 
+    if (!pitchShiftRef.current) {
+      pitchShiftRef.current = new Tone.PitchShift().toDestination();
+    }
+
     // ✅ Initialize Synth for Playing Notes
     if (!synth) {
-      console.log("Initializing Synth...");
-      const newSynth = new Tone.PolySynth(Tone.Synth).toDestination();
-      setSynth(newSynth);
+      console.log("Initializing Synth...", musicSettings.instrument);
+      // const newSynth = new Tone.PolySynth(Tone.Synth).toDestination();
+      const instrumentInstance = InstrumentFactory.createInstrument(
+        musicSettings.instrument
+      );
+      instrumentInstance.connect(pitchShiftRef.current); // Connect to pitch shift
+      setSynth(instrumentInstance);
     }
     if (!talamSynth) {
       console.log("Initializing TalamSynth...");
@@ -309,75 +306,17 @@ const PreviewMusicKalapanaSwaramComponent = ({
             prevCount = startEventNumber;
           }
 
-          let checkTableEventNbrs = getTableAndEventNumber(prevCount);
-          let checkcurrentTable = checkTableEventNbrs.tableNbr;
-          let heckcurrentEvent = checkTableEventNbrs.eventNbr;
-          let checkthisEvent = events[checkcurrentTable][heckcurrentEvent];
-
-          if (checkthisEvent.optional) {
-            console.log("checking...1");
-            let skipTalam = true;
-            let skipToCount = prevCount;
-
-            // check next full talam of notes if blank
-            let notesForTalam = notesPerBeatForTable * images.length;
-
-            for (let i = 0; i < notesForTalam; i++) {
-              let tempEventPosn = prevCount + i;
-
-              if (tempEventPosn >= endEventNumber + 1) {
-                tempEventPosn =
-                  startEventNumber + tempEventPosn - endEventNumber - 1;
-              }
-              let tempTableEventNbrs = getTableAndEventNumber(tempEventPosn);
-              let tempTable = tempTableEventNbrs.tableNbr;
-              let tempEventNbr = tempTableEventNbrs.eventNbr;
-              let tempEvent = events[tempTable][tempEventNbr];
-              if (!tempEvent.optional && tempEvent.note !== 0) {
-                skipTalam = false;
-                break;
-              }
-              skipToCount = tempEventPosn + 1;
-            }
-
-            if (skipTalam) {
-              console.log("skip found...1");
-              console.log("skipToCount", skipToCount);
-              let continueEvent = skipToCount + 1;
-              if (continueEvent >= endEventNumber + 1) {
-                continueEvent = startEventNumber;
-              }
-              console.log("continueEvent", continueEvent);
-              let checkTableEventNbrs = getTableAndEventNumber(continueEvent);
-              let checkcurrentTable = checkTableEventNbrs.tableNbr;
-              let checkcurrentEvent = checkTableEventNbrs.eventNbr;
-              let checkthisEvent = events[checkcurrentTable][checkcurrentEvent];
-              console.log("continueEventNote", checkthisEvent.note);
-
-              if (checkthisEvent.note === 0) {
-                skipTalam = false;
-              } else {
-                console.log("prevCount", prevCount);
-                console.log("skipToCount", skipToCount);
-                prevCount = skipToCount;
-              }
-            }
-          }
-
           let getTableEventNbrs = getTableAndEventNumber(prevCount);
           let currentTable = getTableEventNbrs.tableNbr;
           let currentEvent = getTableEventNbrs.eventNbr;
+          setTimeInterval(basicSpeed / notesPerBeatForTable[currentTable]);
+
           let thisEvent = events[currentTable][currentEvent];
-
           const nextNote = thisEvent.note;
-
-          setTimeInterval(basicSpeed / notesPerBeatForTable);
-
-          let imageShow =
-            images[thisEvent.talam] === 9
-              ? "00.gif"
-              : images[thisEvent.talam] + ".jpeg";
-          showTalam("/images/img" + imageShow, thisEvent.noteText);
+          showTalam(
+            "/images/img" + images[thisEvent.talam] + ".jpeg",
+            thisEvent.noteText
+          );
 
           if (nextNote !== 0) {
             const noteName = Tone.Frequency(nextNote, "midi").toNote();
@@ -392,24 +331,22 @@ const PreviewMusicKalapanaSwaramComponent = ({
               });
             }
             // ✅ Trigger the note
-            if (timeInterval > 750) {
-              synth.triggerAttackRelease(noteName, "2n");
-            } else {
-              synth.triggerAttackRelease(noteName, "4n");
-            }
+            synth.triggerRelease();
+            synth.triggerAttack(noteName);
+            // if (timeInterval > 750) {
+
+            //   synth.triggerAttackRelease(noteName, "2n");
+            // } else {
+            //   synth.triggerAttackRelease(noteName, "4n");
+            // }
           }
 
-          if (thisEvent.beatRequired) {
-            const notesToPlay =
-              images[thisEvent.talam] === 0
-                ? [
-                    Tone.Frequency(baseNbr, "midi").toNote(), // C4
-                    Tone.Frequency(baseNbr + 7, "midi").toNote(), // G4
-                    Tone.Frequency(baseNbr + 12, "midi").toNote(), // C5
-                  ]
-                : [
-                    Tone.Frequency(baseNbr, "midi").toNote(), // C4
-                  ];
+          if (thisEvent.beatRequired && images[thisEvent.talam] === 0) {
+            const notesToPlay = [
+              Tone.Frequency(baseNbr, "midi").toNote(), // C4
+              Tone.Frequency(baseNbr + 7, "midi").toNote(), // G4
+              Tone.Frequency(baseNbr + 12, "midi").toNote(), // C5
+            ];
             talamSynth?.triggerAttackRelease(notesToPlay, "2n", Tone.now());
           }
 
@@ -450,7 +387,7 @@ const PreviewMusicKalapanaSwaramComponent = ({
     }
 
     if (synth) {
-      synth.releaseAll(); // Stop playing notes
+      synth.triggerRelease(); // Stop playing notes
       setSynth(null);
       console.log("Synth Stopped");
     }
@@ -475,26 +412,16 @@ const PreviewMusicKalapanaSwaramComponent = ({
     setEndEventNumber(totalEvents - 1);
   };
 
-  const isSahityamRequired = (row: any[]): boolean => {
-    let sahRequired = false;
-    row.forEach((column: any[]) => {
-      column.forEach((cell) => {
-        if (cell.lyric !== "") sahRequired = true;
-      });
-    });
-    return sahRequired;
-  };
-
   const getNoteStyle = (
     globalIndex: number,
     globalIndexStart: number,
-    tableIndex: number = 0
+    tableIndex: number
   ): React.CSSProperties => {
     if (
       globalIndex <= currentNote - 1 &&
       globalIndexStart >=
-        Math.floor((currentNote - 1) / notesPerBeatForTable) *
-          notesPerBeatForTable
+        Math.floor((currentNote - 1) / notesPerBeatForTable[tableIndex]) *
+          notesPerBeatForTable[tableIndex]
     ) {
       return {
         padding: "1px",
@@ -533,7 +460,6 @@ const PreviewMusicKalapanaSwaramComponent = ({
       padding: "1px",
       textAlign: "center" as const, // ✅ Fix type issue
       backgroundColor: "transparent",
-      color: "black",
       cursor: "pointer",
     };
   };
@@ -649,7 +575,7 @@ const PreviewMusicKalapanaSwaramComponent = ({
       <>
         {tables.map((rows, tableIndex) => (
           <>
-            <h3>Swaram = {tableIndex + 1} </h3>
+            <h3>{tableHeaderrs[tableIndex]}</h3>
             <table
               style={{
                 borderCollapse: "collapse",
@@ -661,13 +587,15 @@ const PreviewMusicKalapanaSwaramComponent = ({
                 {rows.map((row, rowIndex) => {
                   return (
                     <>
-                      <tr key={rowIndex}>
+                      <tr key={rowIndex + "s"}>
                         {row.map((item, columnIndex) => {
                           // Calculate the global index based on row and column
                           const globalIndexStart =
                             startEventForTable(tableIndex) +
-                            rowIndex * images.length * notesPerBeatForTable +
-                            columnIndex * notesPerBeatForTable;
+                            rowIndex *
+                              images.length *
+                              notesPerBeatForTable[tableIndex] +
+                            columnIndex * notesPerBeatForTable[tableIndex];
 
                           return (
                             <td
@@ -680,6 +608,7 @@ const PreviewMusicKalapanaSwaramComponent = ({
                                   images[columnIndex] === 0
                                     ? "lightgrey"
                                     : "transparent",
+                                color: "blue",
                               }}
                             >
                               {item.map((note, noteIndex) => {
@@ -687,8 +616,9 @@ const PreviewMusicKalapanaSwaramComponent = ({
                                   startEventForTable(tableIndex) +
                                   rowIndex *
                                     images.length *
-                                    notesPerBeatForTable +
-                                  columnIndex * notesPerBeatForTable +
+                                    notesPerBeatForTable[tableIndex] +
+                                  columnIndex *
+                                    notesPerBeatForTable[tableIndex] +
                                   noteIndex;
                                 return (
                                   <span
@@ -709,56 +639,58 @@ const PreviewMusicKalapanaSwaramComponent = ({
                           );
                         })}
                       </tr>
-                      {isSahityamRequired(row) && (
-                        <tr key={rowIndex + "s"}>
-                          {row.map((item, columnIndex) => {
-                            // Calculate the global index based on row and column
-                            const globalIndexStart =
-                              startEventForTable(tableIndex) +
-                              rowIndex * images.length * notesPerBeatForTable +
-                              columnIndex * notesPerBeatForTable;
+                      <tr key={rowIndex}>
+                        {row.map((item, columnIndex) => {
+                          // Calculate the global index based on row and column
+                          const globalIndexStart =
+                            startEventForTable(tableIndex) +
+                            rowIndex *
+                              images.length *
+                              notesPerBeatForTable[tableIndex] +
+                            columnIndex * notesPerBeatForTable[tableIndex];
 
-                            return (
-                              <td
-                                key={columnIndex}
-                                style={{
-                                  border: "1px solid black", // Border for each cell
-                                  padding: "10px",
-                                  textAlign: "center",
-                                  backgroundColor:
-                                    images[columnIndex] === 0
-                                      ? "lightgrey"
-                                      : "transparent",
-                                }}
-                              >
-                                {item.map((note, noteIndex) => {
-                                  const globalIndex =
-                                    startEventForTable(tableIndex) +
-                                    rowIndex *
-                                      images.length *
-                                      notesPerBeatForTable +
-                                    columnIndex * notesPerBeatForTable +
-                                    noteIndex;
-                                  return (
-                                    <span
-                                      key={globalIndex}
-                                      id={`note-${rowg}-${colg}-${globalIndex}`}
-                                      onClick={() => handleClick(globalIndex)}
-                                      style={getNoteStyle(
-                                        globalIndex,
-                                        globalIndexStart,
-                                        tableIndex
-                                      )}
-                                    >
-                                      {note.lyric === "" ? ";" : note.lyric}
-                                    </span>
-                                  );
-                                })}
-                              </td>
-                            );
-                          })}
-                        </tr>
-                      )}
+                          return (
+                            <td
+                              key={columnIndex}
+                              style={{
+                                border: "1px solid black", // Border for each cell
+                                padding: "10px",
+                                textAlign: "center",
+                                backgroundColor:
+                                  images[columnIndex] === 0
+                                    ? "lightgrey"
+                                    : "transparent",
+                                color: "red",
+                              }}
+                            >
+                              {item.map((note, noteIndex) => {
+                                const globalIndex =
+                                  startEventForTable(tableIndex) +
+                                  rowIndex *
+                                    images.length *
+                                    notesPerBeatForTable[tableIndex] +
+                                  columnIndex *
+                                    notesPerBeatForTable[tableIndex] +
+                                  noteIndex;
+                                return (
+                                  <span
+                                    key={globalIndex}
+                                    id={`note-${rowg}-${colg}-${globalIndex}`}
+                                    onClick={() => handleClick(globalIndex)}
+                                    style={getNoteStyle(
+                                      globalIndex,
+                                      globalIndexStart,
+                                      tableIndex
+                                    )}
+                                  >
+                                    {note.lyric === "" ? ";" : note.lyric}
+                                  </span>
+                                );
+                              })}
+                            </td>
+                          );
+                        })}
+                      </tr>
                     </>
                   );
                 })}
@@ -772,4 +704,4 @@ const PreviewMusicKalapanaSwaramComponent = ({
   );
 };
 
-export default PreviewMusicKalapanaSwaramComponent;
+export default PreviewMusicGeethamComponent;

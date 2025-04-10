@@ -10,6 +10,7 @@ import {
   ComponentType,
   musicSets,
 } from "../services/dataTypes";
+import { RagamName } from "../services/RagamFactory";
 
 interface Props {
   initialDataRows: any[]; // Initial data passed to the component
@@ -36,6 +37,7 @@ interface Props {
   updateDisctionary: (str: string, sentence: string) => void;
   insertRowBelow: (rowIndex: number) => void;
   updateTalam: (image: string, note: string) => void;
+  setRagam: (ragam: RagamName) => void;
 }
 
 const RowsDesign: React.FC<Props> = ({
@@ -55,6 +57,7 @@ const RowsDesign: React.FC<Props> = ({
   updateDisctionary,
   insertRowBelow,
   updateTalam,
+  setRagam,
 }) => {
   // Initialize state with the dataRows
   // const [dataRows, setDataRows] = useState<any[]>(initialDataRows);
@@ -91,6 +94,7 @@ const RowsDesign: React.FC<Props> = ({
               stopPlayClicked={stopPlayClicked}
               updateDisctionary={updateDisctionary}
               updateTalam={updateTalam}
+              setRagam={setRagam}
             ></RowPreview>
           </div>
         </div>
