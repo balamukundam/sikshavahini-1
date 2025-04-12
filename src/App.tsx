@@ -47,7 +47,7 @@ function App() {
   const [curLang, setLanguage] = useState<BmkLanguage>(BmkLanguages.telugu);
 
   const [musicSettings, setMusicSettings] = useState<musicSets>({
-    bpm: 30,
+    bpm: 45,
     pitch: 60,
     instrument: "Basic",
     melakarta: 15,
@@ -364,7 +364,7 @@ function App() {
       border: false,
       musicNotes:
         "P;D;N; \n G;M;P;D;N; \n S+; N; D; P; M; G; M; P; D; N; \n R+ ; S+ ; S+; N; N; D; P; M; G; M; P; D; N; ",
-      musicPallavi: "NS+; ND; P;PM G; M; P ; ; D P M G ;",
+      musicPallavi: "S ; D- S ;R ; R ; R ",
       lyricsPallavi: "Si va ; Si va *; Si ; va ; ya ; na ; ra ; ; ; da ; ; ;",
       pStart: "2",
       title: "Notes",
@@ -372,6 +372,23 @@ function App() {
       talamSeq: "0,1,2,3,0,6,0,6",
     };
   }
+
+  // function getNewMusicKalpanaSwaraCompObject(): ComponentMusicLKalpanaNotes {
+  //   return {
+  //     width: "12",
+  //     cType: "55",
+  //     language: "default",
+  //     border: false,
+  //     musicNotes:
+  //       "P;D;N; \n G;M;P;D;N; \n S+; N; D; P; M; G; M; P; D; N; \n R+ ; S+ ; S+; N; N; D; P; M; G; M; P; D; N; ",
+  //     musicPallavi: "NS+; ND; P;PM G; M; P ; ; D P M G ;",
+  //     lyricsPallavi: "Si va ; Si va *; Si ; va ; ya ; na ; ra ; ; ; da ; ; ;",
+  //     pStart: "2",
+  //     title: "Notes",
+  //     npb: "4",
+  //     talamSeq: "0,1,2,3,0,6,0,6",
+  //   };
+  // }
 
   function getNewImageCompObject(): ComponentImage {
     return {
