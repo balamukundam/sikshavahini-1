@@ -218,6 +218,7 @@ const RowInput: React.FC<Props> = ({
                         "Seperator comp",
                         "Music Notes comp",
                         "Music Geethams comp",
+                        "Music Multi Geethams comp",
                         "Music Kalpana Swara comp",
                       ]}
                       heading="Choose component"
@@ -373,6 +374,7 @@ const RowInput: React.FC<Props> = ({
                       "Seperator comp",
                       "Music Notes comp",
                       "Music Geethams comp",
+                      "Music Multi Geethams comp",
                       "Music Kalpana Swara comp",
                     ]}
                     heading="Choose component"

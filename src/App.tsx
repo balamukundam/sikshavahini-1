@@ -21,6 +21,7 @@ import {
   melakartaDataList,
   musicSets,
   ComponentMusicGeethams,
+  ComponentMusicGeethamsMulti,
 } from "./services/dataTypes";
 import { downloadData } from "./services/downloadUtils";
 import React from "react";
@@ -356,6 +357,35 @@ function App() {
     };
   }
 
+  function getNewMusicGeethamMultiCompObject(): ComponentMusicGeethamsMulti {
+    return {
+      width: "12",
+      cType: "53",
+      language: "default",
+      border: false,
+      musicPallavi: "S;;RG;P;D;S+;N;D; P;DPMGRSRSN-D-S;;;",
+      lyricsPallavi:
+        "raa ; ; ra vE ; Nu ; gO ; pa ; baa ; laa ; raa ; ji ta sad ; gu Na ja ya shee ; laa ; ; ;",
+      pallaviGati: 2,
+      musicNotes: [
+        "S;;RG;P;M;;GP;D; R+;;S+N;D;P;;MG;R;",
+        "S;;RG;G;G;;;;;RG P;;PP;P;P;;;;;DP S+;;S+S+;S+;G+R+S+NNDP; PDPMGRR;GPMGRSRG",
+        "PPP;RRR;GPMGG;;; GPMGMGRSRGRSS;;; RSN-D-S;;;MGRGP;;; DPDR+S+;;;R+S+NDPMGR",
+        "P;;;MGRGD;;;MGRG P;;;MGRGP;P;P;;; G+;;;R+S+NDR+;;;R+S+ND S+;;;R+S+NDS+;S+;S+;;; G+;R+S+R+;R+;R+;;;R+;S+N D;D;D;;;P;MGG;G; G;;;SRGDP;;;R+S+R+G+ S+;;;G+R+S+NDPMGRSRG",
+      ],
+      musicLyrics: [
+        "saa ; ; ra saa ; kshha ; nE ; ; ra mE ; mi ; ma ; ; ru baa ; dha ; kO ; ; rva lE ; ; raa",
+        "nan ; ; da gO ; paa ; laa ; ; ; ; ; nE ; nen ; ; du pO ; jaa ; laa ; ; ; ; ; nee ; vin ; ; du raa ; raa ; sa da ma la ma di tO ; mu da ma la ra ga naa ; ke du ru ga ga di ya raa",
+        "pa lu maa ; ru nu gaa ; ra va mu na nin ; ; ; pi la chi na pa lu ka vu na lu ga ku raa ; ; ; ka ri va ra daa ; ; ; ma ri ma ri naa ; ; ; ya dha ra mu grO ; ; ; la raa ka ni ka ra mu ga",
+        "raa ; ; ; na ga dha ra raa ; ; ; mu ra ha ra raa ; ; ; bha va ha ra raa ; vE ; raa ; ; ; ee ; ; ; ma gu va nu ee ; ; ; la la na nu ee ; ; ; so ga si ni chE ; kO ; raa ; ; ; kO ; ri ka lim ; pon ; da ; ; ; Den ; da mu nee ; yan ; du ; ; ; jE ; re nu nee ; chen ; ta ; ; ; ma ru va ku raa ; ; ; ka ra mu la chE ; ; ; ma ri ma ri ni nu sha ra Na ne da ra",
+      ],
+      title: "Geetham-14",
+      gatis: [2],
+      talamSeq: "0,1,2,3,0,6,0,6",
+      ragam: "Bilahari",
+    };
+  }
+
   function getNewMusicKalpanaSwaraCompObject(): ComponentMusicLKalpanaNotes {
     return {
       width: "12",
@@ -484,6 +514,8 @@ function App() {
         return getNewMusicNotesCompObject();
       case "Music Geethams comp":
         return getNewMusicGeethamCompObject();
+      case "Music Multi Geethams comp":
+        return getNewMusicGeethamMultiCompObject();
       case "Music Kalpana Swara comp":
         return getNewMusicKalpanaSwaraCompObject();
       case "Poem comp":
@@ -644,6 +676,7 @@ function App() {
         (component) =>
           component.cType === "51" ||
           component.cType === "52" ||
+          component.cType === "53" ||
           component.cType === "55"
       )
     );

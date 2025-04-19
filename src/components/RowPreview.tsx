@@ -12,6 +12,7 @@ import PreviewMusicNotesComponent from "./PreviewMusicNotesComponent";
 import PreviewMusicKalapanaSwaramComponent from "./PreviewMusicKalapanaSwaramComponent";
 import PreviewMusicGeethamComponent from "./PreviewMusicGeethamComponent";
 import { RagamName } from "../services/RagamFactory";
+import PreviewMusicGeethamMultiComponent from "./PreviewMusicGeethamMultiComponent";
 
 interface Props {
   dataRow: any; // Initial data passed to the component
@@ -154,6 +155,20 @@ const RowPreview: React.FC<Props> = ({
                   updateTalam={updateTalam}
                   setRagam={setRagam}
                 ></PreviewMusicGeethamComponent>
+              </>
+            )}
+            {item["cType"] === "53" && (
+              <>
+                <PreviewMusicGeethamMultiComponent
+                  musicGeethamMultiComp={item}
+                  musicSettings={musicSettings}
+                  stopPlayClicked={stopPlayClicked}
+                  talamShow={talamShow}
+                  rowg={rowNbr}
+                  colg={index}
+                  updateTalam={updateTalam}
+                  setRagam={setRagam}
+                ></PreviewMusicGeethamMultiComponent>
               </>
             )}
             {item["cType"] === "55" && (

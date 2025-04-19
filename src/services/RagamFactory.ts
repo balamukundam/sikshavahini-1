@@ -1,6 +1,6 @@
 
 // Define available instrument types
-export type RagamName = "" | "Malahari" | "Suddha Saveri" | "Mohanam" | "Kalyani" | "Saveri" | "Kamboji" | "Arabhi" | "Anandabhairavi" | "Sri" | "Bhairavi";
+export type RagamName = "" | "Malahari" | "Suddha Saveri" | "Mohanam" | "Kalyani" | "Saveri" | "Kamboji" | "Arabhi" | "Anandabhairavi" | "Sri" | "Bhairavi" | "Hari kedara gaula" | "Bilahari" | "Kamas";
 
 //rdetails:
   export interface RagamProps{
@@ -84,6 +84,30 @@ export class RagamFactory {
           melakarta: 20,
           Arohana: "S R2 G2 M1 P D2 N2 S+",
           Avarohan: "S+ N2 D1 P M1 G2 R2 S",                
+      }
+
+      case "Hari kedara gaula":
+        return {
+          name: rname,
+          melakarta: 28,
+          Arohana: "S R2 M1 P N2 S+",
+          Avarohan: "S+ N2 D2 P M1 G3 R2 S",                
+      }
+
+      case "Bilahari":
+        return {
+          name: rname,
+          melakarta: 29,
+          Arohana: "S R2 G3 P D2 S+",
+          Avarohan: "S+ N3 D2 P M1 G3 R2 S",                
+      }
+
+      case "Kamas":
+        return {
+          name: rname,
+          melakarta: 28,
+          Arohana: "S M1 G3 M1 P D2 N2 S+",
+          Avarohan: "S+ N2 D2 P M1 G3 R2 S",                
       }
 
       default:
