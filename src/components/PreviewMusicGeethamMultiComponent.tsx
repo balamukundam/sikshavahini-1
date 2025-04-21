@@ -89,6 +89,7 @@ const PreviewMusicGeethamMultiComponent = ({
         ms.getNoteNbrsArray(),
         ms.getNoteTextArray(),
         musicGeethamMultiComp["lyricsPallavi"].split(" "),
+        musicGeethamMultiComp["gamakPallavi"].split(" "),
         musicGeethamMultiComp["pallaviGati"]
       );
 
@@ -112,6 +113,7 @@ const PreviewMusicGeethamMultiComponent = ({
           ms.getNoteNbrsArray(),
           ms.getNoteTextArray(),
           charanamLine.split(" "),
+          [],
           nbp
         );
         tempTableHeaders.push("Charanam-" + (index + 1));
@@ -190,6 +192,7 @@ const PreviewMusicGeethamMultiComponent = ({
     noteNbrs: number[],
     noteTexts: string[],
     charanamLine: string[],
+    gamakamLine: string[],
     notesPerBeat: number
   ): any => {
     let thisEvents: any[] = [];
@@ -215,11 +218,15 @@ const PreviewMusicGeethamMultiComponent = ({
       thisEvents.push({
         note: noteNbrs[i],
         noteText: noteTexts[i],
+        gamak: gamakamLine.length > i ? gamakamLine[i] : "_",
         beatRequired: noteCount == 0,
         talam: beatCount,
       });
 
-      cellText.push({ note: noteTexts[i], lyric: noteLyrics[i] });
+      cellText.push({
+        note: noteTexts[i],
+        lyric: noteLyrics[i],
+      });
 
       noteCount = noteCount + 1;
       if (noteCount == notesPerBeat) {
@@ -361,13 +368,18 @@ const PreviewMusicGeethamMultiComponent = ({
             synth.triggerRelease();
             synth.triggerAttack(noteName);
             console.log("played at", Tone.now());
+          }
 
-            setTimeout(() => {
-              if (pitchShiftRef.current) {
-                pitchShiftRef.current.pitch = -4; // Reduce pitch by -4
-                console.log("Pitch shifted down to -4 at", Tone.now());
-              }
-            }, 500); // 2 seconds delay
+          if (thisEvent.gamak !== "_") {
+            const gamaks = thisEvent.gamak.split("_");
+            for (let i1 = 0; i1 < gamaks.length; i1++) {
+              setTimeout(() => {
+                if (pitchShiftRef.current) {
+                  pitchShiftRef.current.pitch = Number(gamaks[i1]); // Reduce pitch by -4
+                  console.log("Pitch shifted down to -4 at", Tone.now());
+                }
+              }, (timeInterval * i1) / gamaks.length); // 2 seconds delay
+            }
           }
 
           if (thisEvent.beatRequired && images[thisEvent.talam] === 0) {

@@ -366,6 +366,8 @@ function App() {
       musicPallavi: "S;;RG;P;D;S+;N;D; P;DPMGRSRSN-D-S;;;",
       lyricsPallavi:
         "raa ; ; ra vE ; Nu ; gO ; pa ; baa ; laa ; raa ; ji ta sad ; gu Na ja ya shee ; laa ; ; ;",
+      gamakPallavi:
+        "_ _ _ 2_0 0_-2_0_0 _ _ _ -2_-2_-2_3 0_0_3_0 _ _ 1 0_1_0_0 _ _ _ _ _ _ _ _ 0_0_0_2 _ _ _ _ _ _ _ _ _",
       pallaviGati: 2,
       musicNotes: [
         "S;;RG;P;M;;GP;D; R+;;S+N;D;P;;MG;R;",

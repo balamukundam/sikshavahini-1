@@ -1801,6 +1801,203 @@ const data: Taragati[] = [
           },
         ],
       },
+      {
+        id: 6,
+        name: "General",
+        books: [
+          {
+            id: 5,
+            name: "Annualday Script",
+            documents: [
+              {
+                id: 1,
+                name: "Scene-01",
+                lang: "te",
+                title2: "naimiSAraNyaM",
+                url: "1XybS5WdwN_C10WUiD4D29RyPiyXayp2j",
+              },
+              {
+                id: 2,
+                name: "Scene-02",
+                lang: "te",
+                title2: "naaradaagamanam",
+                url: "1ns67knmG9ucelpIzBUdWH8-coLK4Ncst",
+              },
+              {
+                id: 3,
+                name: "Scene-03",
+                lang: "te",
+                title2: "praarthana-dIpa prajvalanamu",
+                url: "1zVulOb8fdFXg_KPZJwz-WFxsfpp4vuPM",
+              },
+              {
+                id: 4,
+                name: "Scene-04",
+                lang: "te",
+                title2: "caturvEda pArAyaNamu",
+                url: "1gVlr_nsfrb0N8rwCR1LmpRjDLwrOVXZq",
+              },
+              {
+                id: 5,
+                name: "Scene-05",
+                lang: "te",
+                title2: "jayatu vyAsa@h",
+                url: "1hVfyd7V5piUg2vZ7NIg_u9ifuT9h_uuF",
+              },
+              {
+                id: 6,
+                name: "Scene-06",
+                lang: "te",
+                title2: "Rshulu bAlamukuMdamunaku vaccuTa",
+                url: "1o0aruKiSpJ-SLuUJaDsvIL09dVUWRCgI",
+              },
+              {
+                id: 7,
+                name: "Scene-07",
+                lang: "te",
+                title2:
+                  "1 brahma purANamu - Suka maharshi - brahmamokkaTE pATa/`Dance`",
+                url: "1o1uqqaJpaMuewbfLbxXovCNlkYoH6R7c",
+              },
+              {
+                id: 8,
+                name: "Scene-08",
+                lang: "te",
+                title2:
+                  "2 padmapurANamu - Saunaka maharshi - tulasI mahatyamu nATika",
+                url: "1y_c00p98n2JVY9tFlHZ08BxWJh7yRQVk",
+              },
+              {
+                id: 9,
+                name: "Scene-09",
+                lang: "te",
+                title2: "3 vishNu purANamu - AMgIrasa maharshi - SlOkamulu",
+                url: "1uVj6dzgd151cM7Ij5D3Iu1JCWcfrbI-9",
+              },
+              {
+                id: 10,
+                name: "Scene-10",
+                lang: "te",
+                title2:
+                  "4 vAyu purANamu - AraNyaka maharshi - hanumaMtuDu sUryunni miMgE prayatnaM -  nATakamu",
+                url: "1fkHgioRW0N99-Ckd-hEab2wdG071gDC4",
+              },
+              {
+                id: 11,
+                name: "Scene-11",
+                lang: "te",
+                title2: "5 bhAgavata purANamu - atri maharshi - padyaalu",
+                url: "17d3jVh6uKIyL74BbNj3uwp1pAsks7wUj",
+              },
+              {
+                id: 12,
+                name: "Scene-12",
+                lang: "te",
+                title2:
+                  "6 nArada purANamu - nArada maharshi - 5 subhAshitAlu `by kids`",
+                url: "1MQoUQdApdQHQ46lSmiCnARjjYyvqVn3u",
+              },
+              {
+                id: 13,
+                name: "Scene-13",
+                lang: "te",
+                title2:
+                  "7. mArkaMDEya purANamu - gautama maharshi - mArkaMDEya caritam nATika",
+                url: "1fOn_v2yKy2pSM_xVK_my6wy8BFNKXURw",
+              },
+              {
+                id: 14,
+                name: "Scene-14",
+                lang: "te",
+                title2:
+                  "8. agni purANamu - viSvAmitra maharshi - abnidEvuDu laghunATika",
+                url: "1ioCHPM3vnfxyW8BHu5JBFwIJc3AmEkd_",
+              },
+              {
+                id: 15,
+                name: "Scene-15",
+                lang: "te",
+                title2:
+                  "9. bhavishya purANamu - bharadvAja maharshi - kONArka sUrya maMdiraM caritra laghunATika",
+                url: "1GWQp_yxB_Vl7LWxPiQ2goeYWHv8A5erj",
+              },
+              {
+                id: 16,
+                name: "Scene-16",
+                lang: "te",
+                title2:
+                  "10. brahmavaivarta purANamu - jamadagni maharshi - durgA-lakshmI-sarasvatI nATika",
+                url: "1byKUelrB8peidxCRpwrjutRY0uZrKh1X",
+              },
+              {
+                id: 17,
+                name: "Scene-17",
+                lang: "te",
+                title2: "11. liMga purANamu - gautama maharshi - katha",
+                url: "1GkIHt7GFDjfLYilevXw-PRbQEL1aw0TZ",
+              },
+              {
+                id: 18,
+                name: "Scene-18",
+                lang: "te",
+                title2: "12. varAha purANamu - parASara maharshi - katha",
+                url: "1Z4_9BSh9cEnrElDkS41hZ7-UbYUe6DhT",
+              },
+              {
+                id: 19,
+                name: "Scene-19",
+                lang: "te",
+                title2:
+                  "13. skAMda purANamu - khanva maharshi - vanabhOjanAlu nATika",
+                url: "1xKQZqcquKqy1hcDC6YK8O2fHdDb7dUNd",
+              },
+              {
+                id: 20,
+                name: "Scene-20",
+                lang: "te",
+                title2: "14. vAmana purANamu - bhRgu maharshi - katha",
+                url: "1RQ9OVMlcFOxJ7lJU9urGYmUBAFxbkGQu",
+              },
+              {
+                id: 21,
+                name: "Scene-21",
+                lang: "te",
+                title2: "15. kUrma purANamu - kaSyapa maharshi - katha",
+                url: "1cy1ZvwGAtMaTifKUTBy9eHtt5UJcFuTX",
+              },
+              {
+                id: 22,
+                name: "Scene-22",
+                lang: "te",
+                title2: "16. matsya purANamu - cyavana maharshi - katha",
+                url: "1EUDsmV-DsDTnKGxVmhViBjpMHD3n973p",
+              },
+              {
+                id: 23,
+                name: "Scene-23",
+                lang: "te",
+                title2: "17. garuDa purANamu - vaSishTha maharshi - katha",
+                url: "1zLJu0pm_5XlEphDUpfNU3QJ4FCpWIMwR",
+              },
+              {
+                id: 24,
+                name: "Scene-24",
+                lang: "te",
+                title2:
+                  "18. brahmAMDa purANamu - sUta maharshi - lalitAdEvi nATakamu",
+                url: "15X43jkhgZSTwAS5dpC4gfwZH4kLQuGFu",
+              },
+              {
+                id: 25,
+                name: "Scene-25",
+                lang: "te",
+                title2: "gurupUja - svasti",
+                url: "1MeyHKr-J67GnEFW0NOSlRreYhty-UBtI",
+              },
+            ],
+          },
+        ],
+      },
     ],
   },
   {

@@ -91,11 +91,26 @@ export const BmkLanguages = {
   export interface ComponentMusicGeethamsMulti extends BaseComponent {
     musicPallavi: string;
     lyricsPallavi: string;
+    gamakPallavi: string;
     musicNotes: string[];
-    musicLyrics: string[];
+    musicLyrics: string[];    
     title: string;
     pallaviGati: number;
     gatis: number[];
+    talamSeq: string;
+    ragam: RagamName;
+  }
+
+  export interface ComponentMusicVarnamAdi extends BaseComponent {
+    musicPallavi: string;
+    lyricsPallavi: string;
+    musicAnuPallavi: string;
+    lyricsAnuPallavi: string;
+    musicMuktayi: string;
+    musicCharanam: string
+    musicNotes: string[];
+    musicLyrics: string[];
+    title: string;
     talamSeq: string;
     ragam: RagamName;
   }
